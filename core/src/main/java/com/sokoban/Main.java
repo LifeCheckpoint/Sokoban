@@ -51,6 +51,7 @@ public class Main extends ApplicationAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
+        // 游戏开始按钮
         startGameButtonTextTexture = new Texture("start_game.png");
         startGameButtonRegion = new TextureRegion(startGameButtonTextTexture);
         startGameButton = new ImageButton(new TextureRegionDrawable(startGameButtonRegion));
@@ -63,9 +64,11 @@ public class Main extends ApplicationAdapter {
             }
         });
 
+        // 添加 UI
         stage.addActor(startGameButton);
     }
 
+    // 重绘逻辑
     private void draw() {
         ScreenUtils.clear(new Color(backGroundColorRGBA));
 
@@ -104,11 +107,6 @@ public class Main extends ApplicationAdapter {
         input();
         // logic();
         draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true); // true centers the camera
     }
 
     // 资源释放
