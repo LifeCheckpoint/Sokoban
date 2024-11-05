@@ -15,7 +15,6 @@ plugins {
 }
 apply plugin: 'io.github.fourlastor.construo'
 
-
 import io.github.fourlastor.construo.Target
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]

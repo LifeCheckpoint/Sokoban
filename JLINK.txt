@@ -1,0 +1,1 @@
+jlink --module-path jmods --add-modules java.desktop,java.management,java.prefs,java.xml,jdk.unsupported --output jre
