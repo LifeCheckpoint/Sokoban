@@ -1,5 +1,9 @@
 package com.sokoban.scenes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,13 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
 import com.sokoban.Main;
 import com.sokoban.polygon.GridSquare;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
@@ -116,7 +115,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         startGameButton.setPosition(2.2f, 2f);
         startGameButton.setTransform(true);
 
-        // 开始按钮事件
+        // 开始按钮监听
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
