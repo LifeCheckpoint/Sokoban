@@ -23,6 +23,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(1920, 1080);
         configuration.setResizable(false);
         configuration.setWindowIcon("sokoban_icon64.png");
+        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, 16);
         return configuration;
     }
 }

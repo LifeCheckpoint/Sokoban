@@ -57,7 +57,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float backgroundSquareSize = 1f;
     private final float backgroundSquareScale = 2f;
     private final float backgroundMoveDuration = 0.3f;
-    private final float backgroundMoveInverval = 0.4f;
+    private final float backgroundMoveInverval = 0.2f;
     private final float backgroundAlpha = 0.15f;
     private final float BLUR_AMOUNT = 0.5f;
 
@@ -112,7 +112,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         startGameButtonRegion = new TextureRegion(startGameButtonTextTexture);
         startGameButton = new ImageButton(new TextureRegionDrawable(startGameButtonRegion));
         startGameButton.setSize(2.5f, 3.75f);
-        startGameButton.setPosition(2.2f, 2f);
+        startGameButton.setPosition(2f, 2f);
         startGameButton.setTransform(true);
 
         // 开始按钮监听
