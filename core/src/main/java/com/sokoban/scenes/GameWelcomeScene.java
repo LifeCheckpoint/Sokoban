@@ -67,6 +67,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Texture startGameButtonTexture;
     private Texture aboutButtonTexture;
     private Texture[] backgroundTextures;
+    private Texture particleTexture;
 
     private ImageButton startGameButton;
     private ImageButton aboutButton;
@@ -109,7 +110,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         // UI Stage
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
-
         buttonContainer = new ImageButtonContainer(0.3f);
 
         // 初始化按钮
@@ -178,6 +178,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         }, 1, backgroundMoveInverval);
 
         // 初始化背景粒子
+        particleTexture = new Texture("img/particle1.png");
         backgroundParticle = new ArrayList<>();
 
         // 粒子 Timer 控制粒子创建
@@ -246,7 +247,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
     // 创建新粒子
     private void addNewParticle() {
-        BackgroundParticle newParticle = new BackgroundParticle(MathUtils.random(0f, 16f), MathUtils.random(0f, 9f));
+        final float x = MathUtils.random(0f, 16f), y = MathUtils.random(0f, 16f);
+        BackgroundParticle newParticle = new BackgroundParticle(x, y, particleTexture);
         backgroundParticle.add(newParticle);
         stage.addActor(newParticle);
     }
