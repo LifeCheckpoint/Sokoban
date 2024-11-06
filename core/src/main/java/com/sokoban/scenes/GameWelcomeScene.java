@@ -12,25 +12,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
 import com.sokoban.polygon.GridSquare;
+import com.sokoban.polygon.ImageButtonContainer;;
 
 public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
@@ -62,16 +59,13 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private FrameBuffer[] blurBuffers; 
 
     // Texture UI
+    ImageButtonContainer buttonContainer;
     private Texture startGameButtonTexture;
     private Texture aboutButtonTexture;
-    private Texture exitButtonTexture;
     private Texture[] backgroundTextures;
 
-    private TextureRegion startGameButtonRegion;
     private ImageButton startGameButton;
-    private TextureRegion aboutButtonRegion;
     private ImageButton aboutButton;
-    private TextureRegion exitButtonRegion;
     private ImageButton exitButton;
 
     public GameWelcomeScene(Main gameMain) {
@@ -112,46 +106,23 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        // 游戏开始按钮
-        startGameButtonTexture = new Texture("img/start_game.png");
-        startGameButtonRegion = new TextureRegion(startGameButtonTexture);
-        startGameButton = new ImageButton(new TextureRegionDrawable(startGameButtonRegion));
-        startGameButton.setSize(2.5f, 1f);
+        buttonContainer = new ImageButtonContainer(0.3f);
+
+        // 初始化按钮
+        startGameButton = buttonContainer.createButton("img/start_game.png");
         startGameButton.setPosition(1.5f, 2.2f);
-        startGameButton.setTransform(true);
 
-        // 关于按钮
-        aboutButtonTexture = new Texture("img/about.png");
-        aboutButtonRegion = new TextureRegion(aboutButtonTexture);
-        aboutButton = new ImageButton(new TextureRegionDrawable(aboutButtonRegion));
-        aboutButton.setSize(1.6f, 1.3f);
+        aboutButton = buttonContainer.createButton("img/about.png");
         aboutButton.setPosition(1f, 1f);
-        aboutButton.setTransform(true);
 
-        // 退出按钮
-        exitButtonTexture = new Texture("img/exit.png");
-        exitButtonRegion = new TextureRegion(exitButtonTexture);
-        exitButton = new ImageButton(new TextureRegionDrawable(exitButtonRegion));
-        exitButton.setSize(0.1f, 0.1f);
+        exitButton = buttonContainer.createButton("img/exit.png");
         exitButton.setPosition(3.5f, 1f);
-        exitButton.setTransform(true);
 
         // 开始按钮监听
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Start Game!");
-            }
-        });
-        startGameButton.addListener(new InputListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                startGameButton.addAction(Actions.scaleTo(1.2f, 1.2f, 0.2f, Interpolation.sine)); // 增大按钮
-            }
-
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                startGameButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
             }
         });
 
@@ -162,17 +133,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
                 System.out.println("About...");
             }
         });
-        aboutButton.addListener(new InputListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                aboutButton.addAction(Actions.scaleTo(1.2f, 1.2f, 0.2f, Interpolation.sine)); // 增大按钮
-            }
-
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                aboutButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
-            }
-        });
 
         // 退出按钮监听
         exitButton.addListener(new ClickListener() {
@@ -180,17 +140,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Exit");
                 gameMain.exit();
-            }
-        });
-        exitButton.addListener(new InputListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                exitButton.addAction(Actions.scaleTo(1.2f, 1.2f, 0.2f, Interpolation.sine)); // 增大按钮
-            }
-
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                exitButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
             }
         });
 
