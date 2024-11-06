@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class GridSquare extends Image {
+public class TextureSquare extends Image {
     private Texture texture;
 
-    public GridSquare(Texture texture) {
+    public TextureSquare(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.texture = texture;
     }
@@ -21,8 +20,7 @@ public class GridSquare extends Image {
 
     public void setTexture(Texture newTexture) {
         this.texture = newTexture;
-        Drawable drawable = new TextureRegionDrawable(new TextureRegion(newTexture));
-        this.setDrawable(drawable);
+        this.setDrawable(new TextureRegionDrawable(new TextureRegion(newTexture)));
     }
 
     // 透明度设置
@@ -30,6 +28,6 @@ public class GridSquare extends Image {
         Color color = getColor();
         color.a = alpha;
         setColor(color);
-}
+    }
 }
 

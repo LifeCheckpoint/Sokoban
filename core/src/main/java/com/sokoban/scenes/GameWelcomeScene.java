@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,7 +27,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
-import com.sokoban.polygon.GridSquare;
+import com.sokoban.polygon.BackgroundParticle;
+import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.ImageButtonContainer;;
 
 public class GameWelcomeScene extends ApplicationAdapter implements Screen {
@@ -44,7 +46,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float screenMoveScaling = 0.03f;
 
     // Background
-    private GridSquare[][] backgroundGrid;
+    private TextureSquare[][] backgroundGrid;
     private final int backgroundCol = 6;
     private final int backgroundRow = 10;
     private final float backgroundSquareSize = 1f;
@@ -53,6 +55,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float backgroundMoveInverval = 0.2f;
     private final float backgroundAlpha = 0.15f;
     private final float BLUR_AMOUNT = 0.5f;
+
+    private List<BackgroundParticle> backgroundParticle;
 
     // Shader
     private ShaderProgram blurShader;
@@ -151,12 +155,12 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         };
 
         // 背景初始化
-        backgroundGrid = new GridSquare[backgroundRow][backgroundCol];
+        backgroundGrid = new TextureSquare[backgroundRow][backgroundCol];
         for (int row = 0; row < backgroundRow; row++) {
             for (int col = 0; col < backgroundCol; col++) {
                 // 随机选择纹理
                 Texture texture = backgroundTextures[random.nextInt(backgroundTextures.length)];
-                GridSquare square = new GridSquare(texture);
+                TextureSquare square = new TextureSquare(texture);
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
                 square.setAlpha(backgroundAlpha);
@@ -172,6 +176,17 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
                 swapRandomAdjacentSquares();
             }
         }, 1, backgroundMoveInverval);
+
+        // 初始化背景粒子
+        backgroundParticle = new ArrayList<>();
+
+        // 粒子 Timer 控制粒子创建
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                addNewParticle();
+            }
+        }, 3, backgroundMoveInverval);
 
         // 添加 UI
         stage.addActor(startGameButton);
@@ -208,8 +223,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
         final int row2F = row2, col2F = col2; // lambda 使用局部变量需要 final 修饰
 
-        GridSquare square1 = backgroundGrid[row][col];
-        GridSquare square2 = backgroundGrid[row2][col2];
+        TextureSquare square1 = backgroundGrid[row][col];
+        TextureSquare square2 = backgroundGrid[row2][col2];
 
         float x1 = square1.getX();
         float y1 = square1.getY();
@@ -227,7 +242,14 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         ));
 
         square2.addAction(Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
-}
+    }
+
+    // 创建新粒子
+    private void addNewParticle() {
+        BackgroundParticle newParticle = new BackgroundParticle(MathUtils.random(0f, 16f), MathUtils.random(0f, 9f));
+        backgroundParticle.add(newParticle);
+        stage.addActor(newParticle);
+    }
 
     // 重绘逻辑
     private void draw() {
@@ -250,9 +272,10 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
         // 渲染模糊背景
         renderBlurredBackground();
-        
-        // 渲染UI元素
+
+        // 渲染其它元素
         stage.getBatch().begin();
+        for (BackgroundParticle particle : backgroundParticle) particle.draw(stage.getBatch(), 1);
         startGameButton.draw(stage.getBatch(), 1);
         aboutButton.draw(stage.getBatch(), 1);
         exitButton.draw(stage.getBatch(), 1);
@@ -325,28 +348,27 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     @Override
     public void render(float delta) {
         input();
-        // logic();
         draw();
     }
 
     @Override
-    public void hide() {
-        // 隐藏即释放
-        dispose();
-    }
+    public void hide() {}
 
     // 资源释放
     @Override
     public void dispose() {
-        if (stage != null) stage.dispose();
+        // 释放纹理及 glsl
         if (startGameButtonTexture != null) startGameButtonTexture.dispose();
         if (aboutButtonTexture != null) aboutButtonTexture.dispose();
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();
+
+        // 释放 stage
+        if (stage != null) stage.dispose();
     }
 
-    // 游戏开始
+    // 游戏正式开始
     public void startGame() {
         System.out.println("Game start.");
     }
