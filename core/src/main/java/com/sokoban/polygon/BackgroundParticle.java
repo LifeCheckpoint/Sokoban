@@ -6,79 +6,173 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.sokoban.MathUtilsEx;
+import com.sokoban.enums.ParticleEnums;
 
+// 继承自 TextureSquare 的粒子类
 public class BackgroundParticle extends TextureSquare {
     private final int color = 0x88888888;
+
     private float startX, startY;
     private float p1X, p1Y;
     private float endX, endY;
-    private float lifetime;
-    private float age;
-    private float fadeOutDuration;
-    private float originAlpha;
 
-    public BackgroundParticle(float x, float y, Texture texture) {
+    private float lifetime;
+    private float fadeInDuration;
+    private float fadeOutDuration;
+    
+    private float age = 0f;
+    private float originAlpha = 1f;
+
+    public BackgroundParticle(float startX, float startY, Texture texture) {
         super(texture);
 
-        fadeOutDuration = 1f;
-        originAlpha = 1f;
+        setTrace(
+            startX, 
+            startY, 
+            MathUtils.random(-0.5f, 0.5f),
+            MathUtils.random(-0.5f, 0.5f),
+            MathUtils.random(-3f, 3f),
+            MathUtils.random(-3f, 3f)
+        );
 
-        this.startX = x;
-        this.startY = y;
+        setSize(MathUtils.random(0.05f, 0.15f));
 
-        float size = MathUtils.random(0.1f, 0.2f);
-        this.setWidth(size);
-        this.setHeight(size);
+        setLifePeriod(
+            0.5f,
+            MathUtils.random(5f, 8f),
+            1f
+        );
 
-        this.p1X = MathUtils.random(-0.5f, 0.5f);
-        this.p1Y = MathUtils.random(-0.5f, 0.5f);
-
-        // 随机生成结束位置
-        this.endX = x + MathUtils.random(-3f, 3f);
-        this.endY = y + MathUtils.random(-3f, 3f);
-
-        // 生命周期
-        this.lifetime = MathUtils.random(5f, 8f);
-        this.age = 0f;
-
+        this.originAlpha = MathUtils.random(0.2f, 1f);
         this.setPosition(startX, startY);
     }
 
+    // 设置粒子贝塞尔路径
+    public void setTrace(float startX, float startY, float p1X, float p1Y, float endDX, float endDY) {
+        this.startX = startX;
+        this.startY = startY;
+
+        this.p1X = p1X;
+        this.p1Y = p1X;
+
+        this.endX = startX + endDX;
+        this.endY = startY + endDY;
+    }
+
+    // 设置粒子生命周期
+    public void setLifePeriod(float fadeInDuration, float lifetime, float fadeOutDuration) {
+        this.fadeInDuration = fadeInDuration;
+        this.lifetime = lifetime;
+        this.fadeOutDuration = fadeOutDuration;
+    }
+
+    // 设置粒子大小
+    public void setSize(float size) {
+        this.setWidth(size);
+        this.setHeight(size);
+    }
+
+    // 获取粒子当前生命状态
+    public ParticleEnums getParticleLifePeriod() {
+        if (age <= fadeInDuration) return ParticleEnums.In;
+        if (age <= fadeInDuration + lifetime) return ParticleEnums.Live;
+        if (age <= fadeInDuration + lifetime + fadeOutDuration) return ParticleEnums.Out;
+        return ParticleEnums.Dead;
+    }
+
+    // 获取粒子当前生命状态相对时间
+    public float getPeriodDeltaTime() {
+        ParticleEnums period = getParticleLifePeriod();
+        if (period == ParticleEnums.In) return age;
+        if (period == ParticleEnums.Live) return age - fadeInDuration;
+        if (period == ParticleEnums.Out) return age - fadeInDuration - lifetime;
+        return age - fadeInDuration - lifetime - fadeOutDuration;
+    }
+
+    // 粒子渲染逻辑
     @Override
     public void act(float delta) {
         super.act(delta);
         age += delta;
+        
+        ParticleEnums period = getParticleLifePeriod();
+        if (period == ParticleEnums.In) {
+            float t = Interpolation.sine.apply(getPeriodDeltaTime() / fadeInDuration);
+            this.setAlpha(t * originAlpha);
+            return;
+        }
 
-        // 非死亡状态
-        if (age <= lifetime) {
-            // 使用贝塞尔曲线移动
-            float t = Interpolation.sine.apply(age / lifetime);
+        if (period == ParticleEnums.Live) {
+            float t = Interpolation.sine.apply(getPeriodDeltaTime() / lifetime);
             float x = MathUtilsEx.bezier(t, startX, startX + p1X, endX);
             float y = MathUtilsEx.bezier(t, startY, startY + p1Y, endY);
-
             this.setPosition(x, y);
             return;
         }
 
-        // 生命周期结束（渐出）
-        if (age > lifetime && age < lifetime + fadeOutDuration) {
-            float t = Interpolation.sine.apply((age - lifetime) / fadeOutDuration);
+        if (period == ParticleEnums.Out) {
+            float t = Interpolation.sine.apply(getPeriodDeltaTime() / fadeOutDuration);
             this.setAlpha((1 - t) * originAlpha);
             return;
         }
 
-        // 生命周期结束（销毁）
-        if (age > lifetime + fadeOutDuration) {
+        if (period == ParticleEnums.Dead) {
             remove();
             return;
         }
         
     }
 
+    // 绘制命令
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // 未处理 parentAlpha
         batch.setColor(new Color(color));
         super.draw(batch, parentAlpha);
+    }
+
+    // Getter & Setter
+
+    public float getStartX() {
+        return startX;
+    }
+
+    public float getStartY() {
+        return startY;
+    }
+
+    public float getP1X() {
+        return p1X;
+    }
+
+    public float getP1Y() {
+        return p1Y;
+    }
+
+    public float getEndX() {
+        return endX;
+    }
+
+    public float getEndY() {
+        return endY;
+    }
+
+    public float getLifetime() {
+        return lifetime;
+    }
+
+    public float getFadeInDuration() {
+        return fadeInDuration;
+    }
+
+    public float getFadeOutDuration() {
+        return fadeOutDuration;
+    }
+
+    public float getAge() {
+        return age;
+    }
+
+    public float getOriginAlpha() {
+        return originAlpha;
     }
 }

@@ -57,6 +57,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float BLUR_AMOUNT = 0.5f;
 
     private List<BackgroundParticle> backgroundParticle;
+    private final float particleCreateInverval = 1f;
 
     // Shader
     private ShaderProgram blurShader;
@@ -187,7 +188,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             public void run() {
                 addNewParticle();
             }
-        }, 3, backgroundMoveInverval);
+        }, 0, particleCreateInverval);
 
         // 添加 UI
         stage.addActor(startGameButton);
