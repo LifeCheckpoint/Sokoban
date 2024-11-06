@@ -54,4 +54,10 @@ public class Main extends ApplicationAdapter {
     public void startGame() {
         System.out.println("Game start.");
     }
+
+    public void exit() {
+        // Do some Data check...
+        dispose();
+        System.exit(0);
+    }
 }

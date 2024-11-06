@@ -46,10 +46,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float maxScreenOffset = 1f;
     private final float screenMoveScaling = 0.03f;
 
-    // Texture素材
-    private Texture startGameButtonTextTexture;
-    private Texture[] backgroundTextures;
-
     // Background
     private GridSquare[][] backgroundGrid;
     private final int backgroundCol = 6;
@@ -65,9 +61,18 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private ShaderProgram blurShader;
     private FrameBuffer[] blurBuffers; 
 
-    // Region UI
+    // Texture UI
+    private Texture startGameButtonTexture;
+    private Texture aboutButtonTexture;
+    private Texture exitButtonTexture;
+    private Texture[] backgroundTextures;
+
     private TextureRegion startGameButtonRegion;
     private ImageButton startGameButton;
+    private TextureRegion aboutButtonRegion;
+    private ImageButton aboutButton;
+    private TextureRegion exitButtonRegion;
+    private ImageButton exitButton;
 
     public GameWelcomeScene(Main gameMain) {
         this.gameMain = gameMain;
@@ -108,12 +113,28 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // 游戏开始按钮
-        startGameButtonTextTexture = new Texture("img/start_game.png");
-        startGameButtonRegion = new TextureRegion(startGameButtonTextTexture);
+        startGameButtonTexture = new Texture("img/start_game.png");
+        startGameButtonRegion = new TextureRegion(startGameButtonTexture);
         startGameButton = new ImageButton(new TextureRegionDrawable(startGameButtonRegion));
-        startGameButton.setSize(2.5f, 3.75f);
-        startGameButton.setPosition(2f, 2f);
+        startGameButton.setSize(2.5f, 1f);
+        startGameButton.setPosition(1.5f, 2.2f);
         startGameButton.setTransform(true);
+
+        // 关于按钮
+        aboutButtonTexture = new Texture("img/about.png");
+        aboutButtonRegion = new TextureRegion(aboutButtonTexture);
+        aboutButton = new ImageButton(new TextureRegionDrawable(aboutButtonRegion));
+        aboutButton.setSize(1.6f, 1.3f);
+        aboutButton.setPosition(1f, 1f);
+        aboutButton.setTransform(true);
+
+        // 退出按钮
+        exitButtonTexture = new Texture("img/exit.png");
+        exitButtonRegion = new TextureRegion(exitButtonTexture);
+        exitButton = new ImageButton(new TextureRegionDrawable(exitButtonRegion));
+        exitButton.setSize(0.1f, 0.1f);
+        exitButton.setPosition(3.5f, 1f);
+        exitButton.setTransform(true);
 
         // 开始按钮监听
         startGameButton.addListener(new ClickListener() {
@@ -131,6 +152,45 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 startGameButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
+            }
+        });
+
+        // 关于按钮监听
+        aboutButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("About...");
+            }
+        });
+        aboutButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                aboutButton.addAction(Actions.scaleTo(1.2f, 1.2f, 0.2f, Interpolation.sine)); // 增大按钮
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                aboutButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
+            }
+        });
+
+        // 退出按钮监听
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Exit");
+                gameMain.exit();
+            }
+        });
+        exitButton.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                exitButton.addAction(Actions.scaleTo(1.2f, 1.2f, 0.2f, Interpolation.sine)); // 增大按钮
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                exitButton.addAction(Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sine)); // 恢复原始大小
             }
         });
 
@@ -166,6 +226,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
         // 添加 UI
         stage.addActor(startGameButton);
+        stage.addActor(aboutButton);
+        stage.addActor(exitButton);
     }
 
     // 随机交换相邻的两个矩形
@@ -243,6 +305,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         // 渲染UI元素
         stage.getBatch().begin();
         startGameButton.draw(stage.getBatch(), 1);
+        aboutButton.draw(stage.getBatch(), 1);
+        exitButton.draw(stage.getBatch(), 1);
         stage.getBatch().end();
         
         stage.draw();
@@ -326,7 +390,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     @Override
     public void dispose() {
         if (stage != null) stage.dispose();
-        if (startGameButtonTextTexture != null) startGameButtonTextTexture.dispose();
+        if (startGameButtonTexture != null) startGameButtonTexture.dispose();
+        if (aboutButtonTexture != null) aboutButtonTexture.dispose();
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();
