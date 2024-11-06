@@ -108,7 +108,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // 游戏开始按钮
-        startGameButtonTextTexture = new Texture("start_game.png");
+        startGameButtonTextTexture = new Texture("img/start_game.png");
         startGameButtonRegion = new TextureRegion(startGameButtonTextTexture);
         startGameButton = new ImageButton(new TextureRegionDrawable(startGameButtonRegion));
         startGameButton.setSize(2.5f, 3.75f);
@@ -136,9 +136,9 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
         // 背景纹理组
         backgroundTextures = new Texture[]{
-            new Texture("box.png"),
-            new Texture("box_active.png"),
-            new Texture("target.png")
+            new Texture("img/box.png"),
+            new Texture("img/box_active.png"),
+            new Texture("img/target.png")
         };
 
         // 背景初始化
