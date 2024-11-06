@@ -1,8 +1,6 @@
 package com.sokoban.polygon;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.sokoban.MathUtilsEx;
@@ -10,8 +8,6 @@ import com.sokoban.enums.ParticleEnums;
 
 // 继承自 TextureSquare 的粒子类
 public class BackgroundParticle extends TextureSquare {
-    private final int color = 0x88888888;
-
     private float startX, startY;
     private float p1X, p1Y;
     private float endX, endY;
@@ -121,13 +117,6 @@ public class BackgroundParticle extends TextureSquare {
             return;
         }
         
-    }
-
-    // 绘制命令
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(new Color(color));
-        super.draw(batch, parentAlpha);
     }
 
     // Getter & Setter
