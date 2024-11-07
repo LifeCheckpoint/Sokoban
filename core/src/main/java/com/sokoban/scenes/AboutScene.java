@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,7 +14,7 @@ import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.ImageButtonContainer;
-import com.sokoban.polygon.LabelContainer;
+import com.sokoban.polygon.ImageLabelContainer;
 
 public class AboutScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
@@ -26,10 +27,13 @@ public class AboutScene extends ApplicationAdapter implements Screen {
     // Background 粒子
     private BackgroundGrayParticleManager bgParticle;
 
-    // Texture UI
-    ImageButtonContainer buttonContainer;
-
+    // UI
+    private ImageButtonContainer buttonContainer;
+    private ImageLabelContainer labelContainer;
     private ImageButton returnButton;
+    private Image infoLabel;
+
+    private int clickLabelCount = 0;
 
     public AboutScene(Main gameMain) {
         this.gameMain = gameMain;
@@ -48,13 +52,15 @@ public class AboutScene extends ApplicationAdapter implements Screen {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
         buttonContainer = new ImageButtonContainer(0.3f);
+        labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮
         returnButton = buttonContainer.createButton("img/left_arrow.png");
         returnButton.setPosition(0.5f, 8f);
 
         // 信息 label
-        LabelContainer label = new LabelContainer("Hello, libGDX!");
+        infoLabel = labelContainer.createLabel("img/about_info.png", 3f);
+        infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -65,12 +71,24 @@ public class AboutScene extends ApplicationAdapter implements Screen {
             }
         });
 
+        // label 点击彩蛋
+        infoLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                clickLabelCount += 1;
+                if (clickLabelCount >= 10) {
+                    System.out.println("Colorful eggs");
+                    labelContainer.resetLabel(infoLabel, "img/about_info2.png", 3f);
+                }
+            }
+        });
+
         bgParticle = new BackgroundGrayParticleManager(stage);
         bgParticle.startCreateParticles();
 
         // 添加 UI
         stage.addActor(returnButton);
-        stage.addActor(label);
+        stage.addActor(infoLabel);
     }
 
     // 输入事件处理
