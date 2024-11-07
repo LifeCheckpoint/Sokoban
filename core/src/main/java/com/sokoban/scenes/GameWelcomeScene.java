@@ -74,7 +74,7 @@ public class GameWelcomeScene extends SokoyoScene {
         musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
         musicManager.loadMusic(AudioEnums.Background2, "Rain.mp3");
         musicManager.setVolume(0.2f);
-        musicManager.play(AudioEnums.Background1, true);
+        musicManager.play(musicManager.getRandomAudioEnum(), false);
 
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();

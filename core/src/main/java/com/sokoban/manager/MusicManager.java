@@ -6,6 +6,7 @@ import com.sokoban.enums.AudioEnums;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 // 管理音乐播放
 public class MusicManager {
@@ -42,8 +43,17 @@ public class MusicManager {
             currentMusic.setVolume(volume);
             currentMusic.play();
             isPlaying = true;
+
+            // 设置播放结束回调
+            currentMusic.setOnCompletionListener(music -> onMusicCompleted());
         } else {
             Gdx.app.error("MusicManager", "Music not found: " + audioName);
+        }
+    }
+
+    private void onMusicCompleted() {
+        if (currentMusic != null) {
+            play(getRandomAudioEnum(), false);
         }
     }
 
@@ -104,5 +114,13 @@ public class MusicManager {
 
     public float getVolume() {
         return volume;
+    }
+
+    // 从 AudioEnums 中随机选择枚举
+    public AudioEnums getRandomAudioEnum() {
+        AudioEnums[] values = AudioEnums.values();  // 获取所有枚举值
+        Random random = new Random();
+        int index = random.nextInt(values.length);  // 生成随机索引
+        return values[index];  // 返回随机选中的枚举值
     }
 }
