@@ -65,8 +65,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
     // Texture UI
     ImageButtonContainer buttonContainer;
-    private Texture startGameButtonTexture;
-    private Texture aboutButtonTexture;
     private Texture[] backgroundTextures;
     private Texture particleTexture;
 
@@ -136,6 +134,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("About...");
+                gameMain.getScreenManager().setScreen(new AboutScene(gameMain));
             }
         });
 
@@ -361,8 +360,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     @Override
     public void dispose() {
         // 释放纹理及 glsl
-        if (startGameButtonTexture != null) startGameButtonTexture.dispose();
-        if (aboutButtonTexture != null) aboutButtonTexture.dispose();
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();

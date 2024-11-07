@@ -1,13 +1,11 @@
 package com.sokoban;
 
-import com.sokoban.enums.*;
-
 import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
     private Screen currentScreen;
 
-    // 直接场景切换
+    // 场景切换
     public void setScreen(Screen screen) {
         if (currentScreen != null) {
             currentScreen.hide();
@@ -15,13 +13,6 @@ public class ScreenManager {
         }
         currentScreen = screen;
         currentScreen.show();
-    }
-
-    // 专用场景切换
-    public void setScreen(ScreenEnum transForm, ScreenEnum transTo, Screen screen) {
-        if (transForm == ScreenEnum.GameWelcomeScene) {
-            // sth.
-        }
     }
 
     public void dispose() {
