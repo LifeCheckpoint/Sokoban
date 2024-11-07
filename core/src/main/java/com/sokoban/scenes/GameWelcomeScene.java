@@ -2,7 +2,6 @@ package com.sokoban.scenes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,7 +30,6 @@ import com.sokoban.polygon.ImageButtonContainer;;
 
 public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
-    private Random random;
     private FitViewport viewport;
     private Stage stage;
 
@@ -73,7 +72,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
-        random = new Random();
         viewport = new FitViewport(16, 9);
         moveTrace = new MouseMovingTraceManager(viewport);
 
@@ -148,7 +146,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         for (int row = 0; row < backgroundRow; row++) {
             for (int col = 0; col < backgroundCol; col++) {
                 // 随机选择纹理
-                Texture texture = backgroundTextures[random.nextInt(backgroundTextures.length)];
+                Texture texture = backgroundTextures[MathUtils.random(0, backgroundTextures.length - 1)];
                 TextureSquare square = new TextureSquare(texture);
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
@@ -179,8 +177,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     // 随机交换相邻的两个矩形
     public void swapRandomAdjacentSquares() {
         final int[][] deltaPos = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        int row = random.nextInt(backgroundRow);
-        int col = random.nextInt(backgroundCol);
+        int row = MathUtils.random(0, backgroundRow - 1);
+        int col = MathUtils.random(0, backgroundCol - 1);
         int row2 = -1, col2 = -1;
 
         // 随机选取可用方向
@@ -199,7 +197,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         }
 
         // 随机选择有效方向
-        int randomDirectionIndex = possibleDirections.get(random.nextInt(possibleDirections.size()));
+        int randomDirectionIndex = possibleDirections.get(MathUtils.random(0, possibleDirections.size() - 1));
         row2 = row + deltaPos[randomDirectionIndex][0];
         col2 = col + deltaPos[randomDirectionIndex][1];
 
