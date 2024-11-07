@@ -1,25 +1,17 @@
 package com.sokoban.scenes;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 // import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.ImageButtonContainer;
 // import com.sokoban.polygon.ImageLabelContainer;
 
-public class SettingScene extends ApplicationAdapter implements Screen {
-    private Main gameMain;
-    private FitViewport viewport;
-    private Stage stage;
-    private boolean initFlag = false;
+public class SettingScene extends SokoyoScene {
 
     // Background 粒子
     private BackgroundGrayParticleManager bgParticle;
@@ -30,24 +22,12 @@ public class SettingScene extends ApplicationAdapter implements Screen {
     private ImageButton returnButton;
 
     public SettingScene(Main gameMain) {
-        this.gameMain = gameMain;
-    }
-
-    public Main getGameMain() {
-        return gameMain;
-    }
-
-    @Override
-    public void show() {
-        if (!initFlag) init();
-        Gdx.input.setInputProcessor(stage);
+        super(gameMain);
     }
 
     public void init() {
-        viewport = new FitViewport(16, 9);
+        super.init();
 
-        // UI Stage
-        stage = new Stage(viewport);
         buttonContainer = new ImageButtonContainer(0.3f);
         // labelContainer = new ImageLabelContainer(0.3f);
 
@@ -69,8 +49,6 @@ public class SettingScene extends ApplicationAdapter implements Screen {
 
         // 添加 UI
         stage.addActor(returnButton);
-
-        initFlag = true;
     }
 
     // 输入事件处理
@@ -97,10 +75,8 @@ public class SettingScene extends ApplicationAdapter implements Screen {
     @Override
     public void hide() {}
 
-    // 资源释放
     @Override
     public void dispose() {
-        // 释放 stage
-        if (stage != null) stage.dispose();
+        super.dispose();
     }
 }

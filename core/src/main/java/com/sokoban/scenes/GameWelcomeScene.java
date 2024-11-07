@@ -3,10 +3,8 @@ package com.sokoban.scenes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,23 +14,17 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.ImageButtonContainer;;
 
-public class GameWelcomeScene extends ApplicationAdapter implements Screen {
-    private Main gameMain;
-    private FitViewport viewport;
-    private Stage stage;
-    private boolean initFlag = false;
+public class GameWelcomeScene extends SokoyoScene {
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -65,27 +57,16 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private ImageButton settingsButton;
 
     public GameWelcomeScene(Main gameMain) {
-        this.gameMain = gameMain;
-    }
-
-    public Main getGameMain() {
-        return gameMain;
+        super(gameMain);
     }
 
     @Override
-    public void show() {
-        if (!initFlag) init();
-        Gdx.input.setInputProcessor(stage);
-    }
-
     public void init() {
-        viewport = new FitViewport(16, 9);
-        moveTrace = new MouseMovingTraceManager(viewport);
+        super.init();
 
+        moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
         
-        // UI Stage
-        stage = new Stage(viewport);
         buttonContainer = new ImageButtonContainer(0.3f);
 
         // 初始化按钮
@@ -175,8 +156,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage.addActor(aboutButton);
         stage.addActor(exitButton);
         stage.addActor(settingsButton);
-
-        initFlag = true;
     }
 
     // 随机交换相邻的两个矩形
@@ -343,9 +322,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();
-
-        // 释放 stage
-        if (stage != null) stage.dispose();
+        super.dispose();
     }
 
     // 游戏正式开始
