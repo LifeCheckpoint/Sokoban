@@ -26,8 +26,8 @@ public class BackgroundGrayParticleManager {
         // 设置发射范围
         setMinX(0f);
         setMinY(0f);
-        setMaxX(9f);
-        setMaxY(16f);
+        setMaxX(16f);
+        setMaxY(9f);
 
         creatingTask = new Timer.Task() {
             @Override
