@@ -1,4 +1,4 @@
-package com.sokoban;
+package com.sokoban.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;

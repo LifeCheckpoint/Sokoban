@@ -10,7 +10,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -19,6 +18,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
+import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.BackgroundParticle;
 import com.sokoban.polygon.ImageButtonContainer;
 
@@ -28,12 +28,8 @@ public class AboutScene extends ApplicationAdapter implements Screen {
     private Stage stage;
     private final int backGroundColorRGBA = 0x101010ff;
 
-    // 鼠标位移相关 Vector
-    private Vector2 mousePos;
-    private Vector2 screenCenter;
-    private Vector2 mouse2CenterOffsetScaled;
-    private final float maxScreenOffset = 1f;
-    private final float screenMoveScaling = 0.03f;
+    // 画面相机跟踪
+    private MouseMovingTraceManager moveTrace;
 
     // Background
     private List<BackgroundParticle> backgroundParticle;
@@ -56,9 +52,7 @@ public class AboutScene extends ApplicationAdapter implements Screen {
     @Override
     public void show() {
         viewport = new FitViewport(16, 9);
-        mousePos = new Vector2();
-        mouse2CenterOffsetScaled = new Vector2();
-        screenCenter = new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2);
+        moveTrace = new MouseMovingTraceManager(viewport);
 
         // UI Stage
         stage = new Stage(viewport);
@@ -115,17 +109,8 @@ public class AboutScene extends ApplicationAdapter implements Screen {
     private void draw() {
         ScreenUtils.clear(new Color(backGroundColorRGBA));
 
-        // 计算鼠标位置世界坐标以及偏移矢量
-        mousePos.set(Gdx.input.getX(), Gdx.input.getY());
-        viewport.unproject(mousePos);
-        mouse2CenterOffsetScaled = mousePos.cpy().sub(screenCenter).scl(screenMoveScaling);
-
-        // 防止移出
-        if (mouse2CenterOffsetScaled.len() > maxScreenOffset) mouse2CenterOffsetScaled.setLength(maxScreenOffset);
-        
-        // 更新相机位置
-        viewport.getCamera().position.set(mouse2CenterOffsetScaled.add(screenCenter), 0);
-        viewport.getCamera().update();
+        // 相机跟踪
+        moveTrace.setPositionWithUpdate();
 
         // stage 更新
         stage.act(Gdx.graphics.getDeltaTime());

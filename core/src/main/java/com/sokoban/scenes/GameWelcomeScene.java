@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -27,6 +26,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
+import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.BackgroundParticle;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.ImageButtonContainer;;
@@ -38,12 +38,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Stage stage;
     private final int backGroundColorRGBA = 0x101010ff;
 
-    // 鼠标位移相关 Vector
-    private Vector2 mousePos;
-    private Vector2 screenCenter;
-    private Vector2 mouse2CenterOffsetScaled;
-    private final float maxScreenOffset = 1f;
-    private final float screenMoveScaling = 0.03f;
+    // 画面相机跟踪
+    private MouseMovingTraceManager moveTrace;
 
     // Background
     private TextureSquare[][] backgroundGrid;
@@ -84,9 +80,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     public void show() {
         random = new Random();
         viewport = new FitViewport(16, 9);
-        mousePos = new Vector2();
-        mouse2CenterOffsetScaled = new Vector2();
-        screenCenter = new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2);
+        moveTrace = new MouseMovingTraceManager(viewport);
 
         // 初始化模糊效果
         blurBuffers = new FrameBuffer[2];
@@ -257,32 +251,15 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private void draw() {
         ScreenUtils.clear(new Color(backGroundColorRGBA));
 
-        // 计算鼠标位置世界坐标以及偏移矢量
-        mousePos.set(Gdx.input.getX(), Gdx.input.getY());
-        viewport.unproject(mousePos);
-        mouse2CenterOffsetScaled = mousePos.cpy().sub(screenCenter).scl(screenMoveScaling);
-
-        // 防止移出
-        if (mouse2CenterOffsetScaled.len() > maxScreenOffset) mouse2CenterOffsetScaled.setLength(maxScreenOffset);
+        // 画面跟踪
+        moveTrace.setPositionWithUpdate();
         
-        // 更新相机位置
-        viewport.getCamera().position.set(mouse2CenterOffsetScaled.add(screenCenter), 0);
-        viewport.getCamera().update();
-
         // stage 更新
         stage.act(Gdx.graphics.getDeltaTime());
 
         // 渲染模糊背景
         renderBlurredBackground();
 
-        // 渲染其它元素
-        stage.getBatch().begin();
-        for (BackgroundParticle particle : backgroundParticle) particle.draw(stage.getBatch(), 1);
-        startGameButton.draw(stage.getBatch(), 1);
-        aboutButton.draw(stage.getBatch(), 1);
-        exitButton.draw(stage.getBatch(), 1);
-        stage.getBatch().end();
-        
         stage.draw();
     }
 

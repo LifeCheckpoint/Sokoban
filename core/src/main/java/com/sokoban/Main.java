@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.enums.AudioEnums;
+import com.sokoban.manager.MusicManager;
+import com.sokoban.manager.ScreenManager;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -24,7 +26,7 @@ public class Main extends ApplicationAdapter {
     public void create() {
         screenManager = new ScreenManager();
         screenManager.setScreen(new GameWelcomeScene(this));
-        
+
         musicManager = new MusicManager();
         musicManager.loadMusic(AudioEnums.Background1, "audio/Light.mp3");
         musicManager.setVolume(0.2f);  // 设置音量为50%
