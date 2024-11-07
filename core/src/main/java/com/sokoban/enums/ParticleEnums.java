@@ -1,5 +1,5 @@
 package com.sokoban.enums;
 
-public enum ParticleEnums implements Enums{
+public enum ParticleEnums {
     In, Live, Out, Dead;
 }
