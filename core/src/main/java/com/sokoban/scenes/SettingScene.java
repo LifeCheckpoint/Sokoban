@@ -19,6 +19,7 @@ public class SettingScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
     private FitViewport viewport;
     private Stage stage;
+    private boolean initFlag = false;
 
     // Background 粒子
     private BackgroundGrayParticleManager bgParticle;
@@ -38,11 +39,15 @@ public class SettingScene extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
+        if (!initFlag) init();
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    public void init() {
         viewport = new FitViewport(16, 9);
 
         // UI Stage
         stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
         buttonContainer = new ImageButtonContainer(0.3f);
         // labelContainer = new ImageLabelContainer(0.3f);
 
@@ -55,7 +60,7 @@ public class SettingScene extends ApplicationAdapter implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Return!");
-                gameMain.getScreenManager().setScreen(new GameWelcomeScene(gameMain));
+                gameMain.getScreenManager().returnPreviousScreen();
             }
         });
 
@@ -64,6 +69,8 @@ public class SettingScene extends ApplicationAdapter implements Screen {
 
         // 添加 UI
         stage.addActor(returnButton);
+
+        initFlag = true;
     }
 
     // 输入事件处理

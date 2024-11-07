@@ -32,6 +32,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
     private FitViewport viewport;
     private Stage stage;
+    private boolean initFlag = false;
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -73,6 +74,11 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
     @Override
     public void show() {
+        if (!initFlag) init();
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    public void init() {
         viewport = new FitViewport(16, 9);
         moveTrace = new MouseMovingTraceManager(viewport);
 
@@ -80,7 +86,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         
         // UI Stage
         stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
         buttonContainer = new ImageButtonContainer(0.3f);
 
         // 初始化按钮
@@ -170,6 +175,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage.addActor(aboutButton);
         stage.addActor(exitButton);
         stage.addActor(settingsButton);
+
+        initFlag = true;
     }
 
     // 随机交换相邻的两个矩形
