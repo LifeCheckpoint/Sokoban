@@ -29,7 +29,7 @@ public class Main extends ApplicationAdapter {
 
         musicManager = new MusicManager();
         musicManager.loadMusic(AudioEnums.Background1, "audio/Light.mp3");
-        musicManager.setVolume(0.2f);  // 设置音量为50%
+        musicManager.setVolume(0.2f);
         musicManager.play(AudioEnums.Background1, true);
     }
 

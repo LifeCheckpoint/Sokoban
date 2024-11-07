@@ -4,23 +4,21 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.ImageButtonContainer;
+import com.sokoban.polygon.LabelContainer;
 
 public class AboutScene extends ApplicationAdapter implements Screen {
     private Main gameMain;
     private FitViewport viewport;
     private Stage stage;
-    private final int backGroundColorRGBA = 0x101010ff;
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -55,6 +53,8 @@ public class AboutScene extends ApplicationAdapter implements Screen {
         returnButton = buttonContainer.createButton("img/left_arrow.png");
         returnButton.setPosition(0.5f, 8f);
 
+        // 信息 label
+        LabelContainer label = new LabelContainer("Hello, libGDX!");
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -70,6 +70,7 @@ public class AboutScene extends ApplicationAdapter implements Screen {
 
         // 添加 UI
         stage.addActor(returnButton);
+        stage.addActor(label);
     }
 
     // 输入事件处理
@@ -81,8 +82,6 @@ public class AboutScene extends ApplicationAdapter implements Screen {
 
     // 重绘逻辑
     private void draw() {
-        ScreenUtils.clear(new Color(backGroundColorRGBA));
-
         // 相机跟踪
         moveTrace.setPositionWithUpdate();
 

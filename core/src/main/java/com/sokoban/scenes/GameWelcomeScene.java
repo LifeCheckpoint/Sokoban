@@ -8,7 +8,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
@@ -35,7 +33,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private Random random;
     private FitViewport viewport;
     private Stage stage;
-    private final int backGroundColorRGBA = 0x101010ff;
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -231,8 +228,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
     // 重绘逻辑
     private void draw() {
-        ScreenUtils.clear(new Color(backGroundColorRGBA));
-
         // 画面跟踪
         moveTrace.setPositionWithUpdate();
         
