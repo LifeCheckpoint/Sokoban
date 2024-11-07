@@ -76,23 +76,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         viewport = new FitViewport(16, 9);
         moveTrace = new MouseMovingTraceManager(viewport);
 
-        // 初始化模糊效果
-        blurBuffers = new FrameBuffer[2];
-        for (int i = 0; i < 2; i++) {
-            blurBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-        }
-        
-        // 编译着色器
-        ShaderProgram.pedantic = false;
-        blurShader = new ShaderProgram(
-            Gdx.files.internal("shaders/blurVertex.glsl"),
-            Gdx.files.internal("shaders/blurFragment.glsl")
-        );
-        
-        if (!blurShader.isCompiled()) {
-            Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
-            return;
-        }
+        initShaders();
         
         // UI Stage
         stage = new Stage(viewport);
@@ -252,6 +236,29 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage.draw();
     }
 
+    // 着色器初始化
+    // BUG TO FIX
+    private void initShaders() {
+        // 初始化模糊效果
+        blurBuffers = new FrameBuffer[2];
+        for (int i = 0; i < 2; i++) {
+            blurBuffers[i] = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+        }
+        
+        // 编译着色器
+        ShaderProgram.pedantic = false;
+        blurShader = new ShaderProgram(
+            Gdx.files.internal("shaders/blurVertex.glsl"),
+            Gdx.files.internal("shaders/blurFragment.glsl")
+        );
+        
+        if (!blurShader.isCompiled()) {
+            Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
+            return;
+        }
+    }
+
+    // 渲染模糊背景
     // BUG TO FIX
     private void renderBlurredBackground() {
         Matrix4 projectionMatrix = stage.getBatch().getProjectionMatrix().cpy();
