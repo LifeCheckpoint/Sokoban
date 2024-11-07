@@ -49,12 +49,12 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private TextureSquare[][] backgroundGrid;
     private final int backgroundCol = 6;
     private final int backgroundRow = 10;
-    private final float backgroundSquareSize = 1f;
+    private final float backgroundSquareSize = 0.8f;
     private final float backgroundSquareScale = 2f;
     private final float backgroundMoveDuration = 0.3f;
     private final float backgroundMoveInverval = 0.2f;
     private final float backgroundAlpha = 0.15f;
-    private final float BLUR_AMOUNT = 0.5f;
+    private final float backgroundBlueAmount = 0.5f;
 
     private List<BackgroundParticle> backgroundParticle;
     private final float particleCreateInverval = 1f;
@@ -316,7 +316,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage.getBatch().begin();
         
         // Set shader uniforms
-        blurShader.setUniformf("blurAmount", BLUR_AMOUNT);
+        blurShader.setUniformf("blurAmount", backgroundBlueAmount);
         blurShader.setUniformi("u_texture", 0); // texture unit 0
         
         // Draw with Y-flip

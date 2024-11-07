@@ -2,6 +2,7 @@ package com.sokoban;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -11,6 +12,7 @@ import com.sokoban.scenes.GameWelcomeScene;
 public class Main extends ApplicationAdapter {
     private ScreenManager screenManager;
     private int backGroundColorRGBA = 0x101010ff;
+    private Music backgroundMusic;
 
     // 获得当前场景
     public ScreenManager getScreenManager() {
@@ -21,6 +23,10 @@ public class Main extends ApplicationAdapter {
     public void create() {
         screenManager = new ScreenManager();
         screenManager.setScreen(new GameWelcomeScene(this));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Light.mp3"));
+        backgroundMusic.setVolume(0.2f);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
     }
 
     // 重绘逻辑
