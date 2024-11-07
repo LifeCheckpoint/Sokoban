@@ -40,11 +40,11 @@ public class AboutScene extends SokoyoScene {
         labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮
-        returnButton = buttonContainer.createButton("img/left_arrow.png");
+        returnButton = buttonContainer.createButton("left_arrow.png");
         returnButton.setPosition(0.5f, 8f);
 
         // 信息 label
-        infoLabel = labelContainer.createLabel("img/about_info.png", 3f);
+        infoLabel = labelContainer.createLabel("about_info.png", 3f);
         infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 
         // 返回按钮监听

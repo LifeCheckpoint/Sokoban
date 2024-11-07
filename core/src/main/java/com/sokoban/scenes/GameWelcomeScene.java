@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.ImageButtonContainer;
@@ -70,16 +71,16 @@ public class GameWelcomeScene extends SokoyoScene {
         buttonContainer = new ImageButtonContainer(0.3f);
 
         // 初始化按钮
-        startGameButton = buttonContainer.createButton("img/start_game.png");
+        startGameButton = buttonContainer.createButton("start_game.png");
         startGameButton.setPosition(1.5f, 2.8f);
 
-        aboutButton = buttonContainer.createButton("img/about.png");
+        aboutButton = buttonContainer.createButton("about.png");
         aboutButton.setPosition(1f, 1.7f);
 
-        exitButton = buttonContainer.createButton("img/exit.png");
+        exitButton = buttonContainer.createButton("exit.png");
         exitButton.setPosition(3.5f, 1.5f);
 
-        settingsButton = buttonContainer.createButton("img/settings.png");
+        settingsButton = buttonContainer.createButton("settings.png");
         settingsButton.setPosition(1.5f, 0.8f);
 
         // 开始按钮监听
@@ -119,9 +120,9 @@ public class GameWelcomeScene extends SokoyoScene {
 
         // 背景纹理组
         backgroundTextures = new Texture[]{
-            new Texture("img/box.png"),
-            new Texture("img/box_active.png"),
-            new Texture("img/target.png")
+            AssetsPathManager.textureLoad("box.png"),
+            AssetsPathManager.textureLoad("box_active.png"),
+            AssetsPathManager.textureLoad("target.png")
         };
 
         // 背景初始化
@@ -129,8 +130,7 @@ public class GameWelcomeScene extends SokoyoScene {
         for (int row = 0; row < backgroundRow; row++) {
             for (int col = 0; col < backgroundCol; col++) {
                 // 随机选择纹理
-                Texture texture = backgroundTextures[MathUtils.random(0, backgroundTextures.length - 1)];
-                TextureSquare square = new TextureSquare(texture);
+                TextureSquare square = new TextureSquare(backgroundTextures[MathUtils.random(0, backgroundTextures.length - 1)]);
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
                 square.setAlpha(backgroundAlpha);
@@ -233,11 +233,7 @@ public class GameWelcomeScene extends SokoyoScene {
         
         // 编译着色器
         ShaderProgram.pedantic = false;
-        blurShader = new ShaderProgram(
-            Gdx.files.internal("shaders/blurVertex.glsl"),
-            Gdx.files.internal("shaders/blurFragment.glsl")
-        );
-        
+        blurShader = AssetsPathManager.shaderLoad("blurVertex.glsl", "blurFragment.glsl");
         if (!blurShader.isCompiled()) {
             Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
             return;

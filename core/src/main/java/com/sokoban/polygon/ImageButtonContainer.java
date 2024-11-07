@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.graphics.Texture;
+import com.sokoban.manager.AssetsPathManager;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 
@@ -21,7 +21,7 @@ public class ImageButtonContainer {
     }
 
     public Drawable readDrawableFromFile(String internalpath) {
-        return new TextureRegionDrawable(new TextureRegion(new Texture(internalpath)));
+        return new TextureRegionDrawable(new TextureRegion(AssetsPathManager.textureLoad(internalpath)));
     }
 
     public ImageButton createButton(String internalpath) {

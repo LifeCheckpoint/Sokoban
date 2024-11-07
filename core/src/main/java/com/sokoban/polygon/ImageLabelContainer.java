@@ -1,9 +1,9 @@
 package com.sokoban.polygon;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.sokoban.manager.AssetsPathManager;
 
 public class ImageLabelContainer {
     private float maxLabelHeight;
@@ -33,7 +33,7 @@ public class ImageLabelContainer {
     }
 
     public Drawable readDrawableFromFile(String internalpath) {
-        return new TextureRegionDrawable(new TextureRegion(new Texture(internalpath)));
+        return new TextureRegionDrawable(new TextureRegion(AssetsPathManager.textureLoad(internalpath)));
     }
 
     public Image createLabel(String internalpath) {
