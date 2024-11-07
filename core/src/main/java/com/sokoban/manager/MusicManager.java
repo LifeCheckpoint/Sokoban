@@ -23,7 +23,7 @@ public class MusicManager {
             Gdx.app.log("MusicManager", "Music already loaded: " + audioName.toString());
             return;
         }
-        Music music = Gdx.audio.newMusic(Gdx.files.internal(filePath));
+        Music music = AssetsPathManager.audioLoad(filePath);
         musicMap.put(audioName, music);
     }
 
@@ -41,7 +41,7 @@ public class MusicManager {
             currentMusic.play();
             isPlaying = true;
         } else {
-            Gdx.app.log("MusicManager", "Music not found: " + audioName);
+            Gdx.app.error("MusicManager", "Music not found: " + audioName);
         }
     }
 

@@ -63,7 +63,7 @@ public class AboutScene extends SokoyoScene {
                 clickLabelCount += 1;
                 if (clickLabelCount >= 10) {
                     System.out.println("Colorful eggs");
-                    labelContainer.resetLabel(infoLabel, "img/about_info2.png", 3f);
+                    labelContainer.resetLabel(infoLabel, "about_info2.png", 3f);
                 }
             }
         });

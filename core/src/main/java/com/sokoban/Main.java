@@ -28,7 +28,7 @@ public class Main extends ApplicationAdapter {
         screenManager.setScreen(new GameWelcomeScene(this));
 
         musicManager = new MusicManager();
-        musicManager.loadMusic(AudioEnums.Background1, "audio/Light.mp3");
+        musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
         musicManager.setVolume(0.2f);
         musicManager.play(AudioEnums.Background1, true);
     }
