@@ -2,31 +2,32 @@ package com.sokoban;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.sokoban.scenes.GameWelcomeScene;
+import com.sokoban.enums.AudioEnums;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private ScreenManager screenManager;
     private int backGroundColorRGBA = 0x101010ff;
-    private Music backgroundMusic;
+    private MusicManager musicManager;
 
     // 获得当前场景
     public ScreenManager getScreenManager() {
         return screenManager;
     }
 
+    // 主游戏创建
     @Override
     public void create() {
         screenManager = new ScreenManager();
         screenManager.setScreen(new GameWelcomeScene(this));
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Light.mp3"));
-        backgroundMusic.setVolume(0.2f);
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+        musicManager = new MusicManager();
+        musicManager.loadMusic(AudioEnums.Background1, "audio/Light.mp3");
+        musicManager.setVolume(0.2f);  // 设置音量为50%
+        musicManager.play(AudioEnums.Background1, true);
     }
 
     // 重绘逻辑
@@ -51,14 +52,8 @@ public class Main extends ApplicationAdapter {
     // 资源释放
     @Override
     public void dispose() {
-        if (screenManager != null) {
-            screenManager.dispose(); // 释放当前屏幕的资源
-        }
-    }
-
-    // 游戏开始
-    public void startGame() {
-        System.out.println("Game start.");
+        if (screenManager != null) screenManager.dispose(); // 释放屏幕资源
+        if (musicManager != null) musicManager.dispose(); // 释放音乐资源
     }
 
     public void exit() {
