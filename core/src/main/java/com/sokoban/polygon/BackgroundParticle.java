@@ -115,6 +115,7 @@ public class BackgroundParticle extends TextureSquare {
         if (period == ParticleEnums.Dead) {
             remove();
             super.remove();
+            clear();
             return;
         }
         

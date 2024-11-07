@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,8 +25,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
+import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
-import com.sokoban.polygon.BackgroundParticle;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.ImageButtonContainer;;
 
@@ -52,8 +51,8 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private final float backgroundAlpha = 0.15f;
     private final float backgroundBlueAmount = 0.5f;
 
-    private List<BackgroundParticle> backgroundParticle;
-    private final float particleCreateInverval = 1f;
+    // Background 粒子
+    private BackgroundGrayParticleManager bgParticle;
 
     // Shader
     private ShaderProgram blurShader;
@@ -62,7 +61,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     // Texture UI
     ImageButtonContainer buttonContainer;
     private Texture[] backgroundTextures;
-    private Texture particleTexture;
 
     private ImageButton startGameButton;
     private ImageButton aboutButton;
@@ -171,17 +169,9 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             }
         }, 1, backgroundMoveInverval);
 
-        // 初始化背景粒子
-        particleTexture = new Texture("img/particle1.png");
-        backgroundParticle = new ArrayList<>();
-
-        // 粒子 Timer 控制粒子创建
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                addNewParticle();
-            }
-        }, 0, particleCreateInverval);
+        // 背景粒子
+        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle.startCreateParticles();
 
         // 添加 UI
         stage.addActor(startGameButton);
@@ -237,14 +227,6 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         ));
 
         square2.addAction(Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
-    }
-
-    // 创建新粒子
-    private void addNewParticle() {
-        final float x = MathUtils.random(0f, 16f), y = MathUtils.random(0f, 16f);
-        BackgroundParticle newParticle = new BackgroundParticle(x, y, particleTexture);
-        backgroundParticle.add(newParticle);
-        stage.addActor(newParticle);
     }
 
     // 重绘逻辑

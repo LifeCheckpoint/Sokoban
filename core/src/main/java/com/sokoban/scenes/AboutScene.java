@@ -1,25 +1,19 @@
 package com.sokoban.scenes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.sokoban.Main;
+import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
-import com.sokoban.polygon.BackgroundParticle;
 import com.sokoban.polygon.ImageButtonContainer;
 
 public class AboutScene extends ApplicationAdapter implements Screen {
@@ -31,13 +25,11 @@ public class AboutScene extends ApplicationAdapter implements Screen {
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
 
-    // Background
-    private List<BackgroundParticle> backgroundParticle;
-    private final float particleCreateInverval = 1f;
+    // Background 粒子
+    private BackgroundGrayParticleManager bgParticle;
 
     // Texture UI
     ImageButtonContainer buttonContainer;
-    private Texture particleTexture;
 
     private ImageButton returnButton;
 
@@ -73,30 +65,12 @@ public class AboutScene extends ApplicationAdapter implements Screen {
             }
         });
 
-        // 初始化背景粒子
-        particleTexture = new Texture("img/particle1.png");
-        backgroundParticle = new ArrayList<>();
-
-        // 粒子 Timer 控制粒子创建
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                addNewParticle();
-            }
-        }, 0, particleCreateInverval);
+        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle.startCreateParticles();
 
         // 添加 UI
         stage.addActor(returnButton);
     }
-
-    // 创建新粒子
-    private void addNewParticle() {
-        final float x = MathUtils.random(0f, 16f), y = MathUtils.random(0f, 16f);
-        BackgroundParticle newParticle = new BackgroundParticle(x, y, particleTexture);
-        backgroundParticle.add(newParticle);
-        stage.addActor(newParticle);
-    }
-
 
     // 输入事件处理
     private void input() {
