@@ -21,8 +21,8 @@ import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
-import com.sokoban.polygon.TextureSquare;
-import com.sokoban.polygon.ImageButtonContainer;;
+import com.sokoban.polygon.ImageButtonContainer;
+import com.sokoban.polygon.TextureSquare;;
 
 public class GameWelcomeScene extends SokoyoScene {
 

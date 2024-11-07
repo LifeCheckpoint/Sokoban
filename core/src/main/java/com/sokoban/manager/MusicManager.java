@@ -77,19 +77,6 @@ public class MusicManager {
         }
     }
 
-    // 获取音量
-    public float getVolume() {
-        return volume;
-    }
-
-    public void dispose() {
-        stop();
-        for (Music music : musicMap.values()) {
-            music.dispose();
-        }
-        musicMap.clear();
-    }
-
     // 切换到指定音乐
     public void switchMusic(AudioEnums audioName) {
         if (currentMusic != null && currentMusic.isPlaying()) {
@@ -103,5 +90,17 @@ public class MusicManager {
             currentMusic.stop();
         }
         play(audioName, loop);
+    }
+
+    public void dispose() {
+        stop();
+        for (Music music : musicMap.values()) {
+            music.dispose();
+        }
+        musicMap.clear();
+    }
+
+    public float getVolume() {
+        return volume;
     }
 }

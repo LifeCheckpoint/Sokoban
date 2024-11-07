@@ -23,10 +23,6 @@ public class MouseMovingTraceManager {
         this.screenCenter = new Vector2(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2);
     }
 
-    public Viewport getViewPort() {
-        return viewport;
-    }
-
     // 设置相机位置并更新
     public void setPositionWithUpdate() {
         setPositionWithUpdate(Gdx.input.getX(), Gdx.input.getY());
@@ -45,11 +41,13 @@ public class MouseMovingTraceManager {
         viewport.getCamera().position.set(mouse2CenterOffsetScaled.add(screenCenter), 0);
         viewport.getCamera().update();
     }
-
+    
+    public Viewport getViewPort() {
+        return viewport;
+    }
     public float getMaxScreenOffset() {
         return maxScreenOffset;
     }
-
     public float getScreenMoveScaling() {
         return screenMoveScaling;
     }

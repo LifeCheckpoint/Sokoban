@@ -55,18 +55,15 @@ public class ScreenManager {
         for(Screen thisScreen : screenStack) thisScreen.dispose();
         screenStack.clear();
     }
-
     // 彻底清理所有场景
     public void dispose() {
         clearScreenStack();
         if (currentScreen != null) currentScreen.dispose();
     }
-
     // 执行屏幕渲染
     public void render(float delta) {
         if (currentScreen != null) {
             currentScreen.render(delta);
         }
     }
-
 }

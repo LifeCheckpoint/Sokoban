@@ -78,49 +78,37 @@ public class BackgroundGrayParticleManager {
     public List<BackgroundParticle> getBackgroundParticle() {
         return backgroundParticle;
     }
-
     public float getParticleCreateInverval() {
         return particleCreateInverval;
     }
-
     public Stage getStage() {
         return stage;
     }
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
     public float getMinX() {
         return minX;
     }
-
     public void setMinX(float minX) {
         this.minX = minX;
     }
-
     public float getMinY() {
         return minY;
     }
-
     public void setMinY(float minY) {
         this.minY = minY;
     }
-
     public float getMaxX() {
         return maxX;
     }
-
     public void setMaxX(float maxX) {
         this.maxX = maxX;
     }
-
     public float getMaxY() {
         return maxY;
     }
-
     public void setMaxY(float maxY) {
         this.maxY = maxY;
     }
-    
 }
