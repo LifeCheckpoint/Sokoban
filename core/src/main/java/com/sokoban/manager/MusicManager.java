@@ -9,13 +9,15 @@ import java.util.Map;
 
 // 管理音乐播放
 public class MusicManager {
+    private AssetsPathManager apManager;
     private Map<AudioEnums, Music> musicMap;
     private Music currentMusic;
     private float volume = 1.0f;
     private boolean isPlaying = false;
 
-    public MusicManager() {
+    public MusicManager(AssetsPathManager apManager) {
         musicMap = new HashMap<>();
+        this.apManager = apManager;
     }
 
     public void loadMusic(AudioEnums audioName, String filePath) {
@@ -23,7 +25,7 @@ public class MusicManager {
             Gdx.app.log("MusicManager", "Music already loaded: " + audioName.toString());
             return;
         }
-        Music music = AssetsPathManager.audioLoad(filePath);
+        Music music = apManager.get(filePath, Music.class);
         musicMap.put(audioName, music);
     }
 

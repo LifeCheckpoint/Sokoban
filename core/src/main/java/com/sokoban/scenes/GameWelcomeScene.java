@@ -19,9 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
+import com.sokoban.enums.AudioEnums;
 import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
+import com.sokoban.manager.MusicManager;
 import com.sokoban.polygon.ImageButtonContainer;
 import com.sokoban.polygon.TextureSquare;;
 
@@ -29,6 +31,9 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
+
+    // 背景音乐
+    private MusicManager musicManager;
 
     // Background
     private TextureSquare[][] backgroundGrid;
@@ -64,6 +69,12 @@ public class GameWelcomeScene extends SokoyoScene {
     @Override
     public void init() {
         super.init();
+
+        musicManager = new MusicManager(gameMain.getAssetsPathManager());
+        musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
+        musicManager.loadMusic(AudioEnums.Background2, "Rain.mp3");
+        musicManager.setVolume(0.2f);
+        musicManager.play(AudioEnums.Background1, true);
 
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
@@ -318,6 +329,7 @@ public class GameWelcomeScene extends SokoyoScene {
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();
+        if (musicManager != null) musicManager.dispose(); // 释放音乐资源
         super.dispose();
     }
 
