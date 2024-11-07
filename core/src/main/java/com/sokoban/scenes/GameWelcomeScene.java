@@ -61,6 +61,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
     private ImageButton startGameButton;
     private ImageButton aboutButton;
     private ImageButton exitButton;
+    private ImageButton settingsButton;
 
     public GameWelcomeScene(Main gameMain) {
         this.gameMain = gameMain;
@@ -100,13 +101,16 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
 
         // 初始化按钮
         startGameButton = buttonContainer.createButton("img/start_game.png");
-        startGameButton.setPosition(1.5f, 2.2f);
+        startGameButton.setPosition(1.5f, 2.8f);
 
         aboutButton = buttonContainer.createButton("img/about.png");
-        aboutButton.setPosition(1f, 1f);
+        aboutButton.setPosition(1f, 1.7f);
 
         exitButton = buttonContainer.createButton("img/exit.png");
-        exitButton.setPosition(3.5f, 1f);
+        exitButton.setPosition(3.5f, 1.5f);
+
+        settingsButton = buttonContainer.createButton("img/settings.png");
+        settingsButton.setPosition(1.5f, 0.8f);
 
         // 开始按钮监听
         startGameButton.addListener(new ClickListener() {
@@ -131,6 +135,15 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Exit");
                 gameMain.exit();
+            }
+        });
+
+        // 设置按钮监听
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Settings");
+                gameMain.getScreenManager().setScreen(new SettingScene(gameMain));
             }
         });
 
@@ -172,6 +185,7 @@ public class GameWelcomeScene extends ApplicationAdapter implements Screen {
         stage.addActor(startGameButton);
         stage.addActor(aboutButton);
         stage.addActor(exitButton);
+        stage.addActor(settingsButton);
     }
 
     // 随机交换相邻的两个矩形
