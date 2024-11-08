@@ -13,7 +13,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-// 文件路径管理
+/**
+ * 统一资源管理器
+ * @author Life_Checkpoint
+ */
 public class AssetsPathManager {
     private static final String audioPath = "audio";
     private static final String texturePath = "img";
@@ -23,20 +26,16 @@ public class AssetsPathManager {
 
     AssetManager assetManager = new AssetManager();
 
-    // 用于存储资源类型与路径的映射
+    // 资源类型-路径映射表
     private Map<Class<?>, List<String>> assetsMap = new HashMap<>();
 
     /**
-     * 向加载字典加入资源
+     * 向映射表加入资源
      * @param resourceClass 资源类型
      * @param resourcePath 资源路径
      */
     public <T> void addAsset(Class<T> resourceClass, String resourcePath) {
         assetsMap.computeIfAbsent(resourceClass, k -> new ArrayList<>()).add(resourcePath);
-    }
-
-    public void setAssetsMap(Map<Class<?>, List<String>> assetsMap) {
-        this.assetsMap = assetsMap;
     }
 
     // 更新加载器
@@ -93,7 +92,7 @@ public class AssetsPathManager {
 
         // 未实际加载的资源进行同步加载
         if (!assetManager.isLoaded(fullPath)) {
-            Gdx.app.log("AssetsPathManager", fullPath + " is not loaded by AssetManager. Load synchronously");
+            Gdx.app.log("AssetsPathManager", fullPath + " hasn't loaded by AssetManager. Load synchronously");
             assetManager.load(fullPath, resourceClass);
             assetManager.finishLoading();
         }

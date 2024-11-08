@@ -5,7 +5,10 @@ import java.util.Stack;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
-// 通过栈方式管理场景
+/**
+ * 场景栈切换管理器
+ * @author Life_Checkpoint
+ */
 public class ScreenManager {
     private Screen currentScreen;
     private Stack<Screen> screenStack;
@@ -14,13 +17,19 @@ public class ScreenManager {
         screenStack = new Stack<>();
     }
 
-    // 场景进入并清理后台
+    /** 
+     * 场景进入并彻底清理后台场景
+     * @param screen 进入场景
+     */
     public void setScreenWithClear(Screen screen) {
         if (!screenStack.isEmpty()) clearScreenStack();
         setScreenWithoutSaving(screen);
     }
 
-    // 场景进入，不清理后台，但也不保存前一个场景到后台
+    /** 
+     * 场景进入，保持后台栈不变，不将当前场景压入后台
+     * @param screen 进入场景
+     */
     public void setScreenWithoutSaving(Screen screen) {
         if (currentScreen != null) {
             currentScreen.dispose();
@@ -29,7 +38,10 @@ public class ScreenManager {
         currentScreen.show();
     }
 
-    // 场景进入，不清理后台，同时保存前一个场景到后台
+    /** 
+     * 场景进入，将当前场景压入后台
+     * @param screen 进入场景
+     */
     public void setScreen(Screen screen) {
         if (currentScreen != null) {
             currentScreen.hide();
@@ -39,7 +51,9 @@ public class ScreenManager {
         currentScreen.show();
     }
 
-    // 返回上一个场景，当前场景被销毁
+    /** 
+     * 返回上一个场景，当前场景被彻底销毁
+     */
     public void returnPreviousScreen() {
         if (screenStack.isEmpty() || currentScreen == null) {
             Gdx.app.error("ScreenManager", "The Previous / Current Screen is not exists");
@@ -60,7 +74,7 @@ public class ScreenManager {
         clearScreenStack();
         if (currentScreen != null) currentScreen.dispose();
     }
-    // 执行屏幕渲染
+    // 执行场景渲染
     public void render(float delta) {
         if (currentScreen != null) {
             currentScreen.render(delta);
