@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Interpolation;
 public class ImageButtonContainer {
     private final float buttonScale = 1.2f;
     private final float scaleTime = 0.2f;
-    private float scaling = 0.006f; // 适用于 64 宽度图像缩放到一般高度
+    private float scaling = 0.0065f; // 适用于 64 宽度图像缩放到一般高度
     private AssetsPathManager apManager;
 
     public ImageButtonContainer(float scaling, AssetsPathManager apManager) {
@@ -53,7 +53,6 @@ public class ImageButtonContainer {
     
         // 设置按钮的响应区域（保持与显示区域一致）
         button.setTouchable(Touchable.enabled);
-        // button.setBounds(button.getX(), button.getY(), originalWidth * scaling, originalHeight * scaling);
     
         // 按钮增大缩小缓动
         button.addListener(new InputListener() {
