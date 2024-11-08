@@ -150,11 +150,12 @@ public class GameWelcomeScene extends SokoyoScene {
             }
         }
 
+        SokoyoScene thisScene = this;
         // 背景 Timer 控制网格矩形移动，交换随机相邻的两个矩形
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                swapRandomAdjacentSquares();
+                if (gameMain.getScreenManager().getCurrentScreen().equals(thisScene)) swapRandomAdjacentSquares();
             }
         }, 1, backgroundMoveInverval);
 
