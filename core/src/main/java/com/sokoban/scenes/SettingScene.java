@@ -3,13 +3,11 @@ package com.sokoban.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-// import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.ImageButtonContainer;
-// import com.sokoban.polygon.ImageLabelContainer;
 
 public class SettingScene extends SokoyoScene {
 
@@ -18,8 +16,7 @@ public class SettingScene extends SokoyoScene {
 
     // UI
     private ImageButtonContainer buttonContainer;
-    // private ImageLabelContainer labelContainer;
-    private ImageButton returnButton;
+    private Image returnButton;
 
     public SettingScene(Main gameMain) {
         super(gameMain);

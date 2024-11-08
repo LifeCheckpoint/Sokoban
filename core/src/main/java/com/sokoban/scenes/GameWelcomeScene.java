@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
@@ -57,10 +57,10 @@ public class GameWelcomeScene extends SokoyoScene {
     ImageButtonContainer buttonContainer;
     private Texture[] backgroundTextures;
 
-    private ImageButton startGameButton;
-    private ImageButton aboutButton;
-    private ImageButton exitButton;
-    private ImageButton settingsButton;
+    private Image startGameButton;
+    private Image aboutButton;
+    private Image exitButton;
+    private Image settingsButton;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -79,7 +79,7 @@ public class GameWelcomeScene extends SokoyoScene {
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
         
-        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(0.006f, gameMain.getAssetsPathManager());
 
         // 初始化按钮
         startGameButton = buttonContainer.createButton("start_game.png");
