@@ -25,6 +25,10 @@ public abstract class SokoyoScene extends ApplicationAdapter implements Screen {
         return gameMain;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
     @Override
     public void show() {
         if (!initFlag) {

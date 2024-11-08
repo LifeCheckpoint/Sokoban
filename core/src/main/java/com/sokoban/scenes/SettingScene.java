@@ -41,7 +41,7 @@ public class SettingScene extends SokoyoScene {
             }
         });
 
-        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
+        bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
         // 添加 UI

@@ -159,7 +159,7 @@ public class GameWelcomeScene extends SokoyoScene {
         }, 1, backgroundMoveInverval);
 
         // 背景粒子
-        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
+        bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
         // 添加 UI

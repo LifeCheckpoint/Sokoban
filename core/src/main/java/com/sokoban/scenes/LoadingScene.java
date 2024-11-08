@@ -1,7 +1,6 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,11 +16,11 @@ public class LoadingScene extends SokoyoScene {
     private Image label;
     private WhiteProgressBar progressBar;
     private SpriteBatch batch;
-    private Screen targetScreen;
+    private SokoyoScene targetScreen;
     private float progress;
     private AssetsPathManager assetsPathManager;
 
-    public LoadingScene(Main gameMain, Screen targetScreen, AssetsPathManager assetsPathManager) {
+    public LoadingScene(Main gameMain, SokoyoScene targetScreen, AssetsPathManager assetsPathManager) {
         super(gameMain);
         this.targetScreen = targetScreen;
         this.assetsPathManager = assetsPathManager;
@@ -32,7 +31,7 @@ public class LoadingScene extends SokoyoScene {
         super.init();
 
         // 初始化背景粒子系统
-        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
+        bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
         // 初始化用于渲染的SpriteBatch
