@@ -35,7 +35,7 @@ public class AboutScene extends SokoyoScene {
 
         moveTrace = new MouseMovingTraceManager(viewport);
 
-        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
         labelContainer = new ImageLabelContainer(0.3f, gameMain.getAssetsPathManager());
 
         // 初始化按钮

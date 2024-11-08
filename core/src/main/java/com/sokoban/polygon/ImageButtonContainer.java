@@ -16,12 +16,16 @@ import com.badlogic.gdx.math.Interpolation;
 public class ImageButtonContainer {
     private final float buttonScale = 1.2f;
     private final float scaleTime = 0.2f;
-    private float scaling;
+    private float scaling = 0.006f; // 适用于 64 宽度图像缩放到一般高度
     private AssetsPathManager apManager;
 
     public ImageButtonContainer(float scaling, AssetsPathManager apManager) {
         this.apManager = apManager;
         this.scaling = scaling;
+    }
+
+    public ImageButtonContainer(AssetsPathManager apManager) {
+        this.apManager = apManager;
     }
 
     // 从文件读取图片

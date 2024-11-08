@@ -25,7 +25,7 @@ public class SettingScene extends SokoyoScene {
     public void init() {
         super.init();
 
-        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
         // labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮

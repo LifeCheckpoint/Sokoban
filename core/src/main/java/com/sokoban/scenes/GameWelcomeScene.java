@@ -79,20 +79,20 @@ public class GameWelcomeScene extends SokoyoScene {
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
         
-        buttonContainer = new ImageButtonContainer(0.006f, gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
 
         // 初始化按钮
         startGameButton = buttonContainer.createButton("start_game.png");
-        startGameButton.setPosition(1.5f, 2.8f);
+        startGameButton.setPosition(1f, 2.6f);
 
         aboutButton = buttonContainer.createButton("about.png");
-        aboutButton.setPosition(1f, 1.7f);
+        aboutButton.setPosition(1f, 1.6f);
 
         exitButton = buttonContainer.createButton("exit.png");
-        exitButton.setPosition(3.5f, 1.5f);
+        exitButton.setPosition(3f, 0.8f);
 
         settingsButton = buttonContainer.createButton("settings.png");
-        settingsButton.setPosition(1.5f, 0.8f);
+        settingsButton.setPosition(1f, 0.8f);
 
         // 开始按钮监听
         startGameButton.addListener(new ClickListener() {
