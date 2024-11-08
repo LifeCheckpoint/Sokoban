@@ -41,28 +41,28 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
         > main  游戏主程序代码
             > java\com\sokoban
                 > enums     游戏用到的枚举常数
-                    > AudioEnums.java       音频枚举
-                    > ParticleEnums.java    粒子枚举
+                    AudioEnums.java     音频枚举
+                    ParticleEnums.java  粒子枚举
                 > manager   游戏一些运行机制的管理
-                    > AssetsPathManager                     所有素材的统一管理类
-                    > BackgroundGrayParticleManager.java    背景灰色漂浮粒子效果管理类
-                    > JsonManager.java                      JSON 数据管理类
-                    > MouseMovingTraceManager.java          画面鼠标跟踪管理类
-                    > MusicManager.java                     背景音乐管理类
-                    > ScreenManager.java                    游戏场景切换管理类
+                    AssetsPathManager                   所有素材的统一管理类
+                    BackgroundGrayParticleManager.java  背景灰色漂浮粒子效果管理类
+                    JsonManager.java                    JSON 数据管理类
+                    MouseMovingTraceManager.java        画面鼠标跟踪管理类
+                    MusicManager.java                   背景音乐管理类
+                    ScreenManager.java                  游戏场景切换管理类
                 > polygon   游戏一些图形组件的实现
-                    > BackgroundParticle.java   背景粒子图形
-                    > ImageButtonContainer.java 图像按钮容器
-                    > ImageLabelContainer.java  图像标签容器
-                    > InputTextField.java       输入框
-                    > TextureSquare.java        素材方块
-                    > WhiteProgressBar.java     进度条
+                    BackgroundParticle.java     背景粒子图形
+                    ImageButtonContainer.java   图像按钮容器
+                    ImageLabelContainer.java    图像标签容器
+                    InputTextField.java         输入框
+                    TextureSquare.java          素材方块
+                    WhiteProgressBar.java       进度条
                 > scenes    游戏不同场景的实现
-                    > AboutScene.java       关于场景
-                    > GameWelcomeScene.java 游戏主界面
-                    > LoadingScene.java     素材加载界面
-                    > SettingScene.java     设置界面
-                    > SokoyoScene.java      抽象界面类，是所有界面的父类
+                    AboutScene.java         关于场景
+                    GameWelcomeScene.java   游戏主界面
+                    LoadingScene.java       素材加载界面
+                    SettingScene.java       设置界面
+                    SokoyoScene.java        抽象界面类，是所有界面的父类
                 AssetsList.java     存放要加载素材的类
                 Main.java           游戏主类，负责总体控制
                 MathUtilsEx.java    数学计算补充类
@@ -75,7 +75,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 > gradle            构建项目依赖包的 gradle
 > lwjgl3            游戏绘图引擎相关文件
     > src\main\java\com\sokoban\lwjgl3
-        > Lwjgl3Launcher.java   游戏启动配置
-        > StartupHelper.java    游戏启动器
+        Lwjgl3Launcher.java 游戏启动配置
+        StartupHelper.java  游戏启动器
 README.md           此文档
 ```
