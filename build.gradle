@@ -57,7 +57,7 @@ configure(subprojects) {
 
 subprojects {
   version = '$projectVersion'
-  ext.appName = 'GDXSokoban'
+  ext.appName = 'sokoban'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
