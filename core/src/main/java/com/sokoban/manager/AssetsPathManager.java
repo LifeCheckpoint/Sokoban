@@ -7,9 +7,11 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -23,6 +25,8 @@ public class AssetsPathManager {
     private static final String shaderPath = "shaders";
     private static final String skinPath = "ui";
     private static final String soundPath = "sound";
+
+    private static final boolean usingMipMap = true;
 
     AssetManager assetManager = new AssetManager();
 
@@ -51,6 +55,12 @@ public class AssetsPathManager {
     // 将加载字典注入加载器
     // 注意，不包含 Shader
     public void startAssetsLoading() {
+
+        // mipmap配置
+        TextureParameter textureMipmapParam = new TextureParameter();
+        textureMipmapParam.minFilter = TextureFilter.Linear;
+        textureMipmapParam.genMipMaps = true;
+
         for (Map.Entry<Class<?>, List<String>> entry : assetsMap.entrySet()) {
             Class<?> resourceClass = entry.getKey();
             List<String> resourcePaths = entry.getValue();
@@ -58,7 +68,8 @@ public class AssetsPathManager {
             for (String resourcePath : resourcePaths) {
                 // 根据类型加载资源
                 if (resourceClass == Texture.class) {
-                    assetManager.load(textureFile(resourcePath), Texture.class);
+                     if (usingMipMap) assetManager.load(textureFile(resourcePath), Texture.class, textureMipmapParam);
+                     else assetManager.load(textureFile(resourcePath), Texture.class);
 
                 } else if (resourceClass == Music.class) {
                     assetManager.load(audioFile(resourcePath), Music.class);
