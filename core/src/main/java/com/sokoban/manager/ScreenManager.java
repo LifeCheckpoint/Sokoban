@@ -64,6 +64,10 @@ public class ScreenManager {
         currentScreen.show();
     }
 
+    // 获取当前屏幕
+    public Screen getCurrentScreen() {
+        return currentScreen;
+    }
     // 清理所有后台场景
     public void clearScreenStack() {
         for(Screen thisScreen : screenStack) thisScreen.dispose();
