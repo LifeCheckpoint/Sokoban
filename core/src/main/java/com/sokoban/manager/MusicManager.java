@@ -13,6 +13,7 @@ public class MusicManager {
     private AssetsPathManager apManager;
     private Map<AudioEnums, Music> musicMap;
     private Music currentMusic;
+    private AudioEnums currentMusicName;
     private float volume = 1.0f;
     private boolean isPlaying = false;
 
@@ -42,10 +43,12 @@ public class MusicManager {
             currentMusic.setLooping(loop);
             currentMusic.setVolume(volume);
             currentMusic.play();
+            currentMusicName = audioName;
             isPlaying = true;
 
             // 设置播放结束回调
             currentMusic.setOnCompletionListener(music -> onMusicCompleted());
+
         } else {
             Gdx.app.error("MusicManager", "Music not found: " + audioName);
         }
@@ -53,7 +56,13 @@ public class MusicManager {
 
     private void onMusicCompleted() {
         if (currentMusic != null) {
-            play(getRandomAudioEnum(), false);
+            AudioEnums newRandomMusic = currentMusicName;
+            if (musicMap.size() >= 2) {
+                do newRandomMusic = getRandomAudioEnum();
+                while (newRandomMusic == currentMusicName);
+            }
+
+            play(newRandomMusic, false);
         }
     }
 
