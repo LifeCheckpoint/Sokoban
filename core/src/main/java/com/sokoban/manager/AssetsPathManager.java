@@ -8,6 +8,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,6 +19,7 @@ public class AssetsPathManager {
     private static final String texturePath = "img";
     private static final String shaderPath = "shaders";
     private static final String skinPath = "ui";
+    private static final String soundPath = "sound";
 
     AssetManager assetManager = new AssetManager();
 
@@ -64,6 +66,9 @@ public class AssetsPathManager {
 
                 } else if (resourceClass == Skin.class) {
                     assetManager.load(skinFile(resourcePath), Skin.class);
+
+                } else if (resourceClass == Sound.class) {
+                    assetManager.load(soundFile(resourcePath), Sound.class);
                 }
             }
         }
@@ -82,13 +87,17 @@ public class AssetsPathManager {
             fullPath = audioFile(resourcePath);
         } else if (resourceClass == Skin.class) {
             fullPath = skinFile(resourcePath);
+        } else if (resourceClass == Sound.class) {
+            fullPath = soundFile(resourcePath);
         }
 
+        // 未实际加载的资源进行同步加载
         if (!assetManager.isLoaded(fullPath)) {
             Gdx.app.log("AssetsPathManager", fullPath + " is not loaded by AssetManager. Load synchronously");
             assetManager.load(fullPath, resourceClass);
             assetManager.finishLoading();
         }
+
         return assetManager.get(fullPath, resourceClass);
     }
 
@@ -107,6 +116,9 @@ public class AssetsPathManager {
     public static Skin skinLoad(String skinJsonFile) {
         return new Skin(Gdx.files.internal(skinFile(skinJsonFile)));
     }
+    public static Sound soundLoad(String soundFile) {
+        return Gdx.audio.newSound(Gdx.files.internal(soundFile(soundFile)));
+    }
 
     public static String audioFile(String fileName) {
         return audioPath + "/" + fileName;
@@ -120,6 +132,9 @@ public class AssetsPathManager {
     public static String skinFile(String fileName) {
         return skinPath + "/" + fileName;
     }
+    public static String soundFile(String fileName) {
+        return soundPath + "/" + fileName;
+    }
 
     public static String getAudioPath() {
         return audioPath;
@@ -132,6 +147,9 @@ public class AssetsPathManager {
     }
     public static String getSkinPath() {
         return skinPath;
+    }
+    public static String getSoundPath() {
+        return soundPath;
     }
 
     public void dispose() {
