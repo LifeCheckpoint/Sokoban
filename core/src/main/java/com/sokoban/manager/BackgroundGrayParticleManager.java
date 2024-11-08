@@ -17,9 +17,9 @@ public class BackgroundGrayParticleManager {
     private float minX, minY, maxX, maxY;
     private Timer.Task creatingTask;
 
-    public BackgroundGrayParticleManager(Stage stage) {
+    public BackgroundGrayParticleManager(Stage stage, AssetsPathManager apManager) {
         // 初始化背景粒子
-        particleTexture = new Texture("img/particle1.png");
+        particleTexture = apManager.get("particle1.png", Texture.class);
         backgroundParticle = new ArrayList<>();
         setStage(stage);
 
@@ -37,9 +37,9 @@ public class BackgroundGrayParticleManager {
         };
     }
 
-    public BackgroundGrayParticleManager(Stage stage, float minX, float minY, float maxX, float maxY) {
+    public BackgroundGrayParticleManager(Stage stage, AssetsPathManager apManager, float minX, float minY, float maxX, float maxY) {
         // 初始化背景粒子
-        particleTexture = new Texture("img/particle1.png");
+        particleTexture = apManager.get("particle1.png", Texture.class);
         backgroundParticle = new ArrayList<>();
         setStage(stage);
 

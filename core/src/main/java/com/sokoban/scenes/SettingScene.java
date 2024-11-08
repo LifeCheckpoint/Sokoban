@@ -28,7 +28,7 @@ public class SettingScene extends SokoyoScene {
     public void init() {
         super.init();
 
-        buttonContainer = new ImageButtonContainer(0.3f);
+        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
         // labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮
@@ -44,7 +44,7 @@ public class SettingScene extends SokoyoScene {
             }
         });
 
-        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
         bgParticle.startCreateParticles();
 
         // 添加 UI

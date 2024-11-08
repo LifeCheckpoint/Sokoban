@@ -79,7 +79,7 @@ public class GameWelcomeScene extends SokoyoScene {
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
         
-        buttonContainer = new ImageButtonContainer(0.3f);
+        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
 
         // 初始化按钮
         startGameButton = buttonContainer.createButton("start_game.png");
@@ -159,7 +159,7 @@ public class GameWelcomeScene extends SokoyoScene {
         }, 1, backgroundMoveInverval);
 
         // 背景粒子
-        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
         bgParticle.startCreateParticles();
 
         // 添加 UI

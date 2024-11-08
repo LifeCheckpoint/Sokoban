@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.manager.AssetsPathManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 
@@ -15,13 +16,15 @@ public class ImageButtonContainer {
     private float maxButtonHeight;
     private final float buttonScale = 1.2f;
     private final float scaleTime = 0.2f;
+    private AssetsPathManager apManager;
 
-    public ImageButtonContainer(float maxButtonHeight) {
+    public ImageButtonContainer(float maxButtonHeight, AssetsPathManager apManager) {
         this.maxButtonHeight = maxButtonHeight;
+        this.apManager = apManager;
     }
 
     public Drawable readDrawableFromFile(String internalpath) {
-        return new TextureRegionDrawable(new TextureRegion(AssetsPathManager.textureLoad(internalpath)));
+        return new TextureRegionDrawable(new TextureRegion(apManager.get(internalpath, Texture.class)));
     }
 
     public ImageButton createButton(String internalpath) {

@@ -36,8 +36,8 @@ public class AboutScene extends SokoyoScene {
 
         moveTrace = new MouseMovingTraceManager(viewport);
 
-        buttonContainer = new ImageButtonContainer(0.3f);
-        labelContainer = new ImageLabelContainer(0.3f);
+        buttonContainer = new ImageButtonContainer(0.3f, gameMain.getAssetsPathManager());
+        labelContainer = new ImageLabelContainer(0.3f, gameMain.getAssetsPathManager());
 
         // 初始化按钮
         returnButton = buttonContainer.createButton("left_arrow.png");
@@ -68,7 +68,7 @@ public class AboutScene extends SokoyoScene {
             }
         });
 
-        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
         bgParticle.startCreateParticles();
 
         // 添加 UI

@@ -64,6 +64,7 @@ public class Main extends ApplicationAdapter {
 
     public void exit() {
         // Do some Data check...
+        apManager.dispose();
         dispose();
         System.exit(0);
     }

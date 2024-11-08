@@ -83,6 +83,12 @@ public class AssetsPathManager {
         } else if (resourceClass == Skin.class) {
             fullPath = skinFile(resourcePath);
         }
+
+        if (!assetManager.isLoaded(fullPath)) {
+            Gdx.app.log("AssetsPathManager", fullPath + " is not loaded by AssetManager. Load synchronously");
+            assetManager.load(fullPath, resourceClass);
+            assetManager.finishLoading();
+        }
         return assetManager.get(fullPath, resourceClass);
     }
 
@@ -127,4 +133,9 @@ public class AssetsPathManager {
     public static String getSkinPath() {
         return skinPath;
     }
+
+    public void dispose() {
+        assetManager.dispose();
+    }
+
 }

@@ -32,7 +32,7 @@ public class LoadingScene extends SokoyoScene {
         super.init();
 
         // 初始化背景粒子系统
-        bgParticle = new BackgroundGrayParticleManager(stage);
+        bgParticle = new BackgroundGrayParticleManager(stage, gameMain.getAssetsPathManager());
         bgParticle.startCreateParticles();
 
         // 初始化用于渲染的SpriteBatch
