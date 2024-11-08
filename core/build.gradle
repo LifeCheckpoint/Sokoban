@@ -8,8 +8,21 @@ dependencies {
   api "com.github.tommyettinger:anim8-gdx:$anim8Version"
   api "com.github.tommyettinger:libgdx-utils-box2d:$utilsBox2dVersion"
   api "com.github.tommyettinger:libgdx-utils:$utilsVersion"
+  api 'com.fasterxml.jackson.core:jackson-databind:2.13.5'
+  api 'com.fasterxml.jackson.core:jackson-core:2.13.5'
+  api 'com.fasterxml.jackson.core:jackson-annotations:2.13.5'
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
+  testImplementation 'org.testng:testng:7.4.0'
+}
+
+test {
+  useTestNG()
+}
+
+repositories {
+  mavenCentral() // 或 jcenter()
 }
