@@ -2,6 +2,7 @@ package com.sokoban;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.sokoban.manager.AssetsPathManager;
 
 public class AssetsList {
@@ -26,5 +27,8 @@ public class AssetsList {
         apm.addAsset(Texture.class, "start_game.png");
         apm.addAsset(Texture.class, "target.png");
         apm.addAsset(Texture.class, "white_pixel.png");
+
+        // Spine Atlas
+        apm.addAsset(TextureAtlas.class, "img/test_player1/player1_sp.atlas");
     }
 }

@@ -25,6 +25,7 @@ import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.polygon.ImageButtonContainer;
+import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;;
 
 public class GameWelcomeScene extends SokoyoScene {
@@ -62,6 +63,9 @@ public class GameWelcomeScene extends SokoyoScene {
     private Image exitButton;
     private Image settingsButton;
 
+    // Spine
+    private SpineObject playerObject;
+
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
     }
@@ -70,18 +74,20 @@ public class GameWelcomeScene extends SokoyoScene {
     public void init() {
         super.init();
 
+        // 背景音乐处理
         musicManager = new MusicManager(gameMain.getAssetsPathManager());
         musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
         musicManager.loadMusic(AudioEnums.Background2, "Rain.mp3");
         musicManager.setVolume(0.2f);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
+        // 鼠标跟踪
         moveTrace = new MouseMovingTraceManager(viewport);
         initShaders();
         
+        // 初始化按钮
         buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
 
-        // 初始化按钮
         startGameButton = buttonContainer.createButton("start_game.png");
         startGameButton.setPosition(1f, 2.6f);
 
@@ -163,11 +169,22 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
+        // Spine 背景玩家装饰
+        playerObject = new SpineObject(gameMain, "img/test_player1/player1_sp.atlas", "img/test_player1/player1_sp.json");
+        playerObject.setAnimation(0, "left", true);
+
+        playerObject.setPosition(4f, 4f);
+        playerObject.setSize(1f, 1f);
+
+        // 或直接设置缩放
+        // playerObject.setScale(2f, 2f);
+
         // 添加 UI
         stage.addActor(startGameButton);
         stage.addActor(aboutButton);
         stage.addActor(exitButton);
         stage.addActor(settingsButton);
+        stage.addActor(playerObject);
     }
 
     // 随机交换相邻的两个矩形

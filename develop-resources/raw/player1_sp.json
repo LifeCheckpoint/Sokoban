@@ -1,0 +1,18 @@
+{"skeleton":{"images":"player1_sp/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"down","bone":"root","attachment":"down"},
+	{"name":"body","bone":"root","attachment":"body"},
+	{"name":"le","bone":"root","attachment":"le"},
+	{"name":"re","bone":"root","attachment":"re"}
+],
+"skins":{
+	"default":{
+		"re":{"re":{"x":150.5,"y":159,"width":19,"height":18}},
+		"le":{"le":{"x":87,"y":157.5,"width":18,"height":17}},
+		"body":{"body":{"x":128,"y":128,"width":240,"height":240}},
+		"down":{"down":{"x":128,"y":23,"width":226,"height":30}}
+	}
+},
+"animations":{"animation":{}}
+}
