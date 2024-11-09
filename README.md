@@ -32,6 +32,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 4. 通过高层抽象节省繁复画面元素操作，代码重用率高
 5. 基于 `TestNG` 的充分单元 / 覆盖率测试
 6. 完全原创的美术素材，附加素材源文件
+7. 充分运用 AI 工具，极大加快项目学习编程工作，使工作流在高度抽象的逻辑中进行，必要的底层细节在学习后可以交由 AI 实现
 
 ~~（只是因为要答辩所以写这些）~~
 
@@ -100,8 +101,7 @@ README.md           此文档
 ### Task 1: Game Initialization (10 points) 
 
 1. ❌ After the user logs in or chooses the guest mode, the game will directly enter a level (a level selection interface is an advanced requirement) and correctly display the map. The game should also display the level number and the number of character movement. 
-2. ❌ The game should allow players to restart a new game at any time during gameplay. (Not 
-exiting the program and run it again.)
+2. ❌ The game should allow players to restart a new game at any time during gameplay. (Not exiting the program and run it again.)
 3. ❌ When restarting a new game, the game data needs to be consistent with the new game.
 
 ### Task 2: Multi-user Login (15 points) 
@@ -114,9 +114,7 @@ exiting the program and run it again.)
 ### Task 3: Save and Load Games (15 points) 
 
 1. ❌ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
-2. ❌ From the game start interface, players can choose to load their last save which should 
-contain information about the the game board's status and the number of moves made so 
-far.
+2. ❌ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
 3. ❌ Each user's save data is unique.
 4. ❌ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
 5. ▶️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
@@ -126,8 +124,7 @@ far.
 1. ❌ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
 2. ❌ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
 3. ❌ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
-4. ❌ Game Victory: The goal of the game is to push all the boxes onto the designated target 
-locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
+4. ❌ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
 5. ❌ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
 
 ### Task 5: Graphical User Interface (GUI) (10 points) 
