@@ -18,21 +18,42 @@ public class BackgroundParticle extends TextureSquare {
     
     private float age = 0f;
     private float originAlpha = 1f;
-
+    
     public BackgroundParticle(float startX, float startY, Texture texture) {
         super(texture);
+        float particleSize = MathUtils.random(0.05f, 0.15f);
+        init(startX, startY, texture, particleSize, (particleSize - 0.05f) / (0.15f - 0.05f));
+    }
 
+    public BackgroundParticle(float startX, float startY, Texture texture, float minParticleSize, float maxParticleSize) {
+        super(texture);
+        float particleSize = MathUtils.random(minParticleSize, maxParticleSize);
+        init(startX, startY, texture, particleSize, (particleSize - minParticleSize) / (maxParticleSize - minParticleSize));
+    }
+
+    /**
+     * 初始化粒子
+     * @param startX 粒子出发 X 坐标
+     * @param startY 粒子出发 Y 坐标
+     * @param texture 粒子贴图素材
+     * @param particleSize 粒子大小
+     * @param sizeRatio 粒子相对大小，用于计算位移影响
+     */
+    private void init(float startX, float startY, Texture texture, float particleSize, float sizeRatio) {
+        setSize(particleSize);
+
+        // 优化速度分配曲线
+        sizeRatio = Interpolation.pow3In.apply(sizeRatio);
+        
         setTrace(
             startX, 
             startY, 
-            MathUtils.random(-0.5f, 0.5f),
-            MathUtils.random(-0.5f, 0.5f),
-            MathUtils.random(-3f, 3f),
-            MathUtils.random(-3f, 3f)
+            MathUtils.random(-1f * (1 - sizeRatio), 1f * (1 - sizeRatio)),
+            MathUtils.random(-1f * (1 - sizeRatio), 1f * (1 - sizeRatio)),
+            MathUtils.random(-4f * (1 - sizeRatio), 4f * (1 - sizeRatio)),
+            MathUtils.random(-4f * (1 - sizeRatio), 4f * (1 - sizeRatio))
         );
-
-        setSize(MathUtils.random(0.05f, 0.15f));
-
+        
         setLifePeriod(
             0.5f,
             MathUtils.random(5f, 8f),
