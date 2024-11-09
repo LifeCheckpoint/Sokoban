@@ -1,3 +1,9 @@
+## vscode counter:
+.VSCodeCounter/
+
+## vscode:
+.vscode/
+
 ## Gradle:
 .gradle/
 gradle-app.setting
