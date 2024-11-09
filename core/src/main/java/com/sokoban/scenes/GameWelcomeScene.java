@@ -74,8 +74,10 @@ public class GameWelcomeScene extends SokoyoScene {
     public void init() {
         super.init();
 
+        AssetsPathManager apManager = gameMain.getAssetsPathManager();
+
         // 背景音乐处理
-        musicManager = new MusicManager(gameMain.getAssetsPathManager());
+        musicManager = new MusicManager(apManager);
         musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
         musicManager.loadMusic(AudioEnums.Background2, "Rain.mp3");
         musicManager.setVolume(0.2f);
@@ -86,7 +88,7 @@ public class GameWelcomeScene extends SokoyoScene {
         initShaders();
         
         // 初始化按钮
-        buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(apManager);
 
         startGameButton = buttonContainer.createButton("start_game.png");
         startGameButton.setPosition(1f, 2.6f);
@@ -137,9 +139,9 @@ public class GameWelcomeScene extends SokoyoScene {
 
         // 背景纹理组
         backgroundTextures = new Texture[]{
-            AssetsPathManager.textureLoad("box.png"),
-            AssetsPathManager.textureLoad("box_active.png"),
-            AssetsPathManager.textureLoad("target.png")
+            apManager.get("box.png", Texture.class),
+            apManager.get("box_active.png", Texture.class),
+            apManager.get("target.png", Texture.class)
         };
 
         // 背景初始化
@@ -175,9 +177,6 @@ public class GameWelcomeScene extends SokoyoScene {
 
         playerObject.setPosition(4f, 4f);
         playerObject.setSize(1f, 1f);
-
-        // 或直接设置缩放
-        // playerObject.setScale(2f, 2f);
 
         // 添加 UI
         stage.addActor(startGameButton);
