@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "BKOYOdRSOhhm67kMBwXtJGX2qOI",
+	"hash": "0LRG5gNUoMa+jwspEBE8lj7Tj2c",
 	"spine": "3.8.75",
 	"x": 2.31,
 	"y": 2,
@@ -54,12 +54,43 @@
 		"bones": {
 			"bone": {
 				"translate": [
-					{ "x": -26.98, "curve": 0.582, "c3": 0 },
+					{ "x": -23.44 },
+					{ "time": 0.1, "x": -24.74, "curve": 0.582, "c3": 0 },
 					{ "time": 1 }
 				],
 				"scale": [
-					{ "x": 0, "curve": 0.582, "c3": 0 },
+					{ "x": 0, "curve": "stepped" },
+					{ "time": 0.1, "x": 0, "curve": 0.582, "c3": 0 },
 					{ "time": 1 }
+				],
+				"shear": [
+					{ "x": -180, "curve": "stepped" },
+					{ "time": 0.1, "x": -180, "curve": 0.51, "c3": 0 },
+					{ "time": 1 }
+				]
+			},
+			"bone2": {
+				"scale": [
+					{ "x": 0.9, "y": 0.9, "curve": 0.288, "c3": 0 },
+					{ "time": 0.8333 }
+				]
+			}
+		}
+	},
+	"disabled": {
+		"bones": {
+			"bone": {
+				"rotate": [
+					{ "curve": 0.495, "c3": 0 },
+					{ "time": 1, "angle": -45 }
+				],
+				"scale": [
+					{ "curve": 0.495, "c3": 0 },
+					{ "time": 1, "x": 0.119, "y": 1.324 }
+				],
+				"shear": [
+					{ "curve": 0.495, "c3": 0 },
+					{ "time": 1, "x": -180 }
 				]
 			}
 		}
@@ -69,11 +100,21 @@
 			"bone": {
 				"translate": [
 					{ "curve": 0.543, "c3": 0 },
-					{ "time": 1, "x": 26.82 }
+					{ "time": 0.8333, "x": 26.82 }
 				],
 				"scale": [
 					{ "curve": 0.543, "c3": 0 },
-					{ "time": 1, "x": 0 }
+					{ "time": 0.8333, "x": 0 }
+				],
+				"shear": [
+					{ "curve": 0.928, "c3": 0.808 },
+					{ "time": 0.8333, "x": -180 }
+				]
+			},
+			"bone2": {
+				"scale": [
+					{ "time": 0.3333, "curve": 0.25, "c3": 0 },
+					{ "time": 1, "x": 0.9, "y": 0.9 }
 				]
 			}
 		}

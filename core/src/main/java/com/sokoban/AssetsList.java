@@ -27,6 +27,7 @@ public class AssetsList {
         apm.addAsset(Texture.class, "start_game.png");
         apm.addAsset(Texture.class, "target.png");
         apm.addAsset(Texture.class, "white_pixel.png");
+        apm.addAsset(Texture.class, "mipmap.png");
 
         // Spine Atlas
         apm.addAsset(TextureAtlas.class, "img/test_player1/player1_sp.atlas");

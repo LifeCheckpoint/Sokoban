@@ -6,7 +6,7 @@ import com.sokoban.Main;
 
 /**
  * 利用 Spine 实现的复选框组件，提供动画效果和状态管理
- * 支持悬停效果、禁用状态和动画过渡
+ * 支持禁用状态和动画过渡
  */
 public class CheckboxObject extends SpineObject {
     private boolean isChecked;
@@ -20,6 +20,7 @@ public class CheckboxObject extends SpineObject {
         
         setChecked(true);
         setEnabled(true);
+        setDefaultMixTime(0f);
         setSize(0.25f, 0.25f);
 
         // 设置 check 监听
@@ -31,12 +32,17 @@ public class CheckboxObject extends SpineObject {
             }
         });
     }
-
+    
     public void setChecked(boolean isChecked) {
         if (this.isChecked != isChecked) {
             this.isChecked = isChecked;
             setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
         }
+    }
+
+    public void filp() {
+        isChecked = !isChecked;
+        setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
     }
 
     public void setEnabled(boolean isEnabled) {

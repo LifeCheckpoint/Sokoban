@@ -24,7 +24,7 @@ import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
-import com.sokoban.polygon.CheckboxObject;
+import com.sokoban.polygon.CheckboxTextObject;
 import com.sokoban.polygon.ImageButtonContainer;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;;
@@ -66,7 +66,7 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // Spine
     private SpineObject playerObject;
-    private SpineObject checkBox1;
+    private CheckboxTextObject mipmapCheckbox;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -181,8 +181,10 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setSize(1f, 1f);
 
         // Spine 复选框
-        checkBox1 = new CheckboxObject(gameMain);
-        checkBox1.setPosition(7f, 4f);
+        ImageButtonContainer mipmapImageContainer = new ImageButtonContainer(apManager);
+        Image mipmap = mipmapImageContainer.create("mipmap.png");
+        mipmapCheckbox = new CheckboxTextObject(gameMain, mipmap, true, true, 0.2f);
+        mipmapCheckbox.setPosition(6f, 3f);
 
         // 添加 UI
         stage.addActor(startGameButton);
@@ -190,7 +192,8 @@ public class GameWelcomeScene extends SokoyoScene {
         stage.addActor(exitButton);
         stage.addActor(settingsButton);
         stage.addActor(playerObject);
-        stage.addActor(checkBox1);
+        stage.addActor(mipmapCheckbox.getCheckbox());
+        stage.addActor(mipmapCheckbox.getCheckboxText());
     }
 
     // 随机交换相邻的两个矩形
