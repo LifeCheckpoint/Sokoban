@@ -29,7 +29,7 @@ public class SettingScene extends SokoyoScene {
         // labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮
-        returnButton = buttonContainer.createButton("left_arrow.png");
+        returnButton = buttonContainer.create("left_arrow.png");
         returnButton.setPosition(0.5f, 8f);
 
         // 返回按钮监听

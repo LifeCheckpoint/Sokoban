@@ -1,61 +1,35 @@
 package com.sokoban.polygon;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.manager.AssetsPathManager;
 
-public class ImageLabelContainer {
-    private float maxLabelHeight;
-    private AssetsPathManager apManager;
+/**
+ * 图像标签类<br><br>
+ * 与图像类功能几乎一致
+ * @author Life_Checkpoint
+ */
+public class ImageLabelContainer extends ImageContainer {
 
-    public ImageLabelContainer(float maxLabelHeight, AssetsPathManager apManager) {
-        this.maxLabelHeight = maxLabelHeight;
-        this.apManager = apManager;
+    public ImageLabelContainer(float scaling, AssetsPathManager apManager) {
+        super(scaling, apManager);
     }
 
-    public Image resetLabel(Image label, String internalpath, float maxLabelHeight) {
-        return resetLabel(label, readDrawableFromFile(internalpath), maxLabelHeight);
+    public ImageLabelContainer(AssetsPathManager apManager) {
+        super(apManager);
     }
 
-    public Image resetLabel(Image label, Drawable drawable, float maxLabelHeight) {
-        label.setDrawable(drawable);
-        label.setSize(label.getPrefWidth() / label.getPrefHeight() * maxLabelHeight, maxLabelHeight);
-        return label;
+    public Image create(String internalpath) {
+        return create(readDrawableFromFile(internalpath));
+    }
+    public Image create(String internalpath, float scaling) {
+        return create(readDrawableFromFile(internalpath), scaling);
+    }
+    public Image create(Drawable drawable) {
+        return super.create(drawable, false);
+    }
+    public Image create(Drawable drawable, float scaling) {
+        return super.create(drawable, false, scaling);
     }
 
-    public Image resetLabel(Image label, String internalpath) {
-        return resetLabel(label, readDrawableFromFile(internalpath));
-    }
-
-    public Image resetLabel(Image label, Drawable drawable) {
-        label.setDrawable(drawable);
-        label.setSize(label.getPrefWidth() / label.getPrefHeight() * maxLabelHeight, maxLabelHeight);
-        return label;
-    }
-
-    public Drawable readDrawableFromFile(String internalpath) {
-        return new TextureRegionDrawable(new TextureRegion(apManager.get(internalpath, Texture.class)));
-    }
-
-    public Image createLabel(String internalpath) {
-        return createLabel(readDrawableFromFile(internalpath));
-    }
-
-    public Image createLabel(Drawable drawable) {
-        Image label = new Image(drawable);
-        label.setSize(label.getPrefWidth() / label.getPrefHeight() * maxLabelHeight, maxLabelHeight);
-        return label;
-    }
-
-    public Image createLabel(String internalpath, float maxLabelHeight) {
-        return createLabel(readDrawableFromFile(internalpath), maxLabelHeight);
-    }
-
-    public Image createLabel(Drawable drawable, float maxLabelHeight) {
-        Image label = new Image(drawable);
-        label.setSize(label.getPrefWidth() / label.getPrefHeight() * maxLabelHeight, maxLabelHeight);
-        return label;
-    }
 }

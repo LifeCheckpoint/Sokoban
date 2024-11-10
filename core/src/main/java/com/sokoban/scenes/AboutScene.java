@@ -23,6 +23,7 @@ public class AboutScene extends SokoyoScene {
     private ImageLabelContainer labelContainer;
     private Image returnButton;
     private Image infoLabel;
+    private Image infoLabelEgg;
 
     private int clickLabelCount = 0;
 
@@ -36,15 +37,17 @@ public class AboutScene extends SokoyoScene {
         moveTrace = new MouseMovingTraceManager(viewport);
 
         buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
-        labelContainer = new ImageLabelContainer(0.3f, gameMain.getAssetsPathManager());
+        labelContainer = new ImageLabelContainer(0.008f, gameMain.getAssetsPathManager());
 
         // 初始化按钮
-        returnButton = buttonContainer.createButton("left_arrow.png");
+        returnButton = buttonContainer.create("left_arrow.png");
         returnButton.setPosition(0.5f, 8f);
 
         // 信息 label
-        infoLabel = labelContainer.createLabel("about_info.png", 3f);
+        infoLabel = labelContainer.create("about_info.png");
+        infoLabelEgg = labelContainer.create("about_info2.png");
         infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
+        infoLabelEgg.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -55,14 +58,15 @@ public class AboutScene extends SokoyoScene {
             }
         });
 
-        // label 点击彩蛋
+        // label 点击彩蛋，触发后监听失效
         infoLabel.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 clickLabelCount += 1;
                 if (clickLabelCount >= 10) {
                     System.out.println("Colorful eggs");
-                    labelContainer.resetLabel(infoLabel, "about_info2.png", 3f);
+                    stage.addActor(infoLabelEgg);
+                    infoLabel.remove();
                 }
             }
         });

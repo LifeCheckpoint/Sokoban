@@ -90,16 +90,16 @@ public class GameWelcomeScene extends SokoyoScene {
         // 初始化按钮
         buttonContainer = new ImageButtonContainer(apManager);
 
-        startGameButton = buttonContainer.createButton("start_game.png");
+        startGameButton = buttonContainer.create("start_game.png");
         startGameButton.setPosition(1f, 2.6f);
 
-        aboutButton = buttonContainer.createButton("about.png");
+        aboutButton = buttonContainer.create("about.png");
         aboutButton.setPosition(1f, 1.6f);
 
-        exitButton = buttonContainer.createButton("exit.png");
+        exitButton = buttonContainer.create("exit.png");
         exitButton.setPosition(3f, 0.8f);
 
-        settingsButton = buttonContainer.createButton("settings.png");
+        settingsButton = buttonContainer.create("settings.png");
         settingsButton.setPosition(1f, 0.8f);
 
         // 开始按钮监听
