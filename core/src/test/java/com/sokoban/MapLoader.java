@@ -10,6 +10,7 @@ import java.util.*;
  * 地图<br><br>操作<br><br>...<br><br>操作<br><br>地图<br><br>
  * ————————————<br><br>
  * 地图为二维字串，使用符号表进行编制，后续将会映射实际逻辑中的数字
+ * @author Life_Checkpoint
  */
 public class MapLoader {
 
