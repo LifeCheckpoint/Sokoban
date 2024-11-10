@@ -30,5 +30,6 @@ public class AssetsList {
 
         // Spine Atlas
         apm.addAsset(TextureAtlas.class, "img/test_player1/player1_sp.atlas");
+        apm.addAsset(TextureAtlas.class, "img/checkbox/checkbox.atlas");
     }
 }

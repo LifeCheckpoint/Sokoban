@@ -65,6 +65,7 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // Spine
     private SpineObject playerObject;
+    private SpineObject checkBox1;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -178,12 +179,27 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setPosition(4f, 4f);
         playerObject.setSize(1f, 1f);
 
+        // Spine 复选框
+        checkBox1 = new SpineObject(gameMain, "img/checkbox/checkbox.atlas", "img/checkbox/checkbox.json");
+        checkBox1.setAnimation(0, "checked", false);
+        
+        checkBox1.setPosition(7f, 4f);
+        checkBox1.setSize(0.2f, 0.2f);
+
+        checkBox1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                checkBox1.setAnimation(1, "unchecked", false);
+            }
+        });
+
         // 添加 UI
         stage.addActor(startGameButton);
         stage.addActor(aboutButton);
         stage.addActor(exitButton);
         stage.addActor(settingsButton);
         stage.addActor(playerObject);
+        stage.addActor(checkBox1);
     }
 
     // 随机交换相邻的两个矩形

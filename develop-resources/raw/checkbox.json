@@ -1,0 +1,14 @@
+{"skeleton":{"images":"checkbox/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"bound","bone":"root","attachment":"bound"},
+	{"name":"fill","bone":"root","attachment":"fill"}
+],
+"skins":{
+	"default":{
+		"fill":{"fill":{"x":32,"y":32,"width":56,"height":54}},
+		"bound":{"bound":{"x":32,"y":32,"width":60,"height":60}}
+	}
+},
+"animations":{"animation":{}}
+}

@@ -1,0 +1,82 @@
+{
+"skeleton": {
+	"hash": "BKOYOdRSOhhm67kMBwXtJGX2qOI",
+	"spine": "3.8.75",
+	"x": 2.31,
+	"y": 2,
+	"width": 60,
+	"height": 60,
+	"images": "./checkbox/",
+	"audio": "D:/wroot/Sokoban/develop-resources/raw"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": 32.17, "y": 32.44 },
+	{ "name": "bone2", "parent": "root", "x": 36.95, "y": 6.44 }
+],
+"slots": [
+	{ "name": "bound", "bone": "root", "attachment": "bound" },
+	{ "name": "fill", "bone": "root", "attachment": "fill" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"fill": {
+				"fill": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 3, 0, 1, 2, 3 ],
+					"vertices": [ 1, 1, 28.14, -27.44, 1, 1, 1, -27.86, -27.44, 1, 1, 1, -27.86, 26.56, 1, 1, 1, 28.14, 26.56, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 56,
+					"height": 54
+				}
+			},
+			"bound": {
+				"bound": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 2, 25.36, -4.44, 1, 1, 2, -34.64, -4.44, 1, 1, 2, -34.64, 55.56, 1, 1, 2, 25.36, 55.56, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 60,
+					"height": 60
+				}
+			}
+		}
+	}
+],
+"animations": {
+	"checked": {
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "x": -26.98, "curve": 0.582, "c3": 0 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "x": 0, "curve": 0.582, "c3": 0 },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"unchecked": {
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "curve": 0.543, "c3": 0 },
+					{ "time": 1, "x": 26.82 }
+				],
+				"scale": [
+					{ "curve": 0.543, "c3": 0 },
+					{ "time": 1, "x": 0 }
+				]
+			}
+		}
+	}
+}
+}

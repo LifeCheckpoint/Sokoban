@@ -225,66 +225,66 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
- * 渲染骨骼动画
- */
-@Override
-public void draw(Batch parentBatch, float parentAlpha) {
-    if (skeleton == null || batch == null) return;
-    
-    float worldX = getX();
-    float worldY = getY();
-    
-    // 暂停父级batch的绘制
-    parentBatch.end();
-    
-    try {
-        // 使用PolygonSpriteBatch绘制
-        batch.begin();
-        batch.setProjectionMatrix(parentBatch.getProjectionMatrix());
-        batch.setTransformMatrix(parentBatch.getTransformMatrix());
+     * 渲染骨骼动画
+     */
+    @Override
+    public void draw(Batch parentBatch, float parentAlpha) {
+        if (skeleton == null || batch == null) return;
         
-        // 更新骨骼变换
-        skeleton.setPosition(worldX, worldY);
-        skeleton.getRootBone().setScale(
-            flipX ? -scaleX : scaleX,
-            flipY ? -scaleY : scaleY
-        );
-        skeleton.updateWorldTransform();
+        float worldX = getX();
+        float worldY = getY();
         
-        // 正常绘制骨骼
-        skeletonRenderer.draw(batch, skeleton);
+        // 暂停父级batch的绘制
+        parentBatch.end();
         
-        // 调试绘制
-        if (debugBones) {
+        try {
+            // 使用PolygonSpriteBatch绘制
+            batch.begin();
+            batch.setProjectionMatrix(parentBatch.getProjectionMatrix());
+            batch.setTransformMatrix(parentBatch.getTransformMatrix());
+            
+            // 更新骨骼变换
+            skeleton.setPosition(worldX, worldY);
+            skeleton.getRootBone().setScale(
+                flipX ? -scaleX : scaleX,
+                flipY ? -scaleY : scaleY
+            );
+            skeleton.updateWorldTransform();
+            
+            // 正常绘制骨骼
+            skeletonRenderer.draw(batch, skeleton);
+            
+            // 调试绘制
             if (debugBones) {
-                // 如果是4.0以下版本使用 debugRenderer.draw(batch, skeleton);
-                skeletonRenderer.setVertexEffect(null);
-                // 绘制骨骼线条
-                ShapeRenderer shapes = new ShapeRenderer();
-                shapes.setProjectionMatrix(batch.getProjectionMatrix());
-                shapes.begin(ShapeRenderer.ShapeType.Line);
-                for (Bone bone : skeleton.getBones()) {
-                    float length = bone.getData().getLength();
-                    float x = bone.getWorldX();
-                    float y = bone.getWorldY();
-                    float rotation = bone.getWorldRotationX();
-                    float endX = x + length * MathUtils.cosDeg(rotation);
-                    float endY = y + length * MathUtils.sinDeg(rotation);
-                    shapes.setColor(Color.RED);
-                    shapes.line(x, y, endX, endY);
-                }
-                shapes.end();
-            }   
+                if (debugBones) {
+                    // 如果是4.0以下版本使用 debugRenderer.draw(batch, skeleton);
+                    skeletonRenderer.setVertexEffect(null);
+                    // 绘制骨骼线条
+                    ShapeRenderer shapes = new ShapeRenderer();
+                    shapes.setProjectionMatrix(batch.getProjectionMatrix());
+                    shapes.begin(ShapeRenderer.ShapeType.Line);
+                    for (Bone bone : skeleton.getBones()) {
+                        float length = bone.getData().getLength();
+                        float x = bone.getWorldX();
+                        float y = bone.getWorldY();
+                        float rotation = bone.getWorldRotationX();
+                        float endX = x + length * MathUtils.cosDeg(rotation);
+                        float endY = y + length * MathUtils.sinDeg(rotation);
+                        shapes.setColor(Color.RED);
+                        shapes.line(x, y, endX, endY);
+                    }
+                    shapes.end();
+                }   
+            }
+            
+        } catch (Exception e) {
+            Gdx.app.error("SpineObject", "Failed to draw skeleton: " + e.getMessage());
+        } finally {
+            batch.end();
+            // 恢复父级batch的绘制
+            parentBatch.begin();
         }
-        
-    } catch (Exception e) {
-        Gdx.app.error("SpineObject", "Failed to draw skeleton: " + e.getMessage());
-    } finally {
-        batch.end();
-        // 恢复父级batch的绘制
-        parentBatch.begin();
     }
-}
 
     /**
      * 获取当前动画状态
