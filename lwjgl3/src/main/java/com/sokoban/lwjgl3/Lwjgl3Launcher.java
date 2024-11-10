@@ -2,13 +2,29 @@ package com.sokoban.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.sokoban.CoreTest;
 import com.sokoban.Main;
 
 /** Launches Sokoban. */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
-        if (StartupHelper.startNewJvmIfRequired()) return;
-        createApplication();
+        // 选择是否进入测试模式
+        boolean runTests = false;
+
+        // 检查启动参数
+        for (String arg : args) {
+            if (arg.equals("--test")) {
+                runTests = true;
+                break;
+            }
+        }
+
+        if (!runTests) {
+            if (StartupHelper.startNewJvmIfRequired()) return;
+            createApplication();
+        } else {
+            CoreTest.main();
+        }
     }
 
     private static Lwjgl3Application createApplication() {
