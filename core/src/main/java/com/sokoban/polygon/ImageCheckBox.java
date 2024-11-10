@@ -1,125 +1,162 @@
 package com.sokoban.polygon;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
- * 复选框类
- * @author Claude
+ * 复选框组件，提供动画效果和状态管理
+ * 支持悬停效果、禁用状态和动画过渡
  */
-public class ImageCheckBox extends Actor implements Disposable {
+public class ImageCheckBox extends Actor {
+    // 动画相关常量
     private static final float ANIMATION_DURATION = 0.2f;
     private static final float CHECK_MARK_SCALE = 0.7f;
     private static final float HOVER_TRANSITION_DURATION = 0.15f;
     
+    // 纹理资源
     private final Texture backgroundTexture;
     private final Texture checkMarkTexture;
-    private final Image hintImage;
-    private final Sound clickSound;
-    private final Sound hoverSound;
     
-    private boolean isChecked = false;
-    private boolean isEnabled = true;
-    private boolean isHovered = false;
-    private float animationProgress = 0f;
-    private float hoverProgress = 0f;
-    private boolean isAnimating = false;
+    // 状态属性
+    private boolean isChecked;
+    private boolean isEnabled;
+    private boolean isHovered;
+    private float animationProgress;
+    private float hoverProgress;
+    private boolean isAnimating;
     
     // 颜色定义
     private final Color NORMAL_COLOR = new Color(0.2f, 0.2f, 0.2f, 1f);
     private final Color HOVER_COLOR = new Color(0.3f, 0.3f, 0.3f, 1f);
     private final Color DISABLED_COLOR = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-    private final Color currentColor = new Color();
+    private final Color currentColor = new Color(NORMAL_COLOR);
     
-    public ImageCheckBox(float size) {
-        backgroundTexture = createWhiteSquareTexture((int)size);
-        checkMarkTexture = createWhiteSquareTexture((int)(size * CHECK_MARK_SCALE));
+    // 回调接口
+    private CheckBoxChangeListener changeListener;
+    
+    /**
+     * 复选框状态变化监听器
+     */
+    public interface CheckBoxChangeListener {
+        void onCheckBoxChanged(ImageCheckBox checkBox, boolean isChecked);
+    }
+    
+    /**
+     * 构造函数
+     * @param size 复选框大小
+     * @param backgroundTexure 背景纹理
+     * @param checkMarkTexure 选中标记纹理
+     * @param ownsTextures 是否负责释放纹理资源
+     */
+    public ImageCheckBox(float size, Texture backgroundTexure, Texture checkMarkTexure) {
+        this.backgroundTexture = backgroundTexure;
+        this.checkMarkTexture = checkMarkTexure;
         
-        setSize(size + size * 1.5f, size);
+        setSize(size, size);
+        setEnabled(true);
         
-        hintImage = new Image();
-        hintImage.setSize(size * 1.5f, size);
-        hintImage.setPosition(size, 0);
-        
-        // 加载音效
-        clickSound = Gdx.audio.newSound(Gdx.files.internal("sounds/click.wav"));
-        hoverSound = Gdx.audio.newSound(Gdx.files.internal("sounds/hover.wav"));
-        
-        // 添加输入监听器
-        addListener(new ClickListener() {
+        initializeInputHandling();
+    }
+    
+    /**
+     * 初始化输入处理
+     */
+    private void initializeInputHandling() {
+        addListener(new InputListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (isEnabled) {
                     toggle();
-                    clickSound.play(0.5f);
+                    return true;
                 }
+                return false;
             }
             
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if (isEnabled) {
-                    isHovered = true;
-                    hoverSound.play(0.2f);
-                }
+                setHovered(true);
             }
             
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                isHovered = false;
+                setHovered(false);
             }
         });
     }
     
-    private Texture createWhiteSquareTexture(int size) {
-        // 创建白色方形纹理的实现代码
-        // TODO
-        return null;
-    }
-    
+    /**
+     * 切换选中状态
+     */
     public void toggle() {
         if (isEnabled) {
-            isChecked = !isChecked;
+            setChecked(!isChecked);
+        }
+    }
+    
+    /**
+     * 更新悬停状态
+     */
+    public void setHovered(boolean hovered) {
+        if (isEnabled && this.isHovered != hovered) {
+            this.isHovered = hovered;
+        }
+    }
+    
+    /**
+     * 设置启用状态
+     */
+    public void setEnabled(boolean enabled) {
+        if (this.isEnabled != enabled) {
+            this.isEnabled = enabled;
+            setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
+            if (!enabled) {
+                isHovered = false;
+                hoverProgress = 0f;
+            }
+        }
+    }
+    
+    /**
+     * 设置选中状态
+     */
+    public void setChecked(boolean checked) {
+        if (isEnabled && this.isChecked != checked) {
+            this.isChecked = checked;
             isAnimating = true;
             animationProgress = 0f;
+            
+            if (changeListener != null) {
+                changeListener.onCheckBoxChanged(this, checked);
+            }
         }
     }
     
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
-        setTouchable(enabled ? Touchable.enabled : Touchable.disabled);
-        
-        // 更新提示图像的颜色
-        if (enabled) {
-            hintImage.setColor(Color.WHITE);
-        } else {
-            hintImage.setColor(DISABLED_COLOR);
-        }
-    }
-    
-    public void setHintImage(Texture texture) {
-        hintImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
-        if (!isEnabled) {
-            hintImage.setColor(DISABLED_COLOR);
-        }
+    /**
+     * 设置状态变化监听器
+     */
+    public void setChangeListener(CheckBoxChangeListener listener) {
+        this.changeListener = listener;
     }
     
     @Override
     public void act(float delta) {
         super.act(delta);
         
-        // 处理选中/取消选中动画
+        updateAnimationState(delta);
+        updateHoverState(delta);
+        updateColor();
+    }
+    
+    /**
+     * 更新选中/取消动画状态
+     */
+    private void updateAnimationState(float delta) {
         if (isAnimating) {
             animationProgress += delta / ANIMATION_DURATION;
             if (animationProgress >= 1f) {
@@ -127,15 +164,23 @@ public class ImageCheckBox extends Actor implements Disposable {
                 isAnimating = false;
             }
         }
-        
-        // 处理悬停动画
+    }
+    
+    /**
+     * 更新悬停动画状态
+     */
+    private void updateHoverState(float delta) {
         if (isHovered && isEnabled) {
             hoverProgress = Math.min(1f, hoverProgress + delta / HOVER_TRANSITION_DURATION);
         } else {
             hoverProgress = Math.max(0f, hoverProgress - delta / HOVER_TRANSITION_DURATION);
         }
-        
-        // 计算当前颜色
+    }
+    
+    /**
+     * 更新当前颜色
+     */
+    private void updateColor() {
         if (isEnabled) {
             currentColor.set(NORMAL_COLOR).lerp(HOVER_COLOR, hoverProgress);
         } else {
@@ -146,69 +191,49 @@ public class ImageCheckBox extends Actor implements Disposable {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Color batchColor = batch.getColor();
-        float alpha = batchColor.a * parentAlpha;
+        float alpha = batchColor.a * parentAlpha * getColor().a;
         
         // 绘制背景
         batch.setColor(
-            currentColor.r,
-            currentColor.g,
-            currentColor.b,
-            currentColor.a * alpha
+            currentColor.r * getColor().r,
+            currentColor.g * getColor().g,
+            currentColor.b * getColor().b,
+            alpha
         );
         
         batch.draw(backgroundTexture, 
-                  getX(), getY(), 
-                  backgroundTexture.getWidth(), 
-                  backgroundTexture.getHeight());
+            getX(), getY(),
+            getWidth(), getHeight()
+        );
         
-        // 绘制选中标志（带动画）
+        // 绘制选中标记
         if ((isChecked || isAnimating) && isEnabled) {
             float progress = isChecked ? 
-                Interpolation.smoother.apply(animationProgress) :
+                Interpolation.smoother.apply(animationProgress) : 
                 Interpolation.smoother.apply(1f - animationProgress);
                 
             float scale = CHECK_MARK_SCALE * progress;
-            float centerOffset = (backgroundTexture.getWidth() - 
-                                checkMarkTexture.getWidth() * scale) / 2;
+            float centerOffset = (getWidth() - checkMarkTexture.getWidth() * scale) / 2;
             
-            batch.setColor(1f, 1f, 1f, alpha * progress);
+            batch.setColor(getColor().r, getColor().g, getColor().b, alpha * progress);
             batch.draw(checkMarkTexture,
-                      getX() + centerOffset,
-                      getY() + centerOffset,
-                      checkMarkTexture.getWidth() * scale,
-                      checkMarkTexture.getHeight() * scale);
+                getX() + centerOffset,
+                getY() + centerOffset,
+                checkMarkTexture.getWidth() * scale,
+                checkMarkTexture.getHeight() * scale
+            );
         }
         
-        // 绘制提示图像
-        hintImage.draw(batch, parentAlpha);
-        
-        // 恢复batch的原始颜色
         batch.setColor(batchColor);
     }
     
-    @Override
-    public void dispose() {
-        backgroundTexture.dispose();
-        checkMarkTexture.dispose();
-        clickSound.dispose();
-        hoverSound.dispose();
-    }
-    
-    // Getter方法
     public boolean isChecked() {
         return isChecked;
     }
-    
     public boolean isEnabled() {
         return isEnabled;
     }
-    
-    // Setter方法
-    public void setChecked(boolean checked) {
-        if (this.isChecked != checked && isEnabled) {
-            this.isChecked = checked;
-            isAnimating = true;
-            animationProgress = 0f;
-        }
+    public boolean isHovered() {
+        return isHovered;
     }
 }
