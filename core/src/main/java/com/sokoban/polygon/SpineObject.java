@@ -21,19 +21,19 @@ import com.sokoban.Main;
  */
 public class SpineObject extends Actor implements Disposable {
     // 资源相关
-    private final TextureAtlas playerAtlas;
-    private final SkeletonData playerSkeletonData;
-    private final AnimationStateData playerAnimationData;
-    private final PolygonSpriteBatch batch;
-    private final SkeletonRenderer skeletonRenderer;
+    private TextureAtlas playerAtlas;
+    private SkeletonData playerSkeletonData;
+    private AnimationStateData playerAnimationData;
+    private PolygonSpriteBatch batch;
+    private SkeletonRenderer skeletonRenderer;
     
     // 状态相关
-    private final Skeleton skeleton;
-    private final AnimationState animationState;
+    private Skeleton skeleton;
+    private AnimationState animationState;
     
     // 缓存原始尺寸，避免重复获取
-    private final float originalWidth;
-    private final float originalHeight;
+    private float originalWidth;
+    private float originalHeight;
     
     // 变换相关
     private float scaleX = 1f;
@@ -46,6 +46,9 @@ public class SpineObject extends Actor implements Disposable {
     
     // 调试模式
     private boolean debugBones = false;
+
+    // 仅在子类可见的无参构造
+    protected SpineObject() {}
 
     /**
      * 构造函数

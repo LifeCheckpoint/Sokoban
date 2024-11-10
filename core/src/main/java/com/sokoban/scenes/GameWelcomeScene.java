@@ -24,6 +24,7 @@ import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
+import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.ImageButtonContainer;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;;
@@ -180,18 +181,8 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setSize(1f, 1f);
 
         // Spine 复选框
-        checkBox1 = new SpineObject(gameMain, "img/checkbox/checkbox.atlas", "img/checkbox/checkbox.json");
-        checkBox1.setAnimation(0, "checked", false);
-        
+        checkBox1 = new CheckboxObject(gameMain);
         checkBox1.setPosition(7f, 4f);
-        checkBox1.setSize(0.2f, 0.2f);
-
-        checkBox1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                checkBox1.setAnimation(1, "unchecked", false);
-            }
-        });
 
         // 添加 UI
         stage.addActor(startGameButton);
