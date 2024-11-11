@@ -18,10 +18,10 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
- * 统一资源管理器
+ * 统一资源管理器 AssetsPathManager
  * @author Life_Checkpoint
  */
-public class AssetsPathManager {
+public class APManager {
     private static final String audioPath = "audio";
     private static final String texturePath = "img";
     private static final String shaderPath = "shaders";
@@ -34,7 +34,7 @@ public class AssetsPathManager {
     // 资源类型-路径映射表
     private Map<Class<?>, List<String>> assetsMap = new HashMap<>();
 
-    public AssetsPathManager() {}
+    public APManager() {}
 
     /**
      * 图像资源枚举

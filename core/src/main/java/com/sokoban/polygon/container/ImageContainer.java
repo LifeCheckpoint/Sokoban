@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 
 /**
  * 图像容器超类，支持对图像缩放的良好控制
@@ -14,21 +14,21 @@ import com.sokoban.manager.AssetsPathManager;
  */
 public class ImageContainer {
     protected float scaling = 0.0065f; // 适用于 64 高度图像缩放到一般高度
-    protected AssetsPathManager apManager;
+    protected APManager apManager;
 
-    public ImageContainer(AssetsPathManager apManager, float scaling) {
+    public ImageContainer(APManager apManager, float scaling) {
         this.apManager = apManager;
         this.scaling = scaling;
     }
 
-    public ImageContainer(AssetsPathManager apManager) {
+    public ImageContainer(APManager apManager) {
         this.apManager = apManager;
     }
 
     public ImageContainer() {}
 
     // 从文件读取图片
-    protected Drawable readDrawableFromFile(AssetsPathManager.ImageAssets resourceEnum) {
+    protected Drawable readDrawableFromFile(APManager.ImageAssets resourceEnum) {
         Texture texture = apManager.get(resourceEnum);
         TextureRegion region = new TextureRegion(texture);
         region.setRegion(0, 0, texture.getWidth(), texture.getHeight());
@@ -41,7 +41,7 @@ public class ImageContainer {
      * @param torchable 指定是否允许交互
      * @return Image 组件
      */
-    protected Image create(AssetsPathManager.ImageAssets resourceEnum, boolean torchable) {
+    protected Image create(APManager.ImageAssets resourceEnum, boolean torchable) {
         return create(readDrawableFromFile(resourceEnum), torchable);
     }
 

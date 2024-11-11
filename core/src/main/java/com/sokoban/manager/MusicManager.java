@@ -10,19 +10,19 @@ import java.util.Random;
 
 // 管理音乐播放
 public class MusicManager {
-    private AssetsPathManager apManager;
+    private APManager apManager;
     private AudioEnums currentMusicName;
     private boolean isPlaying = false;
     private float volume = 1.0f;
     private Map<AudioEnums, Music> musicMap;
     private Music currentMusic;
 
-    public MusicManager(AssetsPathManager apManager) {
+    public MusicManager(APManager apManager) {
         musicMap = new HashMap<>();
         this.apManager = apManager;
     }
 
-    public void loadMusic(AudioEnums audioAlias, AssetsPathManager.MusicAssets audioAssets) {
+    public void loadMusic(AudioEnums audioAlias, APManager.MusicAssets audioAssets) {
         if (musicMap.containsKey(audioAlias)) {
             Gdx.app.log("MusicManager", "Music already loaded: " + audioAlias.toString());
             return;

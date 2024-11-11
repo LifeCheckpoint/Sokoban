@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
 import com.sokoban.enums.AudioEnums;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
@@ -74,12 +74,12 @@ public class GameWelcomeScene extends SokoyoScene {
     public void init() {
         super.init();
 
-        AssetsPathManager apManager = gameMain.getAssetsPathManager();
+        APManager apManager = gameMain.getAssetsPathManager();
 
         // 背景音乐处理
         musicManager = new MusicManager(apManager);
-        musicManager.loadMusic(AudioEnums.Background1, AssetsPathManager.MusicAssets.Light);
-        musicManager.loadMusic(AudioEnums.Background2, AssetsPathManager.MusicAssets.Rain);
+        musicManager.loadMusic(AudioEnums.Background1, APManager.MusicAssets.Light);
+        musicManager.loadMusic(AudioEnums.Background2, APManager.MusicAssets.Rain);
         musicManager.setVolume(0.2f);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
@@ -90,19 +90,19 @@ public class GameWelcomeScene extends SokoyoScene {
         // 初始化按钮
         buttonContainer = new ButtonCheckboxContainers();
 
-        startGameButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.StartGameButton, false, true, 0.1f);
+        startGameButton = buttonContainer.create(gameMain, APManager.ImageAssets.StartGameButton, false, true, 0.1f);
         startGameButton.setPosition(1f, 2.6f);
         startGameButton.setCheckboxType(false);
 
-        aboutButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.AboutButton, false, true, 0.1f);
+        aboutButton = buttonContainer.create(gameMain, APManager.ImageAssets.AboutButton, false, true, 0.1f);
         aboutButton.setPosition(1f, 1.6f);
         aboutButton.setCheckboxType(false);
 
-        exitButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.ExitButton, false, true, 0.1f);
+        exitButton = buttonContainer.create(gameMain, APManager.ImageAssets.ExitButton, false, true, 0.1f);
         exitButton.setPosition(3f, 0.8f);
         exitButton.setCheckboxType(false);
 
-        settingsButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.SettingsButton, false, true, 0.1f);
+        settingsButton = buttonContainer.create(gameMain, APManager.ImageAssets.SettingsButton, false, true, 0.1f);
         settingsButton.setPosition(1f, 0.8f);
         settingsButton.setCheckboxType(false);
 
@@ -176,7 +176,7 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle.startCreateParticles();
 
         // Spine 背景玩家装饰测试
-        playerObject = new SpineObject(gameMain, AssetsPathManager.SpineAtlasAssets.Player1, AssetsPathManager.SpineJsonAssets.Player1);
+        playerObject = new SpineObject(gameMain, APManager.SpineAtlasAssets.Player1, APManager.SpineJsonAssets.Player1);
         playerObject.setAnimation(0, "left", true);
 
         playerObject.setPosition(4f, 4f);
@@ -271,7 +271,7 @@ public class GameWelcomeScene extends SokoyoScene {
         
         // 编译着色器
         ShaderProgram.pedantic = false;
-        blurShader = AssetsPathManager.shaderLoad("blurVertex.glsl", "blurFragment.glsl");
+        blurShader = APManager.shaderLoad("blurVertex.glsl", "blurFragment.glsl");
         if (!blurShader.isCompiled()) {
             Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
             return;

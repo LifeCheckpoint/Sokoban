@@ -42,7 +42,7 @@ public class BackgroundGrayParticleManager {
         this.stage = thisScene.getStage();
 
         // 初始化背景粒子
-        particleTexture = gameMain.getAssetsPathManager().get(AssetsPathManager.ImageAssets.ParticleGray);
+        particleTexture = gameMain.getAssetsPathManager().get(APManager.ImageAssets.ParticleGray);
         backgroundParticle = new ArrayList<>();
         setStage(stage);
 

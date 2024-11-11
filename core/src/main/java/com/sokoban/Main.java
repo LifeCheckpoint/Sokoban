@@ -7,12 +7,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 import com.sokoban.manager.ScreenManager;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private AssetsPathManager apManager;
+    private APManager apManager;
     private ScreenManager screenManager;
     
     private int backGroundColorRGBA = 0x101010ff;
@@ -22,14 +22,14 @@ public class Main extends ApplicationAdapter {
         return screenManager;
     }
 
-    public AssetsPathManager getAssetsPathManager() {
+    public APManager getAssetsPathManager() {
         return apManager;
     }
 
     // 主游戏创建
     @Override
     public void create() {
-        apManager = new AssetsPathManager();
+        apManager = new APManager();
         apManager.preloadAllAssets();
 
         screenManager = new ScreenManager();

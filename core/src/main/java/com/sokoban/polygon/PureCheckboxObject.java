@@ -3,7 +3,7 @@ package com.sokoban.polygon;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 
 /**
  * 利用 Spine 实现的复选框组件，提供动画效果和状态管理
@@ -19,7 +19,7 @@ public class PureCheckboxObject extends SpineObject {
     private final String TO_CHECKED = "checked";
 
     public PureCheckboxObject(Main gameMain) {
-        super(gameMain, AssetsPathManager.SpineAtlasAssets.Checkbox, AssetsPathManager.SpineJsonAssets.Checkbox);
+        super(gameMain, APManager.SpineAtlasAssets.Checkbox, APManager.SpineJsonAssets.Checkbox);
         
         this.isChecked = false;
         this.isEnabled = false;

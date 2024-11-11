@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
 import com.sokoban.Main;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 
 /**
  * Spine 对象类，支持移动缩放与动画切换、错误处理、性能优化、功能扩展<br><br>
@@ -54,7 +54,7 @@ public class SpineObject extends Actor implements Disposable {
      * 构造函数
      * @throws IllegalArgumentException 如果资源加载失败
      */
-    public SpineObject(Main gameMain, AssetsPathManager.SpineAtlasAssets atlasEnum, AssetsPathManager.SpineJsonAssets skeletonDataJsonEnum) {
+    public SpineObject(Main gameMain, APManager.SpineAtlasAssets atlasEnum, APManager.SpineJsonAssets skeletonDataJsonEnum) {
         try {
             // 加载纹理图集
             atlas = gameMain.getAssetsPathManager().get(atlasEnum);

@@ -2,7 +2,7 @@ package com.sokoban.polygon.container;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.sokoban.manager.AssetsPathManager;
+import com.sokoban.manager.APManager;
 
 /**
  * 图像标签类<br><br>
@@ -11,18 +11,18 @@ import com.sokoban.manager.AssetsPathManager;
  */
 public class ImageLabelContainer extends ImageContainer {
 
-    public ImageLabelContainer(float scaling, AssetsPathManager apManager) {
+    public ImageLabelContainer(float scaling, APManager apManager) {
         super(apManager, scaling);
     }
 
-    public ImageLabelContainer(AssetsPathManager apManager) {
+    public ImageLabelContainer(APManager apManager) {
         super(apManager);
     }
 
-    public Image create(AssetsPathManager.ImageAssets resourceEnum) {
+    public Image create(APManager.ImageAssets resourceEnum) {
         return create(readDrawableFromFile(resourceEnum));
     }
-    public Image create(AssetsPathManager.ImageAssets resourceEnum, float scaling) {
+    public Image create(APManager.ImageAssets resourceEnum, float scaling) {
         return create(readDrawableFromFile(resourceEnum), scaling);
     }
     public Image create(Drawable drawable) {
