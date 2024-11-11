@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.settings.GraphicsSettings;
+import com.sokoban.core.settings.SoundSettings;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.CheckboxObject;
@@ -41,7 +43,7 @@ public class SettingScene extends SokoyoScene {
         returnButton.setPosition(0.5f, 8f);
 
         // Mipmap 设置
-        mipmapCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Mipmap, true, true, 0.16f);
+        mipmapCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Mipmap, gameMain.getSettingManager().gameSettings.graphics.mipmap, true, 0.16f);
         mipmapCheckbox.setPosition(1f, 7f);
         mipmapCheckbox.setCheckboxType(true);
 
@@ -65,7 +67,18 @@ public class SettingScene extends SokoyoScene {
 
     // 输入事件处理
     private void input() {
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            GraphicsSettings graphicsSet = gameMain.getSettingManager().gameSettings.graphics;
+            SoundSettings soundSet = gameMain.getSettingManager().gameSettings.sound;
+
+            graphicsSet.mipmap = mipmapCheckbox.getCheckbox().getChecked();
+            graphicsSet.vsync = true;
+
+            soundSet.masterVolume = 1.0f;
+            soundSet.musicVolume = 1.0f;
+            soundSet.effectsVolume = 1.0f;
+
+            gameMain.getSettingManager().writeSettings();
             System.out.println("Save");
         }
     }

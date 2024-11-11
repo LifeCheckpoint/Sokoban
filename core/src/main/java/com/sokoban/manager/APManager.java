@@ -16,18 +16,26 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.sokoban.Main;
 
 /**
  * 统一资源管理器 AssetsPathManager
  * @author Life_Checkpoint
  */
 public class APManager {
-    private static final boolean usingMipMap = true;
+    private static boolean usingMipMap = true;
 
     AssetManager assetManager = new AssetManager();
     // 资源类型-路径映射表
     private Map<Class<?>, List<String>> assetsMap = new HashMap<>();
-    public APManager() {}
+
+    /**
+     * 资源管理器构造
+     * @param gameMain 游戏全局句柄
+     */
+    public APManager(Main gameMain) {
+        usingMipMap = gameMain.getSettingManager().gameSettings.graphics.mipmap;
+    }
 
     /*  以下为资源枚举 */
 

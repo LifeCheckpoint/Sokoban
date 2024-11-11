@@ -2,6 +2,7 @@ package com.sokoban.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.sokoban.Main;
 import com.sokoban.enums.AudioEnums;
 
 import java.util.HashMap;
@@ -17,9 +18,10 @@ public class MusicManager {
     private Map<AudioEnums, Music> musicMap;
     private Music currentMusic;
 
-    public MusicManager(APManager apManager) {
+    public MusicManager(Main gameMain) {
         musicMap = new HashMap<>();
-        this.apManager = apManager;
+        this.apManager = gameMain.getAssetsPathManager();
+        this.volume = gameMain.getSettingManager().gameSettings.sound.musicVolume;
     }
 
     public void loadMusic(AudioEnums audioAlias, APManager.MusicAssets audioAssets) {

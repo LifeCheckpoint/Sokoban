@@ -7,29 +7,54 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
+import com.sokoban.core.settings.SettingManager;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.ScreenManager;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/** 
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ * <br><br>
+ * <b>游戏中心类，负责全局句柄分发与初始资源加载</b>
+ */
 public class Main extends ApplicationAdapter {
     private APManager apManager;
+    private SettingManager setManager;
     private ScreenManager screenManager;
     
     private int backGroundColorRGBA = 0x101010ff;
 
-    // 获得当前场景
-    public ScreenManager getScreenManager() {
-        return screenManager;
-    }
-
+    /**
+     * 获得资源管理句柄
+     * @return 资源管理句柄
+     */
     public APManager getAssetsPathManager() {
         return apManager;
+    }
+
+    /**
+     * 获得设置管理句柄
+     * @return 设置管理句柄
+     */
+    public SettingManager getSettingManager() {
+        return setManager;
+    }
+
+    /**
+     * 获得场景管理句柄
+     * @return 场景管理句柄
+     */
+    public ScreenManager getScreenManager() {
+        return screenManager;
     }
 
     // 主游戏创建
     @Override
     public void create() {
-        apManager = new APManager();
+        setManager = new SettingManager("./settings/global.json");
+        
+        Gdx.graphics.setVSync(setManager.gameSettings.graphics.vsync);
+        
+        apManager = new APManager(this);
         apManager.preloadAllAssets();
 
         screenManager = new ScreenManager();
