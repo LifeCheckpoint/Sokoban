@@ -1,5 +1,6 @@
 package com.sokoban.polygon;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -106,11 +107,19 @@ public class CheckboxObject {
     }
 
     public PureCheckboxObject getCheckbox() {
-        return checkbox;
+        if (checkbox != null) return checkbox;
+        else {
+            Gdx.app.error("CheckboxObject", "Checkbox hans't initalized.");
+            return null;
+        }
     }
 
     public Image getCheckboxText() {
-        return checkboxText;
+        if (checkboxText != null) return checkboxText;
+        else {
+            Gdx.app.error("CheckboxObject", "CheckboxText hans't initalized.");
+            return null;
+        }
     }
 
     public float getX() {

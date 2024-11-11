@@ -65,7 +65,6 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // Spine
     private SpineObject playerObject;
-    private CheckboxObject mipmapCheckbox;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -183,11 +182,6 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setPosition(4f, 4f);
         playerObject.setSize(1f, 1f);
 
-        // Spine 复选框测试
-        mipmapCheckbox = new CheckboxObject(gameMain, "mipmap.png", true, true, 0.16f);
-        mipmapCheckbox.setPosition(6f, 3f);
-        mipmapCheckbox.setCheckboxType(true);
-
         // 添加 UI
         stage.addActor(startGameButton.getCheckbox());
         stage.addActor(aboutButton.getCheckbox());
@@ -200,8 +194,6 @@ public class GameWelcomeScene extends SokoyoScene {
         stage.addActor(settingsButton.getCheckboxText());
 
         stage.addActor(playerObject);
-        stage.addActor(mipmapCheckbox.getCheckbox());
-        stage.addActor(mipmapCheckbox.getCheckboxText());
     }
 
     // 随机交换相邻的两个矩形
