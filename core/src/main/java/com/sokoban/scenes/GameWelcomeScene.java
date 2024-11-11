@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
@@ -24,8 +23,8 @@ import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
+import com.sokoban.polygon.ButtonCheckboxContainers;
 import com.sokoban.polygon.CheckboxTextObject;
-import com.sokoban.polygon.ImageButtonContainer;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;;
 
@@ -56,13 +55,13 @@ public class GameWelcomeScene extends SokoyoScene {
     private FrameBuffer[] blurBuffers; 
 
     // Texture UI
-    ImageButtonContainer buttonContainer;
+    ButtonCheckboxContainers buttonContainer;
     private Texture[] backgroundTextures;
 
-    private Image startGameButton;
-    private Image aboutButton;
-    private Image exitButton;
-    private Image settingsButton;
+    private CheckboxTextObject startGameButton;
+    private CheckboxTextObject aboutButton;
+    private CheckboxTextObject exitButton;
+    private CheckboxTextObject settingsButton;
 
     // Spine
     private SpineObject playerObject;
@@ -90,22 +89,26 @@ public class GameWelcomeScene extends SokoyoScene {
         initShaders();
         
         // 初始化按钮
-        buttonContainer = new ImageButtonContainer(apManager);
+        buttonContainer = new ButtonCheckboxContainers();
 
-        startGameButton = buttonContainer.create("start_game.png");
+        startGameButton = buttonContainer.create(gameMain, "start_game.png", false, true, 0.1f);
         startGameButton.setPosition(1f, 2.6f);
+        startGameButton.setCheckboxType(false);
 
-        aboutButton = buttonContainer.create("about.png");
+        aboutButton = buttonContainer.create(gameMain, "about.png", false, true, 0.1f);
         aboutButton.setPosition(1f, 1.6f);
+        aboutButton.setCheckboxType(false);
 
-        exitButton = buttonContainer.create("exit.png");
+        exitButton = buttonContainer.create(gameMain, "exit.png", false, true, 0.1f);
         exitButton.setPosition(3f, 0.8f);
+        exitButton.setCheckboxType(false);
 
-        settingsButton = buttonContainer.create("settings.png");
+        settingsButton = buttonContainer.create(gameMain, "settings.png", false, true, 0.1f);
         settingsButton.setPosition(1f, 0.8f);
+        settingsButton.setCheckboxType(false);
 
         // 开始按钮监听
-        startGameButton.addListener(new ClickListener() {
+        startGameButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Start Game!");
@@ -113,7 +116,7 @@ public class GameWelcomeScene extends SokoyoScene {
         });
 
         // 关于按钮监听
-        aboutButton.addListener(new ClickListener() {
+        aboutButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("About...");
@@ -122,7 +125,7 @@ public class GameWelcomeScene extends SokoyoScene {
         });
 
         // 退出按钮监听
-        exitButton.addListener(new ClickListener() {
+        exitButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Exit");
@@ -131,7 +134,7 @@ public class GameWelcomeScene extends SokoyoScene {
         });
 
         // 设置按钮监听
-        settingsButton.addListener(new ClickListener() {
+        settingsButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Settings");
@@ -173,24 +176,29 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        // Spine 背景玩家装饰
+        // Spine 背景玩家装饰测试
         playerObject = new SpineObject(gameMain, "img/test_player1/player1_sp.atlas", "img/test_player1/player1_sp.json");
         playerObject.setAnimation(0, "left", true);
 
         playerObject.setPosition(4f, 4f);
         playerObject.setSize(1f, 1f);
 
-        // Spine 复选框
-        ImageButtonContainer mipmapImageContainer = new ImageButtonContainer(apManager);
-        Image mipmap = mipmapImageContainer.create("mipmap.png");
-        mipmapCheckbox = new CheckboxTextObject(gameMain, mipmap, true, true, 0.2f);
+        // Spine 复选框测试
+        mipmapCheckbox = new CheckboxTextObject(gameMain, "mipmap.png", true, true, 0.16f);
         mipmapCheckbox.setPosition(6f, 3f);
+        mipmapCheckbox.setCheckboxType(true);
 
         // 添加 UI
-        stage.addActor(startGameButton);
-        stage.addActor(aboutButton);
-        stage.addActor(exitButton);
-        stage.addActor(settingsButton);
+        stage.addActor(startGameButton.getCheckbox());
+        stage.addActor(aboutButton.getCheckbox());
+        stage.addActor(exitButton.getCheckbox());
+        stage.addActor(settingsButton.getCheckbox());
+
+        stage.addActor(startGameButton.getCheckboxText());
+        stage.addActor(aboutButton.getCheckboxText());
+        stage.addActor(exitButton.getCheckboxText());
+        stage.addActor(settingsButton.getCheckboxText());
+
         stage.addActor(playerObject);
         stage.addActor(mipmapCheckbox.getCheckbox());
         stage.addActor(mipmapCheckbox.getCheckboxText());

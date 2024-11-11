@@ -18,8 +18,8 @@ public class ImageButtonContainer extends ImageContainer {
     private final float buttonScale = 1.2f;
     private final float scaleTime = 0.2f;
 
-    public ImageButtonContainer(float scaling, AssetsPathManager apManager) {
-        super(scaling, apManager);
+    public ImageButtonContainer(AssetsPathManager apManager, float scaling) {
+        super(apManager, scaling);
     }
 
     public ImageButtonContainer(AssetsPathManager apManager) {

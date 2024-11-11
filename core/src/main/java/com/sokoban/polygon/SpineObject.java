@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
-import com.esotericsoftware.spine.Bone;
 import com.sokoban.Main;
 
 /**
@@ -193,6 +192,12 @@ public class SpineObject extends Actor implements Disposable {
             System.err.println("Failed to set animation: " + animationName + " - " + e.getMessage());
             return null;
         }
+    }
+
+    public void stayAnimationAtFirst(String animationName) {
+        animationState.setAnimation(0, animationName, false); // 设置非循环动画
+        animationState.update(0); // 设置时间为第一帧
+        animationState.apply(skeleton); // 应用到骨骼上
     }
 
     /**

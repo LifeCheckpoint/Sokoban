@@ -16,7 +16,7 @@ public class ImageContainer {
     protected float scaling = 0.0065f; // 适用于 64 高度图像缩放到一般高度
     protected AssetsPathManager apManager;
 
-    public ImageContainer(float scaling, AssetsPathManager apManager) {
+    public ImageContainer(AssetsPathManager apManager, float scaling) {
         this.apManager = apManager;
         this.scaling = scaling;
     }

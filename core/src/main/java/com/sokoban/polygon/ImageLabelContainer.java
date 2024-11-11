@@ -12,7 +12,7 @@ import com.sokoban.manager.AssetsPathManager;
 public class ImageLabelContainer extends ImageContainer {
 
     public ImageLabelContainer(float scaling, AssetsPathManager apManager) {
-        super(scaling, apManager);
+        super(apManager, scaling);
     }
 
     public ImageLabelContainer(AssetsPathManager apManager) {
