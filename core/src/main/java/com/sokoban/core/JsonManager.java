@@ -1,4 +1,4 @@
-package com.sokoban.manager;
+package com.sokoban.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,11 +16,19 @@ public class JsonManager {
     private static final String HASH_ALGORITHM = "SHA-256";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final int AES_KEY_SIZE = 16; // 16 bytes AES Key
-
     private final SecretKey secretKey;
+
+    private boolean encryptize;
+
+    // 无密钥
+    public JsonManager() {
+        this.encryptize = false;
+        this.secretKey = null;
+    }
 
     // 给定的密钥字符串生成 SecretKey
     public JsonManager(String key) {
+        this.encryptize = true;
         this.secretKey = generateSecretKey(key);
     }
 
@@ -43,15 +51,20 @@ public class JsonManager {
             // 将对象转换为 JSON 字符串
             String json = objectMapper.writeValueAsString(data);
 
-            // 生成 SHA-256
-            String hash = generateSHA256Hash(json);
+            // 判定加密
+            if (encryptize) {
+                // 生成 SHA-256
+                String hash = generateSHA256Hash(json);
+                // 加密 JSON
+                String encryptedJson = encrypt(json);
+                // Base64编码加密 JSON 并与校验值合并保存
+                String fileContent = "ENC" + Base64.getEncoder().encodeToString(encryptedJson.getBytes(StandardCharsets.UTF_8)) + ":" + hash;
+                Files.write(Paths.get(filePath), fileContent.getBytes(StandardCharsets.UTF_8));
+            } else {
+                Files.write(Paths.get(filePath), json.getBytes(StandardCharsets.UTF_8));
+            }
 
-            // 加密 JSON
-            String encryptedJson = encrypt(json);
-
-            // Base64编码加密 JSON 并与校验值合并保存
-            String fileContent = Base64.getEncoder().encodeToString(encryptedJson.getBytes(StandardCharsets.UTF_8)) + ":" + hash;
-            Files.write(Paths.get(filePath), fileContent.getBytes(StandardCharsets.UTF_8));
+            
         } catch (Exception e) {
             throw new Exception("保存加密 JSON 失败: " + e.getMessage(), e);
         }
@@ -62,25 +75,32 @@ public class JsonManager {
         try {
             // 读取文件内容并分离加密 JSON 和校验值
             String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
-            String[] parts = fileContent.split(":");
-            if (parts.length != 2) {
-                throw new Exception("文件格式无效，无法解析");
+            
+            // 判断是否加密
+            if (fileContent.indexOf("ENC", 0) == 0) {
+                String[] parts = fileContent.replaceFirst("ENC", "").split(":");
+                if (parts.length != 2) {
+                    throw new Exception("文件格式无效，无法解析");
+                }
+
+                String encryptedJson = new String(Base64.getDecoder().decode(parts[0]), StandardCharsets.UTF_8);
+                String savedHash = parts[1];
+
+                // 解密 JSON 数据
+                String decryptedJson = decrypt(encryptedJson);
+
+                // 生成解密后 JSON 的 SHA-256 校验值并验证
+                String currentHash = generateSHA256Hash(decryptedJson);
+                if (!currentHash.equals(savedHash)) {
+                    throw new Exception("文件被篡改，校验失败");
+                }
+
+                // 将 JSON 字符串转换为对象
+                return objectMapper.readValue(decryptedJson, clazz);
+            } else {
+                return objectMapper.readValue(fileContent, clazz);
             }
-
-            String encryptedJson = new String(Base64.getDecoder().decode(parts[0]), StandardCharsets.UTF_8);
-            String savedHash = parts[1];
-
-            // 解密 JSON 数据
-            String decryptedJson = decrypt(encryptedJson);
-
-            // 生成解密后 JSON 的 SHA-256 校验值并验证
-            String currentHash = generateSHA256Hash(decryptedJson);
-            if (!currentHash.equals(savedHash)) {
-                throw new Exception("文件被篡改，校验失败");
-            }
-
-            // 将 JSON 字符串转换为对象
-            return objectMapper.readValue(decryptedJson, clazz);
+            
         } catch (Exception e) {
             throw new Exception("加载加密 JSON 失败: " + e.getMessage(), e);
         }

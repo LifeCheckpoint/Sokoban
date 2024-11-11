@@ -2,6 +2,8 @@ package com.sokoban.manager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.sokoban.core.JsonManager;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -10,6 +12,9 @@ import java.util.Random;
 
 public class JsonManagerTest {
 
+    /**
+     * 测试短密钥 Json 加解密
+     */
     @Test
     public void testJsonEncryptionDecryption() {
         // Step 1: 创建一个示例数据对象（比如一个 Map）
@@ -19,7 +24,7 @@ public class JsonManagerTest {
         data.put("city", "New York");
 
         // Step 2: 使用 JsonManager 进行加密
-        String key = "mysecretkey"; // 你可以使用任何自定义密钥
+        String key = "MAKE JSON GREAT AGAIN!@#$%^&*()_";
         JsonManager jsonManager = new JsonManager(key);
 
         // 指定文件路径（保存到当前测试目录）
@@ -64,9 +69,16 @@ public class JsonManagerTest {
                 Assert.fail("Expected exception due to file not found");
             } catch (Exception e) {}
 
-            // Step 7: 删除测试文件
+            // Step 7: 处理测试文件
             if (file.exists()) {
-                file.delete();
+                File fileResultDirectory = new File("test-files");
+                if (!fileResultDirectory.exists()) fileResultDirectory.mkdir();
+                File fileResult = new File("./test-files/test-encrypted.json");
+                if (fileResult.exists()) fileResult.delete();
+                if (file.exists()) {
+                    file.renameTo(fileResult);
+                    file.delete();
+                }
             }
 
         } catch (Exception e) {
@@ -74,6 +86,9 @@ public class JsonManagerTest {
         }
     }
 
+    /**
+     * 测试长密钥 Json 加解密
+     */
     @Test
     public void testLongJsonEncryptionDecryption() {
         // Step 1: 创建一个示例数据对象（比如一个 Map）
@@ -83,11 +98,11 @@ public class JsonManagerTest {
         data.put("city", "New York");
 
         // Step 2: 使用 JsonManager 进行加密
-        String key = new StringBuilder().repeat("mysecretkey", 200).toString(); // 你可以使用任何自定义密钥
+        String key = new StringBuilder().repeat("TestScreteKey123456", 200).toString();
         JsonManager jsonManager = new JsonManager(key);
 
         // 指定文件路径（保存到当前测试目录）
-        String filePath = "test-encrypted.json";
+        String filePath = "test-encrypted-long.json";
 
         try {
             // 将数据加密并保存到文件
@@ -121,16 +136,67 @@ public class JsonManagerTest {
             // Step 5: 删除篡改的文件内容并恢复
             Files.write(file.toPath(), originalContent.getBytes());
 
-            // Step 6: 验证文件不存在的情况
+            // Step 7: 处理测试文件
+            if (file.exists()) {
+                File fileResultDirectory = new File("test-files");
+                if (!fileResultDirectory.exists()) fileResultDirectory.mkdir();
+                File fileResult = new File("./test-files/test-encrypted-long.json");
+                if (fileResult.exists()) fileResult.delete();
+                if (file.exists()) {
+                    file.renameTo(fileResult);
+                    file.delete();
+                }
+            }
+
+        } catch (Exception e) {
+            Assert.fail("Test failed due to exception: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 测试普通 Json
+     */
+    @Test
+    public void testJson() {
+        // Step 1: 创建一个示例数据对象（比如一个 Map）
+        Map<String, String> data = new HashMap<>();
+        data.put("name", "John Doe");
+        data.put("age", "30");
+        data.put("city", "New York");
+
+        JsonManager jsonManager = new JsonManager();
+
+        // 指定文件路径（保存到当前测试目录）
+        String filePath = "test-purejson.json";
+
+        try {
+            // 将数据加密并保存到文件
+            jsonManager.saveEncryptedJson(filePath, data);
+
+            // 验证未被篡改的文件
+            @SuppressWarnings("all")
+            Map<String, String> decryptedData = jsonManager.loadEncryptedJson(filePath, Map.class);
+            Assert.assertEquals(decryptedData, data, "Decrypted data does not match original data");
+
+            File file = new File(filePath);
+
+            // 验证文件不存在情况
             File nonExistentFile = new File("non-existent-file.json");
             try {
                 jsonManager.loadEncryptedJson(nonExistentFile.getAbsolutePath(), Map.class);
                 Assert.fail("Expected exception due to file not found");
             } catch (Exception e) {}
 
-            // Step 7: 删除测试文件
+            // Step 7: 处理测试文件
             if (file.exists()) {
-                file.delete();
+                File fileResultDirectory = new File("test-files");
+                if (!fileResultDirectory.exists()) fileResultDirectory.mkdir();
+                File fileResult = new File("./test-files/test-purejson.json");
+                if (fileResult.exists()) fileResult.delete();
+                if (file.exists()) {
+                    file.renameTo(fileResult);
+                    file.delete();
+                }
             }
 
         } catch (Exception e) {
