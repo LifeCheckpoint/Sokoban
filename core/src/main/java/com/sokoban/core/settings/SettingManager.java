@@ -15,6 +15,7 @@ public class SettingManager {
     }
 
     public void readSettings() {
+        // TODO
         try {
             gameSettings = new JsonManager().loadEncryptedJson(settingsFilePath, GameSettings.class);
         } catch (Exception e) {
@@ -44,6 +45,7 @@ public class SettingManager {
     }
 
     public void setSettingsFilePath(String settingsFilePath) {
+        // TODO
         this.settingsFilePath = settingsFilePath;
         if (!new File(settingsFilePath).exists()) Gdx.app.log("SettingManager", "Setting file " + settingsFilePath + "is not exists.");
     }
