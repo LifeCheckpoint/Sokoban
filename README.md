@@ -22,77 +22,19 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |用户管理|❌未开始|
 |基础AI|❌未开始|
 |动画效果|▶️进行中|
-|设置配置|❌未开始|
+|设置配置|▶️进行中|
 
 ## Feature 项目特色
 
 1. 基于主流游戏引擎 `LibGDX` 开发，移植性强，可维护性高
 2. 允许素材异步加载，支持启用 `Mipmap` `MSAA` 等显示优化，以及加载场景界面
-3. 实现自定义的 GUI 组件，组件间通过 `gameMain` 分发全局控制权协调工作
+3. 实现自定义的 GUI 组件，组件间通过 `gameMain` 分发全局控制句柄协调工作
 4. 通过高层抽象节省繁复画面元素操作，代码重用率高
 5. 基于 `TestNG` 的充分单元 / 覆盖率测试
 6. 完全原创的美术素材，附加素材源文件
 7. 充分运用 AI 工具，极大加快项目学习编程工作，使工作流在高度抽象的逻辑中进行，必要的底层细节在学习后可以交由 AI 实现
 
 ~~（只是因为要答辩所以写这些）~~
-
-## Structure 项目结构
-
-**关键项目文件如下**
-
-```
-> .gradle           用于构建项目依赖包的 gradle 配置文件
-> .vscode           vscode生成的一些编辑器配置文件
-> assets            游戏使用的资源文件，会被打包到游戏中
-    > audio             游戏音乐存放
-    > img               游戏图像素材存放
-    > shaders           着色器 (glsl) 代码
-    > sound             游戏音效存放
-    assets.txt          素材清单
-> assets-backup     资源文件备份，结构同 assets
-> core              游戏核心代码
-    > src
-        > main  游戏主程序代码
-            > java\com\sokoban
-                > enums     游戏用到的枚举常数
-                    AudioEnums.java     音频枚举
-                    ParticleEnums.java  粒子枚举
-                > manager   游戏一些运行机制的管理
-                    AssetsPathManager                   所有素材的统一管理类
-                    BackgroundGrayParticleManager.java  背景灰色漂浮粒子效果管理类
-                    JsonManager.java                    JSON 数据管理类
-                    MouseMovingTraceManager.java        画面鼠标跟踪管理类
-                    MusicManager.java                   背景音乐管理类
-                    ScreenManager.java                  游戏场景切换管理类
-                > polygon   游戏一些图形组件的实现
-                    BackgroundParticle.java     背景粒子图形
-                    ImageButtonContainer.java   图像按钮容器
-                    ImageLabelContainer.java    图像标签容器
-                    InputTextField.java         输入框
-                    TextureSquare.java          素材方块
-                    WhiteProgressBar.java       进度条
-                > scenes    游戏不同场景的实现
-                    AboutScene.java         关于场景
-                    GameWelcomeScene.java   游戏主界面
-                    LoadingScene.java       素材加载界面
-                    SettingScene.java       设置界面
-                    SokoyoScene.java        抽象界面类，是所有界面的父类
-                AssetsList.java     存放要加载素材的类
-                Main.java           游戏主类，负责总体控制
-                MathUtilsEx.java    数学计算补充类
-        > test  测试代码
-> develop-resources 存放素材的一些源文件
-    > img               作为素材的一些图像
-    > raw               图像源文件
-> develop-tool      一些帮助开发构建的工具
-    > img-crop          图像裁剪工具
-> gradle            构建项目依赖包的 gradle
-> lwjgl3            游戏绘图引擎相关文件
-    > src\main\java\com\sokoban\lwjgl3
-        Lwjgl3Launcher.java 游戏启动配置
-        StartupHelper.java  游戏启动器
-README.md           此文档
-```
 
 ## Project Requirements 课程项目进度表
 
@@ -147,3 +89,319 @@ Any additional features beyond the basic requirements described above will earn 
 6. ❌ Adding game time display, save time in the archive, introducing a time-limited mode
 7. ❌ Adding props in the game 
 8. ❌ Adding maps of your own design
+
+## Structure 项目结构
+
+**关键项目文件如下**
+
+有机会再解释
+
+```
+D:.
+│  build.gradle
+│  gradle.properties
+│  README.md
+│
+├─assets
+│  │  assets.txt
+│  │  README.md
+│  │
+│  ├─audio
+│  │      Light.mp3
+│  │      Rain.mp3
+│  │
+│  ├─img
+│  │  │  about_info.png
+│  │  │  about_info2.png
+│  │  │  box.png
+│  │  │  box_active.png
+│  │  │  loading_assets.png
+│  │  │  particle1.png
+│  │  │  player_normal.png
+│  │  │  target.png
+│  │  │  white_pixel.png
+│  │  │
+│  │  ├─button
+│  │  │      about.png
+│  │  │      exit.png
+│  │  │      left_arrow.png
+│  │  │      mipmap.png
+│  │  │      settings.png
+│  │  │      start_game.png
+│  │  │
+│  │  ├─checkbox
+│  │  │      checkbox.atlas
+│  │  │      checkbox.json
+│  │  │      checkbox.png
+│  │  │
+│  │  └─test_player1
+│  │          player1_sp.atlas
+│  │          player1_sp.json
+│  │          player1_sp.png
+│  │
+│  ├─shaders
+│  │      blurFragment.glsl
+│  │      blurVertex.glsl
+│  │
+│  └─sound
+├─assets-backup
+│  │  assets.txt
+│  │
+│  ├─audio
+│  │      Light.mp3
+│  │      Rain.mp3
+│  │
+│  ├─img
+│  │      about.png
+│  │      about_info.png
+│  │      about_info2.png
+│  │      box.png
+│  │      box_active.png
+│  │      exit.png
+│  │      left_arrow.png
+│  │      loading_assets.png
+│  │      particle1.png
+│  │      player_normal.png
+│  │      settings.png
+│  │      start_game.png
+│  │      target.png
+│  │      white_pixel.png
+│  │
+│  ├─shaders
+│  │      blurFragment.glsl
+│  │      blurVertex.glsl
+│  │
+│  └─sound
+├─core
+│  │  build.gradle
+│  │
+│  ├─src
+│  │  ├─main
+│  │  │  └─java
+│  │  │      └─com
+│  │  │          └─sokoban
+│  │  │              │  CoreTest.java
+│  │  │              │  Main.java
+│  │  │              │  MathUtilsEx.java
+│  │  │              │
+│  │  │              ├─core
+│  │  │              │  │  JsonManager.java
+│  │  │              │  │  README.md
+│  │  │              │  │
+│  │  │              │  └─settings
+│  │  │              │          GameSettings.java
+│  │  │              │          GraphicsSettings.java
+│  │  │              │          SettingManager.java
+│  │  │              │          SoundSettings.java
+│  │  │              │
+│  │  │              ├─enums
+│  │  │              │      AudioEnums.java
+│  │  │              │      ParticleEnums.java
+│  │  │              │
+│  │  │              ├─manager
+│  │  │              │      APManager.java
+│  │  │              │      BackgroundGrayParticleManager.java
+│  │  │              │      MouseMovingTraceManager.java
+│  │  │              │      MusicManager.java
+│  │  │              │      ScreenManager.java
+│  │  │              │
+│  │  │              ├─polygon
+│  │  │              │  │  BackgroundParticle.java
+│  │  │              │  │  CheckboxObject.java
+│  │  │              │  │  InputTextField.java
+│  │  │              │  │  PureCheckboxObject.java
+│  │  │              │  │  README.md
+│  │  │              │  │  SpineObject.java
+│  │  │              │  │  TextureSquare.java
+│  │  │              │  │  WhiteProgressBar.java
+│  │  │              │  │
+│  │  │              │  └─container
+│  │  │              │          ButtonCheckboxContainers.java
+│  │  │              │          ImageButtonContainer.java
+│  │  │              │          ImageContainer.java
+│  │  │              │          ImageLabelContainer.java
+│  │  │              │
+│  │  │              └─scenes
+│  │  │                      AboutScene.java
+│  │  │                      GameWelcomeScene.java
+│  │  │                      LoadingScene.java
+│  │  │                      SettingScene.java
+│  │  │                      SokoyoScene.java
+│  │  │
+│  │  └─test
+│  │      └─java
+│  │          └─com
+│  │              └─sokoban
+│  │                  │  MapLoader.java
+│  │                  │  MapSignMapping.java
+│  │                  │  MathUtilsExTest.java
+│  │                  │
+│  │                  └─manager
+│  │                          JsonManagerTest.java
+│  │
+│  └─test-files
+│          README.md
+│          test-encrypted-long.json
+│          test-encrypted.json
+│          test-purejson.json
+│
+├─data
+├─develop-resources
+│  ├─img
+│  │  │  about.png
+│  │  │  about_info.png
+│  │  │  about_info2.png
+│  │  │  box.png
+│  │  │  box_active.png
+│  │  │  exit.png
+│  │  │  left_arrow.png
+│  │  │  loading_assets.png
+│  │  │  mipmap.png
+│  │  │  particle1.png
+│  │  │  player_normal.png
+│  │  │  settings.png
+│  │  │  start_game.png
+│  │  │  target.png
+│  │  │  white_pixel.png
+│  │  │
+│  │  ├─checkbox
+│  │  │      checkbox.atlas
+│  │  │      checkbox.json
+│  │  │      checkbox.png
+│  │  │
+│  │  └─test_player1
+│  │          player1_sp.atlas
+│  │          player1_sp.json
+│  │          player1_sp.png
+│  │
+│  └─raw
+│      │  about.ai
+│      │  about_info.ai
+│      │  about_info2.ai
+│      │  box.ai
+│      │  box_active.ai
+│      │  checkbox.json
+│      │  checkbox.psd
+│      │  checkbox.spine
+│      │  exit.ai
+│      │  left_arrow.ai
+│      │  loading_assets.ai
+│      │  mipmap.ai
+│      │  particle1.psd
+│      │  player1_sp.json
+│      │  player1_sp.psd
+│      │  player_1.spine
+│      │  player_1_block.ai
+│      │  player_1_left.ai
+│      │  player_1_normal.ai
+│      │  player_block.ai
+│      │  player_left.ai
+│      │  player_normal.ai
+│      │  player_right.ai
+│      │  settings.ai
+│      │  start_game.ai
+│      │  start_game.psd
+│      │  target.ai
+│      │  wall.ai
+│      │  white_pixel.psd
+│      │
+│      ├─checkbox
+│      │      bound.png
+│      │      fill.png
+│      │
+│      └─player1_sp
+│              body.png
+│              down.png
+│              le.png
+│              re.png
+│
+├─develop-tool
+│  ├─img-crop
+│  │  │  crop.py
+│  │  │  Readme.md
+│  │  │
+│  │  └─output
+│  │          about.png
+│  │          about_info.png
+│  │          about_info2.png
+│  │          box.png
+│  │          box_active.png
+│  │          exit.png
+│  │          left_arrow.png
+│  │          loading_assets.png
+│  │          particle1.png
+│  │          player_normal.png
+│  │          settings.png
+│  │          start_game.png
+│  │          target.png
+│  │          white_pixel.png
+│  │
+│  └─Layer2PNG
+│          PlayersToPNG.jsx
+│
+├─lwjgl3
+│  │  build.gradle
+│  │  nativeimage.gradle
+│  │
+│  ├─bin
+│  ├─build
+│  │  ├─resources
+│  │  │  └─main
+│  │  │      │  assets.txt
+│  │  │      │  README.md
+│  │  │      │  sokoban_icon64.png
+│  │  │      │
+│  │  │      ├─audio
+│  │  │      │      Light.mp3
+│  │  │      │      Rain.mp3
+│  │  │      │
+│  │  │      ├─img
+│  │  │      │  │  about_info.png
+│  │  │      │  │  about_info2.png
+│  │  │      │  │  box.png
+│  │  │      │  │  box_active.png
+│  │  │      │  │  loading_assets.png
+│  │  │      │  │  particle1.png
+│  │  │      │  │  player_normal.png
+│  │  │      │  │  target.png
+│  │  │      │  │  white_pixel.png
+│  │  │      │  │
+│  │  │      │  ├─button
+│  │  │      │  │      about.png
+│  │  │      │  │      exit.png
+│  │  │      │  │      left_arrow.png
+│  │  │      │  │      mipmap.png
+│  │  │      │  │      settings.png
+│  │  │      │  │      start_game.png
+│  │  │      │  │
+│  │  │      │  ├─checkbox
+│  │  │      │  │      checkbox.atlas
+│  │  │      │  │      checkbox.json
+│  │  │      │  │      checkbox.png
+│  │  │      │  │
+│  │  │      │  └─test_player1
+│  │  │      │          player1_sp.atlas
+│  │  │      │          player1_sp.json
+│  │  │      │          player1_sp.png
+│  │  │      │
+│  │  │      ├─shaders
+│  │  │      │      blurFragment.glsl
+│  │  │      │      blurVertex.glsl
+│  │  │      │
+│  │  │      └─sound
+│  │
+│  └─src
+│      └─main
+│          ├─java
+│          │  └─com
+│          │      └─sokoban
+│          │          └─lwjgl3
+│          │                  Lwjgl3Launcher.java
+│          │                  StartupHelper.java
+│          │
+│          └─resources
+│                  sokoban_icon64.png
+│
+└─settings
+        global.json
+```
