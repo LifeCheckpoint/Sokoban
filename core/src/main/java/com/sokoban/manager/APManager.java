@@ -57,6 +57,7 @@ public class APManager {
         PlayerNormal("img/player_normal.png"),
         SettingsButton("img/button/settings.png"),
         StartGameButton("img/button/start_game.png"),
+        Vsync("img/button/vsync.png"),
         WhitePixel("img/white_pixel.png");
 
         private final String alias;
@@ -81,7 +82,8 @@ public class APManager {
      */
     public enum SpineAtlasAssets {
         Player1("img/test_player1/player1_sp.atlas"),
-        Checkbox("img/checkbox/checkbox.atlas");
+        Checkbox("img/checkbox/checkbox.atlas"),
+        Slider("img/slider/slider.atlas");
 
         private final String alias;
         SpineAtlasAssets(String alias) {this.alias = alias;}
@@ -95,7 +97,8 @@ public class APManager {
      */
     public enum SpineJsonAssets {
         Player1("img/test_player1/player1_sp.json"),
-        Checkbox("img/checkbox/checkbox.json");
+        Checkbox("img/checkbox/checkbox.json"),
+        Slider("img/slider/slider.json");
 
         private final String alias;
         SpineJsonAssets(String alias) {this.alias = alias;}

@@ -22,31 +22,32 @@ import com.sokoban.manager.APManager;
  */
 public class SpineObject extends Actor implements Disposable {
     // 资源相关
-    private TextureAtlas atlas;
-    private SkeletonData skeletonData;
-    private AnimationStateData animationData;
-    private PolygonSpriteBatch batch;
-    private SkeletonRenderer skeletonRenderer;
+    protected TextureAtlas atlas;
+    protected SkeletonData skeletonData;
+    protected AnimationStateData animationData;
+    protected PolygonSpriteBatch batch;
+    protected SkeletonRenderer skeletonRenderer;
     
     // 状态相关
-    private Skeleton skeleton;
-    private AnimationState animationState;
+    protected Skeleton skeleton;
+    protected AnimationState animationState;
+    protected boolean isPaused = false;
     
     // 原始尺寸
-    private float originalWidth;
-    private float originalHeight;
+    protected float originalWidth;
+    protected float originalHeight;
     
     // 变换相关
-    private float scaleX = 1f;
-    private float scaleY = 1f;
-    private boolean flipX = false;
-    private boolean flipY = false;
+    protected float scaleX = 1f;
+    protected float scaleY = 1f;
+    protected boolean flipX = false;
+    protected boolean flipY = false;
     
     // 动画混合时间（秒）
-    private float defaultMixTime = 0.2f;
+    protected float defaultMixTime = 0.2f;
     
     // 调试模式
-    private boolean debugBones = false;
+    protected boolean debugBones = false;
 
     // 仅在子类可见的无参构造
     protected SpineObject() {}
@@ -217,7 +218,34 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
+     * 将动画保持停留在指定位置
+     * <br><br>
+     * 调用 releaseAnimationPause 取消动画暂停
+     * @param animationName 动画名称
+     * @param time 介于 0~1 的时间刻系数
+     */
+    public void stayAnimationAtTime(String animationName, float time) {
+        isPaused = true;
+        TrackEntry entry = animationState.setAnimation(0, animationName, false);
+        float animationDuration = entry.getAnimation().getDuration();
+        float targetTime = animationDuration * time;
+        entry.setTrackTime(targetTime);
+        animationState.apply(skeleton);
+    }
+
+    /**
+     * 释放动画暂停状态
+     */
+    public void releaseAnimationPause() {
+        isPaused = false;
+    }
+
+    /**
      * 添加动画到队列
+     * @param trackIndex 动画轨道
+     * @param animationName 动画名
+     * @param loop 是否循环
+     * @param delay 延迟时间
      */
     public TrackEntry addAnimation(int trackIndex, String animationName, boolean loop, float delay) {
         try {
@@ -241,7 +269,7 @@ public class SpineObject extends Actor implements Disposable {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (animationState != null) {
+        if (animationState != null && !isPaused) {
             animationState.update(delta);
             animationState.apply(skeleton);
             skeleton.updateWorldTransform();

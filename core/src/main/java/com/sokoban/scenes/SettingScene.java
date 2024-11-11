@@ -11,6 +11,7 @@ import com.sokoban.core.settings.SoundSettings;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.CheckboxObject;
+import com.sokoban.polygon.PureSliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
 /**
@@ -27,6 +28,9 @@ public class SettingScene extends SokoyoScene {
     private Image returnButton;
 
     private CheckboxObject mipmapCheckbox;
+    private CheckboxObject vsyncCheckbox;
+
+    private PureSliderObject masterVolumnSlider;
 
     public SettingScene(Main gameMain) {
         super(gameMain);
@@ -40,12 +44,21 @@ public class SettingScene extends SokoyoScene {
 
         // 初始化按钮
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
-        returnButton.setPosition(0.5f, 8f);
+        returnButton.setPosition(0.3f, 8.3f);
 
         // Mipmap 设置
         mipmapCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Mipmap, gameMain.getSettingManager().gameSettings.graphics.mipmap, true, 0.16f);
-        mipmapCheckbox.setPosition(1f, 7f);
+        mipmapCheckbox.setPosition(2f, 7f);
         mipmapCheckbox.setCheckboxType(true);
+
+        // 垂直同步设置
+        vsyncCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Vsync, gameMain.getSettingManager().gameSettings.graphics.vsync, true, 0.16f);
+        vsyncCheckbox.setPosition(2f, 6f);
+        vsyncCheckbox.setCheckboxType(true);
+
+        // 音量设置
+        masterVolumnSlider = new PureSliderObject(gameMain, 0);
+        masterVolumnSlider.setPosition(2f, 3f);
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -62,7 +75,10 @@ public class SettingScene extends SokoyoScene {
         // 添加 UI
         stage.addActor(returnButton);
         stage.addActor(mipmapCheckbox.getCheckbox());
-        stage.addActor((mipmapCheckbox.getCheckboxText()));
+        stage.addActor(mipmapCheckbox.getCheckboxText());
+        stage.addActor(vsyncCheckbox.getCheckbox());
+        stage.addActor(vsyncCheckbox.getCheckboxText());
+        stage.addActor(masterVolumnSlider);
     }
 
     // 输入事件处理
@@ -72,7 +88,7 @@ public class SettingScene extends SokoyoScene {
             SoundSettings soundSet = gameMain.getSettingManager().gameSettings.sound;
 
             graphicsSet.mipmap = mipmapCheckbox.getCheckbox().getChecked();
-            graphicsSet.vsync = true;
+            graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();;
 
             soundSet.masterVolume = 1.0f;
             soundSet.musicVolume = 1.0f;

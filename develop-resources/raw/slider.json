@@ -1,0 +1,14 @@
+{"skeleton":{"images":"slider/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"l1","bone":"root","attachment":"l1"},
+	{"name":"t1","bone":"root","attachment":"t1"}
+],
+"skins":{
+	"default":{
+		"t1":{"t1":{"x":5,"y":8,"width":6,"height":14}},
+		"l1":{"l1":{"x":64.5,"y":8,"width":125,"height":4}}
+	}
+},
+"animations":{"animation":{}}
+}
