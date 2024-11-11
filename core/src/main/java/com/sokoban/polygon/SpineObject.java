@@ -15,7 +15,8 @@ import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 
 /**
- * Spine 对象类，支持移动缩放与动画切换、错误处理、性能优化、功能扩展<br><br>
+ * Spine 对象类，支持移动缩放与动画切换、错误处理、性能优化、功能扩展
+ * <br><br>
  * 这真得谢谢 Claude 了
  * @author Claude
  */
@@ -195,9 +196,23 @@ public class SpineObject extends Actor implements Disposable {
         }
     }
 
+    /**
+     * 将动画保持停留在首帧
+     * @param animationName 动画名称
+     */
     public void stayAnimationAtFirst(String animationName) {
         animationState.setAnimation(0, animationName, false); // 设置非循环动画
         animationState.update(0); // 设置时间为第一帧
+        animationState.apply(skeleton); // 应用到骨骼上
+    }
+
+    /**
+     * 将动画保持停留在尾帧
+     * @param animationName 动画名称
+     */
+    public void stayAnimationAtLast(String animationName) {
+        animationState.setAnimation(0, animationName, false); // 设置非循环动画
+        animationState.update(animationState.getCurrent(0).getAnimation().getDuration()); // 设置时间为最后一帧
         animationState.apply(skeleton); // 应用到骨骼上
     }
 
