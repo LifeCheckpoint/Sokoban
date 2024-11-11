@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.badlogic.gdx.math.Interpolation;
 
@@ -18,12 +19,12 @@ public class ImageButtonContainer extends ImageContainer {
     private final float buttonScale = 1.2f;
     private final float scaleTime = 0.2f;
 
-    public ImageButtonContainer(APManager apManager, float scaling) {
-        super(apManager, scaling);
+    public ImageButtonContainer(Main gameMain, float scaling) {
+        super(gameMain, scaling);
     }
 
-    public ImageButtonContainer(APManager apManager) {
-        super(apManager);
+    public ImageButtonContainer(Main gameMain) {
+        super(gameMain);
     }
 
     // 创建按钮

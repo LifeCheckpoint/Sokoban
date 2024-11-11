@@ -2,13 +2,12 @@ package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.WhiteProgressBar;
+import com.sokoban.polygon.container.ImageLabelContainer;
 
 public class LoadingScene extends SokoyoScene {
 
@@ -38,13 +37,12 @@ public class LoadingScene extends SokoyoScene {
         batch = new SpriteBatch();
 
         // 进度条设置
-        progressBar = new WhiteProgressBar();
+        progressBar = new WhiteProgressBar(gameMain);
         progressBar.setPosition((stage.getWidth() - progressBar.getWidth()) / 2, 0.2f * viewport.getWorldHeight());
 
         // 加载文本标签设置
-        label = new Image(new TextureRegionDrawable(new TextureRegion(APManager.textureLoad("loading_assets.png"))));
-        label.setScale(0.005f);
-        label.setPosition((stage.getWidth() - label.getWidth() * 0.005f) / 2, 0.3f * viewport.getWorldHeight());
+        label = new ImageLabelContainer(0.007f, gameMain).create(APManager.ImageAssets.LoadingAssetsLabel);
+        label.setPosition((stage.getWidth() - label.getWidth()) / 2, 0.3f * viewport.getWorldHeight());
 
         stage.addActor(progressBar);
         stage.addActor(label);

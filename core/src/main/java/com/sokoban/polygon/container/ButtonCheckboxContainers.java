@@ -19,7 +19,7 @@ public class ButtonCheckboxContainers {
      * @return CheckboxTextObject对象
      */
     public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled) {
-        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(resourceEnum);
+        Image button = new ImageButtonContainer(gameMain).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled);
     }
 
@@ -33,7 +33,7 @@ public class ButtonCheckboxContainers {
      * @return CheckboxTextObject对象
      */
     public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff) {
-        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(resourceEnum);
+        Image button = new ImageButtonContainer(gameMain).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
     }
 }

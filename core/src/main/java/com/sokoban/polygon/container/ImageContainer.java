@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 
 /**
@@ -16,13 +17,13 @@ public class ImageContainer {
     protected float scaling = 0.0065f; // 适用于 64 高度图像缩放到一般高度
     protected APManager apManager;
 
-    public ImageContainer(APManager apManager, float scaling) {
-        this.apManager = apManager;
+    public ImageContainer(Main gameMain, float scaling) {
+        this.apManager = gameMain.getAssetsPathManager();
         this.scaling = scaling;
     }
 
-    public ImageContainer(APManager apManager) {
-        this.apManager = apManager;
+    public ImageContainer(Main gameMain) {
+        this.apManager = gameMain.getAssetsPathManager();
     }
 
     public ImageContainer() {}

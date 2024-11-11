@@ -27,7 +27,7 @@ public class CheckboxObject {
     private boolean checkboxType;
 
     public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled) {
-        ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain.getAssetsPathManager(), DEFAULT_TEXT_SCALE);
+        ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
         init(gameMain, CheckboxImage, isChecked, isEnabled, DEFAULT_BUFF);
     }
@@ -37,7 +37,7 @@ public class CheckboxObject {
     }
 
     public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled, float buff) {
-        ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain.getAssetsPathManager(), DEFAULT_TEXT_SCALE);
+        ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
         init(gameMain, CheckboxImage, isChecked, isEnabled, buff);
     }

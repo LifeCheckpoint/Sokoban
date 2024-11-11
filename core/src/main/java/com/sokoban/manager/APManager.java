@@ -22,12 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  * @author Life_Checkpoint
  */
 public class APManager {
-    private static final String audioPath = "audio";
-    private static final String texturePath = "img";
-    private static final String shaderPath = "shaders";
-    private static final String skinPath = "ui";
-    private static final String soundPath = "sound";
-
     private static final boolean usingMipMap = true;
 
     AssetManager assetManager = new AssetManager();
@@ -40,21 +34,21 @@ public class APManager {
      * 图像资源枚举
      */
     public enum ImageAssets {
-        AboutInfo("about_info.png"),
-        AboutInfo2("about_info2.png"),
-        BoxActive("box_active.png"),
-        Box("box.png"),
-        AboutButton("button/about.png"),
-        ExitButton("button/exit.png"),
-        LeftArrowButton("button/left_arrow.png"),
-        Mipmap("button/mipmap.png"),
-        SettingsButton("button/settings.png"),
-        StartGameButton("button/start_game.png"),
-        LoadingAssetsLabel("loading_assets.png"),
-        ParticleGray("particle1.png"),
-        PlayerNormal("player_normal.png"),
-        TargetBox("target.png"),
-        WhitePixel("white_pixel.png");
+        AboutButton("img/button/about.png"),
+        AboutInfo("img/about_info.png"),
+        AboutInfoEGG("img/about_info2.png"),
+        Box("img/box.png"),
+        BoxActive("img/box_active.png"),
+        BoxTarget("img/target.png"),
+        ExitButton("img/button/exit.png"),
+        LeftArrowButton("img/button/left_arrow.png"),
+        LoadingAssetsLabel("img/loading_assets.png"),
+        Mipmap("img/button/mipmap.png"),
+        ParticleGray("img/particle1.png"),
+        PlayerNormal("img/player_normal.png"),
+        SettingsButton("img/button/settings.png"),
+        StartGameButton("img/button/start_game.png"),
+        WhitePixel("img/white_pixel.png");
 
         private final String alias;
         ImageAssets(String alias) {this.alias = alias;}
@@ -65,8 +59,8 @@ public class APManager {
      * 音乐资源枚举
      */
     public enum MusicAssets {
-        Light("Light.mp3"),
-        Rain("Rain.mp3");
+        Light("audio/Light.mp3"),
+        Rain("audio/Rain.mp3");
 
         private final String alias;
         MusicAssets(String alias) {this.alias = alias;}
@@ -97,6 +91,22 @@ public class APManager {
         private final String alias;
         SpineJsonAssets(String alias) {this.alias = alias;}
         public String getAlias() {return alias;}
+    }
+
+    /**
+     * Shader 资源枚举
+     * <br><br>
+     * 顶点和面的 shader 文件之间使用 | 分割
+     * 该类型资源不会被统一读取
+     */
+    public enum ShaderAssets {
+        Blur("shaders/blurVertex.glsl|shaders/blurFragment.glsl");
+
+        private final String alias;
+        ShaderAssets(String alias) {this.alias = alias;}
+        public String getAlias() {return alias;}
+        public String getAliasVertex() {return alias.split("\\|")[0];}
+        public String getAliasFragment() {return alias.split("\\|")[1];}
     }
 
     /**
@@ -152,7 +162,7 @@ public class APManager {
     /** 
      * 将加载字典注入加载器
      * <br><br>
-     * 若需要 Shaders，使用同步加载而非此异步加载
+     * 某些类型只能使用同步加载而非当前异步加载
      */
     public void startAssetsLoading() {
 
@@ -169,21 +179,16 @@ public class APManager {
                 // 根据类型加载资源
 
                 if (resourceClass == Texture.class) {
-                     if (usingMipMap) assetManager.load(textureFile(resourcePath), Texture.class, textureMipmapParam);
-                     else assetManager.load(textureFile(resourcePath), Texture.class);
-
+                    if (usingMipMap) assetManager.load(resourcePath, Texture.class, textureMipmapParam);
+                    else assetManager.load(resourcePath, Texture.class);
                 } else if (resourceClass == Music.class) {
-                    assetManager.load(audioFile(resourcePath), Music.class);
-
+                    assetManager.load(resourcePath, Music.class);
                 } else if (resourceClass == Skin.class) {
-                    assetManager.load(skinFile(resourcePath), Skin.class);
-
+                    assetManager.load(resourcePath, Skin.class);
                 } else if (resourceClass == Sound.class) {
-                    assetManager.load(soundFile(resourcePath), Sound.class);
-
+                    assetManager.load(resourcePath, Sound.class);
                 } else if (resourceClass == TextureAtlas.class) {
                     assetManager.load(resourcePath, TextureAtlas.class);
-
                 }
             }
         }
@@ -192,7 +197,7 @@ public class APManager {
     }
 
     /**
-     * 获得图像资源对象
+     * 获得 Image 资源对象
      * @param resourceEnum 图像资源枚举
      * @return 指定资源
      */
@@ -201,7 +206,7 @@ public class APManager {
     }
 
     /**
-     * 获得音乐资源对象
+     * 获得 Music 资源对象
      * @param resourceEnum 音乐资源枚举
      * @return 指定资源
      */
@@ -219,89 +224,49 @@ public class APManager {
     }
 
     /**
+     * 获得 Shader 资源对象
+     */
+    public ShaderProgram get(ShaderAssets resourceEnum) {
+        return shaderLoad(resourceEnum.getAliasVertex(), resourceEnum.getAliasFragment());
+    }
+
+    /**
      * 获得资源对象
      * @param resourcePath 资源路径
      * @param resourceClass 资源类型
      * @return 指定资源
      */
     public <T> T get(String resourcePath, Class<T> resourceClass) {
-        String fullPath;
-
-        // 根据资源类型添加相对路径前缀
-        if (resourceClass == Texture.class) {
-            fullPath = textureFile(resourcePath);
-        } else if (resourceClass == Music.class) {
-            fullPath = audioFile(resourcePath);
-        } else if (resourceClass == Skin.class) {
-            fullPath = skinFile(resourcePath);
-        } else if (resourceClass == Sound.class) {
-            fullPath = soundFile(resourcePath);
-        } else {
-            fullPath = resourcePath;
-        }
-
         // 未实际加载的资源进行同步加载
-        if (!assetManager.isLoaded(fullPath)) {
-            Gdx.app.log("AssetsPathManager", fullPath + " hasn't loaded by AssetManager. Load synchronously");
-            assetManager.load(fullPath, resourceClass);
+        if (!assetManager.isLoaded(resourcePath)) {
+            Gdx.app.log("AssetsPathManager", resourcePath + " hasn't loaded by AssetManager. Load synchronously");
+            assetManager.load(resourcePath, resourceClass);
             assetManager.finishLoading();
         }
 
-        return assetManager.get(fullPath, resourceClass);
+        return assetManager.get(resourcePath, resourceClass);
     }
 
     public static Music audioLoad(String fileName) {
-        return Gdx.audio.newMusic(Gdx.files.internal(audioFile(fileName)));
+        return Gdx.audio.newMusic(Gdx.files.internal(fileName));
     }
     public static Texture textureLoad(String fileName) {
-        return new Texture(textureFile(fileName));
+        return new Texture(fileName);
     }
     public static ShaderProgram shaderLoad(String vertexFileName, String fragmentFileName) {
         return new ShaderProgram(
-            Gdx.files.internal(shaderFile(vertexFileName)),
-            Gdx.files.internal(shaderFile(fragmentFileName))
+            Gdx.files.internal(vertexFileName),
+            Gdx.files.internal(fragmentFileName)
         );
     }
     public static Skin skinLoad(String skinJsonFile) {
-        return new Skin(Gdx.files.internal(skinFile(skinJsonFile)));
+        return new Skin(Gdx.files.internal(skinJsonFile));
     }
     public static Sound soundLoad(String soundFile) {
-        return Gdx.audio.newSound(Gdx.files.internal(soundFile(soundFile)));
+        return Gdx.audio.newSound(Gdx.files.internal(soundFile));
     }
     public static TextureAtlas textureAtlasLoad(String testureAtlasFile) {
         return new TextureAtlas(Gdx.files.internal(testureAtlasFile));
-    }
-
-    public static String audioFile(String fileName) {
-        return audioPath + "/" + fileName;
-    }
-    public static String textureFile(String fileName) {
-        return texturePath + "/" + fileName;
-    }
-    public static String shaderFile(String fileName) {
-        return shaderPath + "/" + fileName;
-    }
-    public static String skinFile(String fileName) {
-        return skinPath + "/" + fileName;
-    }
-    public static String soundFile(String fileName) {
-        return soundPath + "/" + fileName;
-    }
-
-    public static String getAudioPath() {
-        return audioPath;
-    }
-    public static String getTexturePath() {
-        return texturePath;
-    }
-    public static String getShaderPath() {
-        return shaderPath;
-    }
-    public static String getSkinPath() {
-        return skinPath;
-    }
-    public static String getSoundPath() {
-        return soundPath;
     }
 
     public FileHandle fileObj(String filePath) {

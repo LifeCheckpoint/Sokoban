@@ -37,8 +37,8 @@ public class AboutScene extends SokoyoScene {
 
         moveTrace = new MouseMovingTraceManager(viewport);
 
-        buttonContainer = new ImageButtonContainer(gameMain.getAssetsPathManager());
-        labelContainer = new ImageLabelContainer(0.008f, gameMain.getAssetsPathManager());
+        buttonContainer = new ImageButtonContainer(gameMain);
+        labelContainer = new ImageLabelContainer(0.008f, gameMain);
 
         // 初始化按钮
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
@@ -46,7 +46,7 @@ public class AboutScene extends SokoyoScene {
 
         // 信息 label
         infoLabel = labelContainer.create(APManager.ImageAssets.AboutInfo);
-        infoLabelEgg = labelContainer.create(APManager.ImageAssets.AboutInfo2);
+        infoLabelEgg = labelContainer.create(APManager.ImageAssets.AboutInfoEGG);
         infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
         infoLabelEgg.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 

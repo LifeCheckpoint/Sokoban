@@ -143,9 +143,9 @@ public class GameWelcomeScene extends SokoyoScene {
 
         // 背景纹理组
         backgroundTextures = new Texture[]{
-            apManager.get("box.png", Texture.class),
-            apManager.get("box_active.png", Texture.class),
-            apManager.get("target.png", Texture.class)
+            apManager.get(APManager.ImageAssets.Box),
+            apManager.get(APManager.ImageAssets.BoxActive),
+            apManager.get(APManager.ImageAssets.BoxTarget)
         };
 
         // 背景初始化
@@ -271,7 +271,7 @@ public class GameWelcomeScene extends SokoyoScene {
         
         // 编译着色器
         ShaderProgram.pedantic = false;
-        blurShader = APManager.shaderLoad("blurVertex.glsl", "blurFragment.glsl");
+        blurShader = gameMain.getAssetsPathManager().get(APManager.ShaderAssets.Blur);
         if (!blurShader.isCompiled()) {
             Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
             return;

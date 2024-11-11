@@ -2,6 +2,7 @@ package com.sokoban.polygon.container;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 
 /**
@@ -11,12 +12,12 @@ import com.sokoban.manager.APManager;
  */
 public class ImageLabelContainer extends ImageContainer {
 
-    public ImageLabelContainer(float scaling, APManager apManager) {
-        super(apManager, scaling);
+    public ImageLabelContainer(float scaling, Main gameMain) {
+        super(gameMain, scaling);
     }
 
-    public ImageLabelContainer(APManager apManager) {
-        super(apManager);
+    public ImageLabelContainer(Main gameMain) {
+        super(gameMain);
     }
 
     public Image create(APManager.ImageAssets resourceEnum) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 
 public class WhiteProgressBar extends Actor {
@@ -33,10 +34,10 @@ public class WhiteProgressBar extends Actor {
 
     private Texture whitePixel;
 
-    public WhiteProgressBar() {
+    public WhiteProgressBar(Main gameMain) {
         setWidth(outerBorderWidth);
         setHeight(outerBorderHeight);
-        whitePixel = APManager.textureLoad("white_pixel.png");
+        whitePixel = gameMain.getAssetsPathManager().get(APManager.ImageAssets.WhitePixel);
     }
 
     // 设置进度条值
