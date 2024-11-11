@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
 /**
@@ -25,9 +26,9 @@ public class CheckboxObject {
      */
     private boolean checkboxType;
 
-    public CheckboxObject(Main gameMain, String checkboxTextTexturePath, boolean isChecked, boolean isEnabled) {
+    public CheckboxObject(Main gameMain, AssetsPathManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled) {
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain.getAssetsPathManager(), DEFAULT_TEXT_SCALE);
-        Image CheckboxImage = CheckboxImageContainer.create(checkboxTextTexturePath);
+        Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
         init(gameMain, CheckboxImage, isChecked, isEnabled, DEFAULT_BUFF);
     }
 
@@ -35,9 +36,9 @@ public class CheckboxObject {
         init(gameMain, checkboxText, isChecked, isEnabled, DEFAULT_BUFF);
     }
 
-    public CheckboxObject(Main gameMain, String checkboxTextTexturePath, boolean isChecked, boolean isEnabled, float buff) {
+    public CheckboxObject(Main gameMain, AssetsPathManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled, float buff) {
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain.getAssetsPathManager(), DEFAULT_TEXT_SCALE);
-        Image CheckboxImage = CheckboxImageContainer.create(checkboxTextTexturePath);
+        Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
         init(gameMain, CheckboxImage, isChecked, isEnabled, buff);
     }
 

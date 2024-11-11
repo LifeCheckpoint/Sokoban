@@ -27,8 +27,8 @@ public class ImageButtonContainer extends ImageContainer {
     }
 
     // 创建按钮
-    public Image create(String internalpath) {
-        return create(readDrawableFromFile(internalpath));
+    public Image create(AssetsPathManager.ImageAssets resourceEnum) {
+        return create(readDrawableFromFile(resourceEnum));
     }
 
     public Image create(Drawable drawable) {

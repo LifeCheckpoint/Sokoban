@@ -19,11 +19,11 @@ public class ImageLabelContainer extends ImageContainer {
         super(apManager);
     }
 
-    public Image create(String internalpath) {
-        return create(readDrawableFromFile(internalpath));
+    public Image create(AssetsPathManager.ImageAssets resourceEnum) {
+        return create(readDrawableFromFile(resourceEnum));
     }
-    public Image create(String internalpath, float scaling) {
-        return create(readDrawableFromFile(internalpath), scaling);
+    public Image create(AssetsPathManager.ImageAssets resourceEnum, float scaling) {
+        return create(readDrawableFromFile(resourceEnum), scaling);
     }
     public Image create(Drawable drawable) {
         return super.create(drawable, false);

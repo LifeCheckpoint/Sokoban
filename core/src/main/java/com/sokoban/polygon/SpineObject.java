@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 
 /**
  * Spine 对象类，支持移动缩放与动画切换、错误处理、性能优化、功能扩展<br><br>
@@ -53,21 +54,21 @@ public class SpineObject extends Actor implements Disposable {
      * 构造函数
      * @throws IllegalArgumentException 如果资源加载失败
      */
-    public SpineObject(Main gameMain, String atlasFilePath, String skeletonDataJsonPath) {
+    public SpineObject(Main gameMain, AssetsPathManager.SpineAtlasAssets atlasEnum, AssetsPathManager.SpineJsonAssets skeletonDataJsonEnum) {
         try {
             // 加载纹理图集
-            atlas = gameMain.getAssetsPathManager().get(atlasFilePath, TextureAtlas.class);
+            atlas = gameMain.getAssetsPathManager().get(atlasEnum);
             if (atlas == null) {
-                throw new IllegalArgumentException("Failed to load atlas: " + atlasFilePath);
+                throw new IllegalArgumentException("Failed to load atlas: " + atlasEnum.getAlias());
             }
             
             // 创建Skeleton数据
             SkeletonJson json = new SkeletonJson(atlas);
             json.setScale(1f);
             
-            skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(skeletonDataJsonPath));
+            skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(skeletonDataJsonEnum.getAlias()));
             if (skeletonData == null) {
-                throw new IllegalArgumentException("Failed to load skeleton data: " + skeletonDataJsonPath);
+                throw new IllegalArgumentException("Failed to load skeleton data: " + skeletonDataJsonEnum.getAlias());
             }
             
             // 初始化动画状态数据

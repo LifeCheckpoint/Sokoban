@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -40,12 +41,12 @@ public class AboutScene extends SokoyoScene {
         labelContainer = new ImageLabelContainer(0.008f, gameMain.getAssetsPathManager());
 
         // 初始化按钮
-        returnButton = buttonContainer.create("left_arrow.png");
+        returnButton = buttonContainer.create(AssetsPathManager.ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 
         // 信息 label
-        infoLabel = labelContainer.create("about_info.png");
-        infoLabelEgg = labelContainer.create("about_info2.png");
+        infoLabel = labelContainer.create(AssetsPathManager.ImageAssets.AboutInfo);
+        infoLabelEgg = labelContainer.create(AssetsPathManager.ImageAssets.AboutInfo2);
         infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
         infoLabelEgg.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 

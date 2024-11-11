@@ -28,8 +28,8 @@ public class ImageContainer {
     public ImageContainer() {}
 
     // 从文件读取图片
-    protected Drawable readDrawableFromFile(String internalpath) {
-        Texture texture = apManager.get(internalpath, Texture.class);
+    protected Drawable readDrawableFromFile(AssetsPathManager.ImageAssets resourceEnum) {
+        Texture texture = apManager.get(resourceEnum);
         TextureRegion region = new TextureRegion(texture);
         region.setRegion(0, 0, texture.getWidth(), texture.getHeight());
         return new TextureRegionDrawable(region);
@@ -41,8 +41,8 @@ public class ImageContainer {
      * @param torchable 指定是否允许交互
      * @return Image 组件
      */
-    protected Image create(String internalpath, boolean torchable) {
-        return create(readDrawableFromFile(internalpath), torchable);
+    protected Image create(AssetsPathManager.ImageAssets resourceEnum, boolean torchable) {
+        return create(readDrawableFromFile(resourceEnum), torchable);
     }
 
     /**

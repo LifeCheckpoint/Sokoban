@@ -30,8 +30,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         apManager = new AssetsPathManager();
-        AssetsList asList = new AssetsList();
-        asList.setAssets(apManager);
+        apManager.preloadAllAssets();
 
         screenManager = new ScreenManager();
         screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));

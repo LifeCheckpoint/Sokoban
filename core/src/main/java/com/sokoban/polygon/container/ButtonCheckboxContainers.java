@@ -2,6 +2,7 @@ package com.sokoban.polygon.container;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.polygon.CheckboxObject;
 
 /**
@@ -17,8 +18,8 @@ public class ButtonCheckboxContainers {
      * @param isEnabled 是否启用
      * @return CheckboxTextObject对象
      */
-    public CheckboxObject create(Main gameMain, String internalpath, boolean isChecked, boolean isEnabled) {
-        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(internalpath);
+    public CheckboxObject create(Main gameMain, AssetsPathManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled) {
+        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled);
     }
 
@@ -31,8 +32,8 @@ public class ButtonCheckboxContainers {
      * @param buff 左右间距
      * @return CheckboxTextObject对象
      */
-    public CheckboxObject create(Main gameMain, String internalpath, boolean isChecked, boolean isEnabled, float buff) {
-        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(internalpath);
+    public CheckboxObject create(Main gameMain, AssetsPathManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff) {
+        Image button = new ImageButtonContainer(gameMain.getAssetsPathManager()).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
     }
 }

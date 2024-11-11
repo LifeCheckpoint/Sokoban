@@ -78,8 +78,8 @@ public class GameWelcomeScene extends SokoyoScene {
 
         // 背景音乐处理
         musicManager = new MusicManager(apManager);
-        musicManager.loadMusic(AudioEnums.Background1, "Light.mp3");
-        musicManager.loadMusic(AudioEnums.Background2, "Rain.mp3");
+        musicManager.loadMusic(AudioEnums.Background1, AssetsPathManager.MusicAssets.Light);
+        musicManager.loadMusic(AudioEnums.Background2, AssetsPathManager.MusicAssets.Rain);
         musicManager.setVolume(0.2f);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
@@ -90,19 +90,19 @@ public class GameWelcomeScene extends SokoyoScene {
         // 初始化按钮
         buttonContainer = new ButtonCheckboxContainers();
 
-        startGameButton = buttonContainer.create(gameMain, "start_game.png", false, true, 0.1f);
+        startGameButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.StartGameButton, false, true, 0.1f);
         startGameButton.setPosition(1f, 2.6f);
         startGameButton.setCheckboxType(false);
 
-        aboutButton = buttonContainer.create(gameMain, "about.png", false, true, 0.1f);
+        aboutButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.AboutButton, false, true, 0.1f);
         aboutButton.setPosition(1f, 1.6f);
         aboutButton.setCheckboxType(false);
 
-        exitButton = buttonContainer.create(gameMain, "exit.png", false, true, 0.1f);
+        exitButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.ExitButton, false, true, 0.1f);
         exitButton.setPosition(3f, 0.8f);
         exitButton.setCheckboxType(false);
 
-        settingsButton = buttonContainer.create(gameMain, "settings.png", false, true, 0.1f);
+        settingsButton = buttonContainer.create(gameMain, AssetsPathManager.ImageAssets.SettingsButton, false, true, 0.1f);
         settingsButton.setPosition(1f, 0.8f);
         settingsButton.setCheckboxType(false);
 
@@ -176,7 +176,7 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle.startCreateParticles();
 
         // Spine 背景玩家装饰测试
-        playerObject = new SpineObject(gameMain, "img/test_player1/player1_sp.atlas", "img/test_player1/player1_sp.json");
+        playerObject = new SpineObject(gameMain, AssetsPathManager.SpineAtlasAssets.Player1, AssetsPathManager.SpineJsonAssets.Player1);
         playerObject.setAnimation(0, "left", true);
 
         playerObject.setPosition(4f, 4f);

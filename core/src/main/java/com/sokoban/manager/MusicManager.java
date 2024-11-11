@@ -11,24 +11,24 @@ import java.util.Random;
 // 管理音乐播放
 public class MusicManager {
     private AssetsPathManager apManager;
+    private AudioEnums currentMusicName;
+    private boolean isPlaying = false;
+    private float volume = 1.0f;
     private Map<AudioEnums, Music> musicMap;
     private Music currentMusic;
-    private AudioEnums currentMusicName;
-    private float volume = 1.0f;
-    private boolean isPlaying = false;
 
     public MusicManager(AssetsPathManager apManager) {
         musicMap = new HashMap<>();
         this.apManager = apManager;
     }
 
-    public void loadMusic(AudioEnums audioName, String filePath) {
-        if (musicMap.containsKey(audioName)) {
-            Gdx.app.log("MusicManager", "Music already loaded: " + audioName.toString());
+    public void loadMusic(AudioEnums audioAlias, AssetsPathManager.MusicAssets audioAssets) {
+        if (musicMap.containsKey(audioAlias)) {
+            Gdx.app.log("MusicManager", "Music already loaded: " + audioAlias.toString());
             return;
         }
-        Music music = apManager.get(filePath, Music.class);
-        musicMap.put(audioName, music);
+        Music music = apManager.get(audioAssets);
+        musicMap.put(audioAlias, music);
     }
 
     // 播放

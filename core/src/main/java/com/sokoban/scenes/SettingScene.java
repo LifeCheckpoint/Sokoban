@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -32,11 +33,11 @@ public class SettingScene extends SokoyoScene {
         // labelContainer = new ImageLabelContainer(0.3f);
 
         // 初始化按钮
-        returnButton = buttonContainer.create("left_arrow.png");
+        returnButton = buttonContainer.create(AssetsPathManager.ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 
         // Mipmap 设置
-        mipmapCheckbox = new CheckboxObject(gameMain, "mipmap.png", true, true, 0.16f);
+        mipmapCheckbox = new CheckboxObject(gameMain, AssetsPathManager.ImageAssets.Mipmap, true, true, 0.16f);
         mipmapCheckbox.setPosition(1f, 7f);
         mipmapCheckbox.setCheckboxType(true);
 
