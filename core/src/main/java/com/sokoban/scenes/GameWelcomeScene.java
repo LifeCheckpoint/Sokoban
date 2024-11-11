@@ -23,10 +23,10 @@ import com.sokoban.manager.AssetsPathManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
-import com.sokoban.polygon.ButtonCheckboxContainers;
-import com.sokoban.polygon.CheckboxTextObject;
+import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.SpineObject;
-import com.sokoban.polygon.TextureSquare;;
+import com.sokoban.polygon.TextureSquare;
+import com.sokoban.polygon.container.ButtonCheckboxContainers;;
 
 public class GameWelcomeScene extends SokoyoScene {
 
@@ -58,14 +58,14 @@ public class GameWelcomeScene extends SokoyoScene {
     ButtonCheckboxContainers buttonContainer;
     private Texture[] backgroundTextures;
 
-    private CheckboxTextObject startGameButton;
-    private CheckboxTextObject aboutButton;
-    private CheckboxTextObject exitButton;
-    private CheckboxTextObject settingsButton;
+    private CheckboxObject startGameButton;
+    private CheckboxObject aboutButton;
+    private CheckboxObject exitButton;
+    private CheckboxObject settingsButton;
 
     // Spine
     private SpineObject playerObject;
-    private CheckboxTextObject mipmapCheckbox;
+    private CheckboxObject mipmapCheckbox;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -184,7 +184,7 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setSize(1f, 1f);
 
         // Spine 复选框测试
-        mipmapCheckbox = new CheckboxTextObject(gameMain, "mipmap.png", true, true, 0.16f);
+        mipmapCheckbox = new CheckboxObject(gameMain, "mipmap.png", true, true, 0.16f);
         mipmapCheckbox.setPosition(6f, 3f);
         mipmapCheckbox.setCheckboxType(true);
 

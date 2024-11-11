@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
-import com.sokoban.polygon.ImageButtonContainer;
-import com.sokoban.polygon.ImageLabelContainer;
+import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.polygon.container.ImageLabelContainer;
 
 public class AboutScene extends SokoyoScene {
 

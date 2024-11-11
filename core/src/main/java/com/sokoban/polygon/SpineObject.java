@@ -20,9 +20,9 @@ import com.sokoban.Main;
  */
 public class SpineObject extends Actor implements Disposable {
     // 资源相关
-    private TextureAtlas playerAtlas;
-    private SkeletonData playerSkeletonData;
-    private AnimationStateData playerAnimationData;
+    private TextureAtlas atlas;
+    private SkeletonData skeletonData;
+    private AnimationStateData animationData;
     private PolygonSpriteBatch batch;
     private SkeletonRenderer skeletonRenderer;
     
@@ -30,7 +30,7 @@ public class SpineObject extends Actor implements Disposable {
     private Skeleton skeleton;
     private AnimationState animationState;
     
-    // 缓存原始尺寸，避免重复获取
+    // 原始尺寸
     private float originalWidth;
     private float originalHeight;
     
@@ -56,23 +56,23 @@ public class SpineObject extends Actor implements Disposable {
     public SpineObject(Main gameMain, String atlasFilePath, String skeletonDataJsonPath) {
         try {
             // 加载纹理图集
-            playerAtlas = gameMain.getAssetsPathManager().get(atlasFilePath, TextureAtlas.class);
-            if (playerAtlas == null) {
+            atlas = gameMain.getAssetsPathManager().get(atlasFilePath, TextureAtlas.class);
+            if (atlas == null) {
                 throw new IllegalArgumentException("Failed to load atlas: " + atlasFilePath);
             }
             
             // 创建Skeleton数据
-            SkeletonJson json = new SkeletonJson(playerAtlas);
+            SkeletonJson json = new SkeletonJson(atlas);
             json.setScale(1f);
             
-            playerSkeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(skeletonDataJsonPath));
-            if (playerSkeletonData == null) {
+            skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(skeletonDataJsonPath));
+            if (skeletonData == null) {
                 throw new IllegalArgumentException("Failed to load skeleton data: " + skeletonDataJsonPath);
             }
             
             // 初始化动画状态数据
-            playerAnimationData = new AnimationStateData(playerSkeletonData);
-            playerAnimationData.setDefaultMix(defaultMixTime);
+            animationData = new AnimationStateData(skeletonData);
+            animationData.setDefaultMix(defaultMixTime);
             
             // 创建渲染器
             batch = new PolygonSpriteBatch();
@@ -80,12 +80,12 @@ public class SpineObject extends Actor implements Disposable {
             skeletonRenderer.setPremultipliedAlpha(true);
             
             // 创建骨骼和动画状态
-            skeleton = new Skeleton(playerSkeletonData);
-            animationState = new AnimationState(playerAnimationData);
+            skeleton = new Skeleton(skeletonData);
+            animationState = new AnimationState(animationData);
             
             // 缓存原始尺寸
-            originalWidth = playerSkeletonData.getWidth();
-            originalHeight = playerSkeletonData.getHeight();
+            originalWidth = skeletonData.getWidth();
+            originalHeight = skeletonData.getHeight();
             
             // 设置初始大小和位置
             setSize(originalWidth, originalHeight);
@@ -164,8 +164,8 @@ public class SpineObject extends Actor implements Disposable {
      */
     public void setDefaultMixTime(float mixTime) {
         this.defaultMixTime = mixTime;
-        if (playerAnimationData != null) {
-            playerAnimationData.setDefaultMix(mixTime);
+        if (animationData != null) {
+            animationData.setDefaultMix(mixTime);
         }
     }
 
@@ -173,8 +173,8 @@ public class SpineObject extends Actor implements Disposable {
      * 设置特定动画之间的混合时间
      */
     public void setMixTime(String fromAnimation, String toAnimation, float mixTime) {
-        if (playerAnimationData != null) {
-            playerAnimationData.setMix(fromAnimation, toAnimation, mixTime);
+        if (animationData != null) {
+            animationData.setMix(fromAnimation, toAnimation, mixTime);
         }
     }
 
@@ -189,7 +189,7 @@ public class SpineObject extends Actor implements Disposable {
         try {
             return animationState.setAnimation(trackIndex, animationName, loop);
         } catch (Exception e) {
-            System.err.println("Failed to set animation: " + animationName + " - " + e.getMessage());
+            Gdx.app.error("SpineObject", "Failed to set animation: " + animationName + " - " + e.getMessage());
             return null;
         }
     }
@@ -207,7 +207,7 @@ public class SpineObject extends Actor implements Disposable {
         try {
             return animationState.addAnimation(trackIndex, animationName, loop, delay);
         } catch (Exception e) {
-            System.err.println("Failed to add animation: " + animationName + " - " + e.getMessage());
+            Gdx.app.error("SpineObject", "Failed to add animation: " + animationName + " - " + e.getMessage());
             return null;
         }
     }
@@ -262,7 +262,7 @@ public class SpineObject extends Actor implements Disposable {
             // 正常绘制骨骼
             skeletonRenderer.draw(batch, skeleton);
             
-            // 调试绘制
+            // 调试绘制（未测试）
             if (debugBones) {
                 if (debugBones) {
                     // 如果是4.0以下版本使用 debugRenderer.draw(batch, skeleton);
@@ -309,8 +309,8 @@ public class SpineObject extends Actor implements Disposable {
         if (batch != null) {
             batch.dispose();
         }
-        if (playerAtlas != null) {
-            playerAtlas.dispose();
+        if (atlas != null) {
+            atlas.dispose();
         }
     }
 }
