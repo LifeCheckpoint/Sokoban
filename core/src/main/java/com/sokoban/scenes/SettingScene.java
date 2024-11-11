@@ -11,6 +11,10 @@ import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
+/**
+ * 设置界面
+ * @author Life_Checkpoint
+ */
 public class SettingScene extends SokoyoScene {
 
     // Background 粒子

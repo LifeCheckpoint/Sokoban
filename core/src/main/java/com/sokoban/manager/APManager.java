@@ -27,8 +27,9 @@ public class APManager {
     AssetManager assetManager = new AssetManager();
     // 资源类型-路径映射表
     private Map<Class<?>, List<String>> assetsMap = new HashMap<>();
-
     public APManager() {}
+
+    /*  以下为资源枚举 */
 
     /**
      * 图像资源枚举
@@ -109,6 +110,8 @@ public class APManager {
         public String getAliasFragment() {return alias.split("\\|")[1];}
     }
 
+    /*  以上为资源枚举 */
+
     /**
      * 通过以上定义的资源枚举<b>将所有 Image Music 和 Spine 资源加入映射表</b>
      */
@@ -136,8 +139,6 @@ public class APManager {
      * <b>只有 Texture, Music Audio Sound Skin 可以使用路径缩写</b>
      * <br><br>
      * <b> Atlas 等文件使用全称而非路径缩写</b>
-     * <br><br>
-     * SkeletonData 暂未得出实现方案，暂时不实现
      * @param resourceClass 资源类型
      * @param resourcePath 资源路径
      */

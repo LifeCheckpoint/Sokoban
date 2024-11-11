@@ -8,7 +8,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sokoban.Main;
 
-// 统一父类，控制输入处理器和初始化
+/** 
+ * Scene 的统一父类
+ * <br><br>
+ * 拥有控制输入处理器和初始化权
+ * @author Life_Checkpoint
+ */
 public abstract class SokoyoScene extends ApplicationAdapter implements Screen {
     private boolean initFlag = false;
 

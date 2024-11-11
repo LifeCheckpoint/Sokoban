@@ -28,6 +28,10 @@ import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;;
 
+/**
+ * 游戏开始欢迎界面
+ * @author Life_Checkpoint
+ */
 public class GameWelcomeScene extends SokoyoScene {
 
     // 画面相机跟踪

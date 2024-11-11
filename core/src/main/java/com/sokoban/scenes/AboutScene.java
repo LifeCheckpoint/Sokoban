@@ -11,6 +11,10 @@ import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
+/**
+ * 关于界面
+ * @author Life_Checkpoint
+ */
 public class AboutScene extends SokoyoScene {
 
     // 画面相机跟踪
@@ -38,7 +42,7 @@ public class AboutScene extends SokoyoScene {
         moveTrace = new MouseMovingTraceManager(viewport);
 
         buttonContainer = new ImageButtonContainer(gameMain);
-        labelContainer = new ImageLabelContainer(0.008f, gameMain);
+        labelContainer = new ImageLabelContainer(gameMain, 0.008f);
 
         // 初始化按钮
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);

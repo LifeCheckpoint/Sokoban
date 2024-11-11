@@ -2,6 +2,10 @@ package com.sokoban;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * 数学增强类
+ * @author Life_Checkpoint
+ */
 public class MathUtilsEx {
     // 二次贝塞尔曲线
     public static float bezier(float t, float p0, float p1, float p2) {

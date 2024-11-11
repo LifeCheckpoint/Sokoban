@@ -12,7 +12,7 @@ import com.sokoban.manager.APManager;
  */
 public class ImageLabelContainer extends ImageContainer {
 
-    public ImageLabelContainer(float scaling, Main gameMain) {
+    public ImageLabelContainer(Main gameMain, float scaling) {
         super(gameMain, scaling);
     }
 
