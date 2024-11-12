@@ -30,6 +30,8 @@ public class SettingScene extends SokoyoScene {
     private CheckboxObject mipmapCheckbox;
     private CheckboxObject vsyncCheckbox;
 
+    private SliderObject masterVolumeSlider;
+
     public SettingScene(Main gameMain) {
         super(gameMain);
     }
@@ -55,6 +57,9 @@ public class SettingScene extends SokoyoScene {
         vsyncCheckbox.setCheckboxType(true);
 
         // 音量设置
+        masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.masterVolume * 100, 3, 1);
+        masterVolumeSlider.setPosition(2f, 5f);
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -68,19 +73,16 @@ public class SettingScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        SliderObject testNumberDisplay = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 0f, 100f, 100f, 3, 1);
-        testNumberDisplay.setPosition(5f, 3f);
-
         // 添加 UI
         stage.addActor(returnButton);
         stage.addActor(mipmapCheckbox.getCheckbox());
         stage.addActor(mipmapCheckbox.getCheckboxText());
         stage.addActor(vsyncCheckbox.getCheckbox());
         stage.addActor(vsyncCheckbox.getCheckboxText());
-        stage.addActor(testNumberDisplay.getHintTextImage());
-        stage.addActor(testNumberDisplay.getSlider());
-        stage.addActor(testNumberDisplay.getCombinedNumberDisplayObject().getDecimalPoint());
-        testNumberDisplay.getCombinedNumberDisplayObject().getNumberDigitDisplayObjects().forEach(dig -> stage.addActor(dig));
+        stage.addActor(masterVolumeSlider.getHintTextImage());
+        stage.addActor(masterVolumeSlider.getSlider());
+        stage.addActor(masterVolumeSlider.getCombinedNumberDisplayObject().getDecimalPoint());
+        masterVolumeSlider.getCombinedNumberDisplayObject().getNumberDigitDisplayObjects().forEach(dig -> stage.addActor(dig));
     }
 
     // 输入事件处理
@@ -90,9 +92,9 @@ public class SettingScene extends SokoyoScene {
             SoundSettings soundSet = gameMain.getSettingManager().gameSettings.sound;
 
             graphicsSet.mipmap = mipmapCheckbox.getCheckbox().getChecked();
-            graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();;
+            graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();
 
-            soundSet.masterVolume = 1.0f;
+            soundSet.masterVolume = masterVolumeSlider.getSlider().getValue();
             soundSet.musicVolume = 1.0f;
             soundSet.effectsVolume = 1.0f;
 

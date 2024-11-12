@@ -128,6 +128,7 @@ public class SliderObject {
     }
 
     public float getValue() {
+        // TODO
         return value;
     }
 
