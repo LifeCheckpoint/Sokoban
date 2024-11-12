@@ -37,9 +37,6 @@ public class GameWelcomeScene extends SokoyoScene {
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
 
-    // 背景音乐
-    private MusicManager musicManager;
-
     // Background
     private TextureSquare[][] backgroundGrid;
     private final int backgroundCol = 6;
@@ -81,7 +78,7 @@ public class GameWelcomeScene extends SokoyoScene {
         APManager apManager = gameMain.getAssetsPathManager();
 
         // 背景音乐处理
-        musicManager = new MusicManager(gameMain);
+        MusicManager musicManager = gameMain.getMusicManager();
         musicManager.loadMusic(AudioEnums.Background1, APManager.MusicAssets.Light);
         musicManager.loadMusic(AudioEnums.Background2, APManager.MusicAssets.Rain);
         musicManager.setVolume(0.2f);
@@ -360,7 +357,6 @@ public class GameWelcomeScene extends SokoyoScene {
         if (backgroundTextures != null) for (Texture texture : backgroundTextures) if (texture != null) texture.dispose();
         if (blurShader != null) blurShader.dispose();
         if (blurBuffers != null) for (FrameBuffer buffer : blurBuffers) if (buffer != null) buffer.dispose();
-        if (musicManager != null) musicManager.dispose(); // 释放音乐资源
         super.dispose();
     }
 

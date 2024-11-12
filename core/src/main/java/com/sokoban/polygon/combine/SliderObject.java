@@ -20,6 +20,7 @@ public class SliderObject {
     private CombinedNumberDisplayObject combinedNumberDisplayObject;
     private float value;
     private boolean showFirstZeros;
+    private ValueUpdateCallback callback = null; // SliderObject 自定义更新事件，与 slider 本身更新事件不一致
 
     private final float DEFAULT_TEXT_SCALE = 0.005f;
     private final float DEFAULT_BUFF = 0.16f;
@@ -68,6 +69,8 @@ public class SliderObject {
             @Override
             public void onValueUpdate(float value) {
                 combinedNumberDisplayObject.setValue(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, toMapMinValue, toMapMaxValue));
+                // 调用 SliderObject 自定义更新事件
+                if (callback != null) callback.onValueUpdate(value);
                 // System.out.println(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, toMapMinValue, toMapMaxValue));
             }
         });
@@ -109,6 +112,10 @@ public class SliderObject {
 
     public void setShowFirstZeros(boolean showFirstZeros) {
         this.showFirstZeros = showFirstZeros;
+    }
+
+    public void setActionWhenValueUpdate(ValueUpdateCallback callback) {
+        this.callback = callback;
     }
 
     public float getOriginalMapMinValue() {

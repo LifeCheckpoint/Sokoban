@@ -10,6 +10,7 @@ import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
+import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -60,6 +61,12 @@ public class SettingScene extends SokoyoScene {
         masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
                                 0f, 100f, gameMain.getSettingManager().gameSettings.sound.masterVolume * 100, 3, 1);
         masterVolumeSlider.setPosition(2f, 5f);
+        masterVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
+            @Override
+            public void onValueUpdate(float value) {
+                gameMain.getMusicManager().setVolume(value);
+            }
+        });
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {

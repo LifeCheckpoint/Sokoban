@@ -9,7 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-// 管理音乐播放
+/**
+ * 音乐播放管理器
+ * @author Life_Checkpoint
+ */
 public class MusicManager {
     private APManager apManager;
     private AudioEnums currentMusicName;
@@ -21,7 +24,8 @@ public class MusicManager {
     public MusicManager(Main gameMain) {
         musicMap = new HashMap<>();
         this.apManager = gameMain.getAssetsPathManager();
-        this.volume = gameMain.getSettingManager().gameSettings.sound.musicVolume;
+        // 主音量 × 音乐音量
+        this.volume = gameMain.getSettingManager().gameSettings.sound.masterVolume * gameMain.getSettingManager().gameSettings.sound.musicVolume;
     }
 
     public void loadMusic(AudioEnums audioAlias, APManager.MusicAssets audioAssets) {

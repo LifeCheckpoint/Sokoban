@@ -9,6 +9,7 @@ import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.manager.APManager;
+import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.ScreenManager;
 
 /** 
@@ -20,6 +21,7 @@ public class Main extends ApplicationAdapter {
     private APManager apManager;
     private SettingManager setManager;
     private ScreenManager screenManager;
+    private MusicManager musicManager;
     
     private int backGroundColorRGBA = 0x101010ff;
 
@@ -47,6 +49,14 @@ public class Main extends ApplicationAdapter {
         return screenManager;
     }
 
+    /**
+     * 获得音乐管理句柄
+     * @return 场景管理句柄
+     */
+    public MusicManager getMusicManager() {
+        return musicManager;
+    }
+
     // 主游戏创建
     @Override
     public void create() {
@@ -56,6 +66,8 @@ public class Main extends ApplicationAdapter {
         
         apManager = new APManager(this);
         apManager.preloadAllAssets();
+
+        musicManager = new MusicManager(this);
 
         screenManager = new ScreenManager();
         screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
