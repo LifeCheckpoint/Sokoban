@@ -18,4 +18,9 @@ public class MathUtilsEx {
         float y = bezier(t, p0.y, p1.y, p2.y);
         return new Vector2(x, y);
     }
+
+    // 线性映射
+    public static float linearMap(float t, float originalMinValue, float originalMaxValue, float mapMinValue, float toMapMaxValue) {
+        return (t - originalMinValue) / (originalMaxValue - originalMinValue) * (toMapMaxValue - mapMinValue) + mapMinValue;
+    }
 }

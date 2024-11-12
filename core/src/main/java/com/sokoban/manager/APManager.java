@@ -52,6 +52,7 @@ public class APManager {
         ExitButton("img/button/exit.png"),
         LeftArrowButton("img/button/left_arrow.png"),
         LoadingAssetsLabel("img/loading_assets.png"),
+        MasterVolume("img/master_volume.png"),
         Mipmap("img/button/mipmap.png"),
         ParticleGray("img/particle1.png"),
         PlayerNormal("img/player_normal.png"),
@@ -83,7 +84,8 @@ public class APManager {
     public enum SpineAtlasAssets {
         Player1("img/test_player1/player1_sp.atlas"),
         Checkbox("img/checkbox/checkbox.atlas"),
-        Slider("img/slider/slider.atlas");
+        Slider("img/slider/slider.atlas"),
+        Numbers("img/numbers/numbers.atlas");
 
         private final String alias;
         SpineAtlasAssets(String alias) {this.alias = alias;}
@@ -98,7 +100,8 @@ public class APManager {
     public enum SpineJsonAssets {
         Player1("img/test_player1/player1_sp.json"),
         Checkbox("img/checkbox/checkbox.json"),
-        Slider("img/slider/slider.json");
+        Slider("img/slider/slider.json"),
+        Numbers("img/numbers/numbers.json");
 
         private final String alias;
         SpineJsonAssets(String alias) {this.alias = alias;}

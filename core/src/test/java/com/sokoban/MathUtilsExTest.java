@@ -49,7 +49,7 @@ public class MathUtilsExTest {
     }
 
     @Test
-    public void testEdgeCases() {
+    public void testBezierEdgeCases() {
         // 测试边界情况：t = 0 和 t = 1
         
         // t = 0
@@ -63,6 +63,19 @@ public class MathUtilsExTest {
         // t = 0.5 (检查中间点)
         result = MathUtilsEx.bezier(0.5f, new Vector2(0f, 0f), new Vector2(2f, 0f), new Vector2(4f, 0f));
         Assert.assertEquals(result, new Vector2(2f, 0f), "The result for t=0.5 should be (2, 0)");
+    }
+
+    // 线性映射测试
+    @Test void testLinear() {
+        float result;
+        result = MathUtilsEx.linearMap(2f, 1f, 3f, 4f, 5f);
+        Assert.assertEquals(result, 4.5, "Thr result for t=2 should be 4.5");
+
+        result = MathUtilsEx.linearMap(1f, 1f, 3f, 4f, 5f);
+        Assert.assertEquals(result, 4, "Thr result for t=1 should be 4");
+
+        result = MathUtilsEx.linearMap(3f, 1f, 3f, 4f, 5f);
+        Assert.assertEquals(result, 5, "Thr result for t=3 should be 5");
     }
 }
 

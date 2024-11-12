@@ -1,4 +1,4 @@
-package com.sokoban.polygon;
+package com.sokoban.polygon.combine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
+import com.sokoban.polygon.PureCheckboxObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
 /**
@@ -26,9 +27,9 @@ public class CheckboxObject {
      */
     private boolean checkboxType;
 
-    public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled) {
+    public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxImageResourceEnum, boolean isChecked, boolean isEnabled) {
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
-        Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
+        Image CheckboxImage = CheckboxImageContainer.create(checkboxImageResourceEnum);
         init(gameMain, CheckboxImage, isChecked, isEnabled, DEFAULT_BUFF);
     }
 

@@ -23,9 +23,9 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
-import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;
+import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;;
 
 /**

@@ -3,7 +3,7 @@ package com.sokoban.polygon.container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
-import com.sokoban.polygon.CheckboxObject;
+import com.sokoban.polygon.combine.CheckboxObject;
 
 /**
  * 复选框装饰按钮容器

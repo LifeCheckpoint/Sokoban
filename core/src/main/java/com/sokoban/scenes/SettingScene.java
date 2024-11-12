@@ -10,8 +10,9 @@ import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
-import com.sokoban.polygon.CheckboxObject;
 import com.sokoban.polygon.PureSliderObject;
+import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
 /**
@@ -29,8 +30,6 @@ public class SettingScene extends SokoyoScene {
 
     private CheckboxObject mipmapCheckbox;
     private CheckboxObject vsyncCheckbox;
-
-    private PureSliderObject masterVolumnSlider;
 
     public SettingScene(Main gameMain) {
         super(gameMain);
@@ -57,8 +56,6 @@ public class SettingScene extends SokoyoScene {
         vsyncCheckbox.setCheckboxType(true);
 
         // 音量设置
-        masterVolumnSlider = new PureSliderObject(gameMain, 0);
-        masterVolumnSlider.setPosition(2f, 3f);
 
         // 返回按钮监听
         returnButton.addListener(new ClickListener() {
@@ -72,13 +69,19 @@ public class SettingScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
+        SliderObject testNumberDisplay = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 0f, 100f, 100f, 2, 1);
+        testNumberDisplay.setPosition(5f, 3f);
+
         // 添加 UI
         stage.addActor(returnButton);
         stage.addActor(mipmapCheckbox.getCheckbox());
         stage.addActor(mipmapCheckbox.getCheckboxText());
         stage.addActor(vsyncCheckbox.getCheckbox());
         stage.addActor(vsyncCheckbox.getCheckboxText());
-        stage.addActor(masterVolumnSlider);
+        stage.addActor(testNumberDisplay.getHintTextImage());
+        stage.addActor(testNumberDisplay.getSlider());
+        stage.addActor(testNumberDisplay.getCombinedNumberDisplayObject().getDecimalPoint());
+        testNumberDisplay.getCombinedNumberDisplayObject().getNumberDigitDisplayObjects().forEach(dig -> stage.addActor(dig));
     }
 
     // 输入事件处理
