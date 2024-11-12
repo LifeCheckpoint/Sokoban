@@ -58,6 +58,8 @@ public class PureSliderObject extends SpineObject {
                 if (button == 0) {
                     isMouseDownInside = true;
                     if (x >= 0 && x <= WIDTH) setValue(x / WIDTH); // 初始化时更新滑块值
+                    if (x < 0) setValue(0f);
+                    if (x > WIDTH) setValue(1f);
                     return true; // 捕获事件，防止进一步传递
                 }
                 return false;
@@ -68,6 +70,8 @@ public class PureSliderObject extends SpineObject {
                 // 如果鼠标按下且拖动过程中，更新滑块的值
                 if (isMouseDownInside) {
                     if (x >= 0 && x <= WIDTH) setValue(x / WIDTH);
+                    if (x < 0) setValue(0f);
+                    if (x > WIDTH) setValue(1f);
                 }
             }
 

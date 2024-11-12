@@ -19,6 +19,7 @@ public class SliderObject {
     private PureSliderObject slider;
     private CombinedNumberDisplayObject combinedNumberDisplayObject;
     private float value;
+    private boolean showFirstZeros;
 
     private final float DEFAULT_TEXT_SCALE = 0.005f;
     private final float DEFAULT_BUFF = 0.16f;
@@ -100,6 +101,14 @@ public class SliderObject {
 
     public CombinedNumberDisplayObject getCombinedNumberDisplayObject() {
         return combinedNumberDisplayObject;
+    }
+
+    public boolean isShowFirstZeros() {
+        return showFirstZeros;
+    }
+
+    public void setShowFirstZeros(boolean showFirstZeros) {
+        this.showFirstZeros = showFirstZeros;
     }
 
     public float getOriginalMapMinValue() {

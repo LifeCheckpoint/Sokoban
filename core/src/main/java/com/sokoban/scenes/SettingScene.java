@@ -10,7 +10,6 @@ import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
-import com.sokoban.polygon.PureSliderObject;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -69,7 +68,7 @@ public class SettingScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        SliderObject testNumberDisplay = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 0f, 100f, 100f, 2, 1);
+        SliderObject testNumberDisplay = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 0f, 100f, 100f, 3, 1);
         testNumberDisplay.setPosition(5f, 3f);
 
         // 添加 UI

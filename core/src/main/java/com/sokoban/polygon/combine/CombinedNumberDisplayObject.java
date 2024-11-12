@@ -17,6 +17,7 @@ public class CombinedNumberDisplayObject {
     private float x, y, width, height, buff;
     private Image decimalPoint;
     private int integerDigits, decimalDigits;
+    private boolean showFirstZeros;
     private List<NumberDisplayObject> numberDigitDisplayObjects;
 
     private final float DEFAULT_BUFF = 0.16f;
@@ -57,6 +58,7 @@ public class CombinedNumberDisplayObject {
 
         // 设置初始位置
         setPosition(0f, 0f);
+        setValue(initialValue);
     }
 
     /**
@@ -92,9 +94,19 @@ public class CombinedNumberDisplayObject {
      * @param value 真实数值
      */
     public void setValue(float value) {
-        // 设置整数，整数的数位要反向遍历
+        // 设置整数，整数的数位要反向取值
+        boolean zerosEndflag = false;
         for (int i = 0; i < integerDigits; i++) {
-            numberDigitDisplayObjects.get(integerDigits - i - 1).setValue(getIntegerDigit(value, i));
+            NumberDisplayObject numberDisplayObject = numberDigitDisplayObjects.get(i);
+            numberDisplayObject.setValue(getIntegerDigit(value, integerDigits - i - 1));
+
+            if (!showFirstZeros) {
+                if (!zerosEndflag && numberDisplayObject.getValue() == 0) numberDisplayObject.hide();
+                if (numberDisplayObject.getValue() != 0) {
+                    numberDisplayObject.show();
+                    zerosEndflag = true;
+                }
+            }
         }
 
         // 设置小数
@@ -137,6 +149,14 @@ public class CombinedNumberDisplayObject {
 
     public Image getDecimalPoint() {
         return decimalPoint;
+    }
+
+    public boolean isShowFirstZeros() {
+        return showFirstZeros;
+    }
+
+    public void setShowFirstZeros(boolean showFirstZeros) {
+        this.showFirstZeros = showFirstZeros;
     }
 
     public float getX() {

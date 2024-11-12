@@ -32,6 +32,7 @@ public class SpineObject extends Actor implements Disposable {
     protected Skeleton skeleton;
     protected AnimationState animationState;
     protected boolean isPaused = false;
+    protected boolean isHide = false;
     
     // 原始尺寸
     protected float originalWidth;
@@ -241,6 +242,20 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
+     * 隐藏 Spine
+     */
+    public void hide() {
+        isHide = true;
+    }
+
+    /**
+     * 显示 Spine
+     */
+    public void show() {
+        isHide = false;
+    }
+
+    /**
      * 添加动画到队列
      * @param trackIndex 动画轨道
      * @param animationName 动画名
@@ -282,6 +297,7 @@ public class SpineObject extends Actor implements Disposable {
     @Override
     public void draw(Batch parentBatch, float parentAlpha) {
         if (skeleton == null || batch == null) return;
+        if (isHide) return;
         
         float worldX = getX();
         float worldY = getY();
