@@ -1,5 +1,6 @@
 buildscript {
   repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
     gradlePluginPortal()
@@ -59,6 +60,7 @@ subprojects {
   version = '$projectVersion'
   ext.appName = 'sokoban'
   repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
     // You may want to remove the following line if you have errors downloading dependencies.
