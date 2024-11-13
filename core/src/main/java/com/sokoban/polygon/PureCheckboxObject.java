@@ -20,7 +20,7 @@ public class PureCheckboxObject extends SpineObject {
     private final String TO_DISABLED = "disabled";
 
     public PureCheckboxObject(Main gameMain) {
-        super(gameMain, APManager.SpineAtlasAssets.Checkbox, APManager.SpineJsonAssets.Checkbox);
+        super(gameMain, APManager.SpineAtlasAssets.Checkbox);
         
         this.isChecked = false;
         this.isEnabled = true;

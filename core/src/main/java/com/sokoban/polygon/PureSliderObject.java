@@ -23,7 +23,7 @@ public class PureSliderObject extends SpineObject {
      * @param gameMain 全局句柄
      */
     public PureSliderObject(Main gameMain) {
-        super(gameMain, APManager.SpineAtlasAssets.Slider, APManager.SpineJsonAssets.Slider);
+        super(gameMain, APManager.SpineAtlasAssets.Slider);
         init(gameMain, 0f);
     }
 
@@ -33,7 +33,7 @@ public class PureSliderObject extends SpineObject {
      * @param initialValue 滑块条初始取值，介于 0~1
      */
     public PureSliderObject(Main gameMain, float initialValue) {
-        super(gameMain, APManager.SpineAtlasAssets.Slider, APManager.SpineJsonAssets.Slider);
+        super(gameMain, APManager.SpineAtlasAssets.Slider);
         init(gameMain, initialValue);
     }
 

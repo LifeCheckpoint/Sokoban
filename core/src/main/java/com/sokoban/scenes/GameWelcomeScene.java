@@ -179,7 +179,7 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle.startCreateParticles();
 
         // Spine 背景玩家装饰测试
-        playerObject = new SpineObject(gameMain, APManager.SpineAtlasAssets.Player1, APManager.SpineJsonAssets.Player1);
+        playerObject = new SpineObject(gameMain, APManager.SpineAtlasAssets.Player1);
         playerObject.setAnimation(0, "left", true);
 
         playerObject.setPosition(4f, 4f);

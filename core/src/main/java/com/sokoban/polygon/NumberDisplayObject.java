@@ -12,7 +12,7 @@ public class NumberDisplayObject extends SpineObject {
     private int value;
 
     public NumberDisplayObject(Main gameMain, int initialValue) {
-        super(gameMain, APManager.SpineAtlasAssets.Numbers, APManager.SpineJsonAssets.Numbers);
+        super(gameMain, APManager.SpineAtlasAssets.Numbers);
         setSize(0.2f, 3.6f);
         setValue(initialValue);
     }

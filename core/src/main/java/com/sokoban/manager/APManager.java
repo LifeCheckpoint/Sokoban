@@ -83,32 +83,20 @@ public class APManager {
 
     /**
      * Spine Atlas 资源枚举
+     * <br><br>
+     * 只有 atlas 会被统一读取，Json <b>不会</b>被统一读取
      */
     public enum SpineAtlasAssets {
-        Player1("spine/test_player1/player1_sp.atlas"),
-        Checkbox("spine/checkbox/checkbox.atlas"),
-        Slider("spine/slider/slider.atlas"),
-        Numbers("spine/numbers/numbers.atlas");
+        Player1("spine/test_player1/player1_sp.atlas|spine/test_player1/player1_sp.json"),
+        Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
+        Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
+        Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json");
 
         private final String alias;
         SpineAtlasAssets(String alias) {this.alias = alias;}
         public String getAlias() {return alias;}
-    }
-
-    /**
-     * Spine Atlas 资源枚举
-     * <br><br>
-     * 该类型资源不会被统一读取
-     */
-    public enum SpineJsonAssets {
-        Player1("spine/test_player1/player1_sp.json"),
-        Checkbox("spine/checkbox/checkbox.json"),
-        Slider("spine/slider/slider.json"),
-        Numbers("spine/numbers/numbers.json");
-
-        private final String alias;
-        SpineJsonAssets(String alias) {this.alias = alias;}
-        public String getAlias() {return alias;}
+        public String getAliasAtlas() {return alias.split("\\|")[0];}
+        public String getAliasJson() {return alias.split("\\|")[1];}
     }
 
     /**
@@ -146,7 +134,7 @@ public class APManager {
 
         // 加载 SpineAssets
         for (SpineAtlasAssets spineAsset : SpineAtlasAssets.values()) {
-            addAsset(TextureAtlas.class, spineAsset.getAlias());
+            addAsset(TextureAtlas.class, spineAsset.getAliasAtlas());
         }
     }
     
@@ -207,6 +195,8 @@ public class APManager {
                     assetManager.load(resourcePath, Sound.class);
                 } else if (resourceClass == TextureAtlas.class) {
                     assetManager.load(resourcePath, TextureAtlas.class);
+                } else {
+                    Gdx.app.log("AssetsPathManager", String.format("Unknow assets type: %s", resourceClass));
                 }
             }
         }
@@ -238,7 +228,7 @@ public class APManager {
      * @return 指定资源
      */
     public TextureAtlas get(SpineAtlasAssets resourceEnum) {
-        return get(resourceEnum.getAlias(), TextureAtlas.class);
+        return get(resourceEnum.getAliasAtlas(), TextureAtlas.class);
     }
 
     /**

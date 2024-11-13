@@ -57,48 +57,42 @@ public class SpineObject extends Actor implements Disposable {
      * 构造函数
      * @throws IllegalArgumentException 如果资源加载失败
      */
-    public SpineObject(Main gameMain, APManager.SpineAtlasAssets atlasEnum, APManager.SpineJsonAssets skeletonDataJsonEnum) {
-        try {
-            // 加载纹理图集
-            atlas = gameMain.getAssetsPathManager().get(atlasEnum);
-            if (atlas == null) {
-                throw new IllegalArgumentException("Failed to load atlas: " + atlasEnum.getAlias());
-            }
-            
-            // 创建Skeleton数据
-            SkeletonJson json = new SkeletonJson(atlas);
-            json.setScale(1f);
-            
-            skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(skeletonDataJsonEnum.getAlias()));
-            if (skeletonData == null) {
-                throw new IllegalArgumentException("Failed to load skeleton data: " + skeletonDataJsonEnum.getAlias());
-            }
-            
-            // 初始化动画状态数据
-            animationData = new AnimationStateData(skeletonData);
-            animationData.setDefaultMix(defaultMixTime);
-            
-            // 创建渲染器
-            batch = new PolygonSpriteBatch();
-            skeletonRenderer = new SkeletonRenderer();
-            skeletonRenderer.setPremultipliedAlpha(true);
-            
-            // 创建骨骼和动画状态
-            skeleton = new Skeleton(skeletonData);
-            animationState = new AnimationState(animationData);
-            
-            // 缓存原始尺寸
-            originalWidth = skeletonData.getWidth();
-            originalHeight = skeletonData.getHeight();
-            
-            // 设置初始大小和位置
-            setSize(originalWidth, originalHeight);
-            setPosition(0f, 0f);
-            
-        } catch (Exception e) {
-            dispose(); // 确保清理已创建的资源
-            throw new IllegalStateException("Failed to initialize SpineObject", e);
+    public SpineObject(Main gameMain, APManager.SpineAtlasAssets atlasEnum) {
+        // 加载纹理图集
+        atlas = gameMain.getAssetsPathManager().get(atlasEnum);
+        if (atlas == null) {
+            throw new IllegalArgumentException("Failed to load atlas: " + atlasEnum.getAliasAtlas());
         }
+        
+        // 创建Skeleton数据
+        SkeletonJson json = new SkeletonJson(atlas);
+        json.setScale(1f);
+        
+        skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(atlasEnum.getAliasJson()));
+        if (skeletonData == null) {
+            throw new IllegalArgumentException("Failed to load skeleton data: " + atlasEnum.getAliasJson());
+        }
+        
+        // 初始化动画状态数据
+        animationData = new AnimationStateData(skeletonData);
+        animationData.setDefaultMix(defaultMixTime);
+        
+        // 创建渲染器
+        batch = new PolygonSpriteBatch();
+        skeletonRenderer = new SkeletonRenderer();
+        skeletonRenderer.setPremultipliedAlpha(true);
+        
+        // 创建骨骼和动画状态
+        skeleton = new Skeleton(skeletonData);
+        animationState = new AnimationState(animationData);
+        
+        // 缓存原始尺寸
+        originalWidth = skeletonData.getWidth();
+        originalHeight = skeletonData.getHeight();
+        
+        // 设置初始大小和位置
+        setSize(originalWidth, originalHeight);
+        setPosition(0f, 0f);
     }
 
     /**
