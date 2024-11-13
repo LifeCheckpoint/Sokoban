@@ -68,6 +68,8 @@ public class SliderObject extends SokobanCombineObject{
         hintTextImage = TextContainer.create(SliderHintResourceEnum); // 提示文本
         slider = new PureSliderObject(gameMain, MathUtilsEx.linearMap(initialValue, toMapMinValue, toMapMaxValue, MIN_VALUE, MAX_VALUE)); // 滑块条
 
+        if (decimalDigits == 0) combinedNumberDisplayObject.setShowDecimalPoint(false);
+
         slider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
             public void onValueUpdate(float value) {

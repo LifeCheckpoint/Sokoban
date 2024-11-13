@@ -67,13 +67,13 @@ public class SettingScene extends SokoyoScene {
 
         // 音量设置
         masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
-                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.masterVolume * 100, 3, 1);
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.masterVolume * 100, 3, 0);
         masterVolumeSlider.setPosition(2f, 5f);
         musicVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MusicVolume, 
-                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.musicVolume * 100, 3, 1);
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.musicVolume * 100, 3, 0);
         musicVolumeSlider.setPosition(2f, 4.2f);
         effectsVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.EffectsVolume, 
-                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.effectsVolume * 100, 3, 1);
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.effectsVolume * 100, 3, 0);
         effectsVolumeSlider.setPosition(2f, 3.4f);
 
         // 滑块条响应

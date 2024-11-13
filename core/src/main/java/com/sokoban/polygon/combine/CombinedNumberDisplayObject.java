@@ -18,7 +18,7 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
     private float buff;
     private Image decimalPoint;
     private int integerDigits, decimalDigits;
-    private boolean showFirstZeros;
+    private boolean showFirstZeros, showDecimalPoint;
     private List<NumberDisplayObject> numberDigitDisplayObjects;
 
     private final float DEFAULT_BUFF = 0.16f;
@@ -42,6 +42,7 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
     private void init(int integerDigits, int decimalDigits, float initialValue, float buff) {
         this.integerDigits = integerDigits;
         this.decimalDigits = decimalDigits;
+        this.showDecimalPoint = true;
         numberDigitDisplayObjects = new ArrayList<>();
 
         // 添加整数
@@ -99,7 +100,7 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
     @Override
     public void addActorsToStage(Stage stage) {
         numberDigitDisplayObjects.forEach(dig -> stage.addActor(dig));
-        stage.addActor(decimalPoint);
+        if (showDecimalPoint) stage.addActor(decimalPoint);
     }
 
     /**
@@ -113,8 +114,10 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
             NumberDisplayObject numberDisplayObject = numberDigitDisplayObjects.get(i);
             numberDisplayObject.setValue(getIntegerDigit(value, integerDigits - i - 1));
 
+            // 忽略首零
             if (!showFirstZeros) {
-                if (!zerosEndflag && numberDisplayObject.getValue() == 0) numberDisplayObject.hide();
+                // 若为首零，且不单独为零，则隐藏
+                if (!zerosEndflag && numberDisplayObject.getValue() == 0 && (int) value != 0) numberDisplayObject.hide();
                 if (numberDisplayObject.getValue() != 0) {
                     numberDisplayObject.show();
                     zerosEndflag = true;
@@ -162,6 +165,14 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
 
     public Image getDecimalPoint() {
         return decimalPoint;
+    }
+
+    public boolean isShowDecimalPoint() {
+        return showDecimalPoint;
+    }
+
+    public void setShowDecimalPoint(boolean showDecimalPoint) {
+        this.showDecimalPoint = showDecimalPoint;
     }
 
     public boolean isShowFirstZeros() {
