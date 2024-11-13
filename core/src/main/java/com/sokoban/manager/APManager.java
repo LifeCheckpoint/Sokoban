@@ -85,10 +85,10 @@ public class APManager {
      * Spine Atlas 资源枚举
      */
     public enum SpineAtlasAssets {
-        Player1("img/test_player1/player1_sp.atlas"),
-        Checkbox("img/checkbox/checkbox.atlas"),
-        Slider("img/slider/slider.atlas"),
-        Numbers("img/numbers/numbers.atlas");
+        Player1("spine/test_player1/player1_sp.atlas"),
+        Checkbox("spine/checkbox/checkbox.atlas"),
+        Slider("spine/slider/slider.atlas"),
+        Numbers("spine/numbers/numbers.atlas");
 
         private final String alias;
         SpineAtlasAssets(String alias) {this.alias = alias;}
@@ -101,10 +101,10 @@ public class APManager {
      * 该类型资源不会被统一读取
      */
     public enum SpineJsonAssets {
-        Player1("img/test_player1/player1_sp.json"),
-        Checkbox("img/checkbox/checkbox.json"),
-        Slider("img/slider/slider.json"),
-        Numbers("img/numbers/numbers.json");
+        Player1("spine/test_player1/player1_sp.json"),
+        Checkbox("spine/checkbox/checkbox.json"),
+        Slider("spine/slider/slider.json"),
+        Numbers("spine/numbers/numbers.json");
 
         private final String alias;
         SpineJsonAssets(String alias) {this.alias = alias;}
