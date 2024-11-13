@@ -1,5 +1,8 @@
 package com.sokoban.polygon.combine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -121,6 +124,17 @@ public class CheckboxObject extends SokobanCombineObject {
     public void addActorsToStage(Stage stage) {
         stage.addActor(checkboxText);
         stage.addActor(checkbox);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Actor> getAllActors() {
+        List<Actor> actors = new ArrayList<>();
+        actors.add(checkbox);
+        actors.add(checkboxText);
+        return actors;
     }
 
     public PureCheckboxObject getCheckbox() {

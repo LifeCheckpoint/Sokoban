@@ -1,5 +1,8 @@
 package com.sokoban.polygon.combine;
 
+import java.util.List;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sokoban.Main;
 
@@ -37,6 +40,12 @@ public abstract class SokobanCombineObject {
      * @param stage stage 对象
      */
     public abstract void addActorsToStage(Stage stage);
+
+    /**
+     * 返回所有组件列表
+     * @return 组件列表
+     */
+    public abstract List<Actor> getAllActors();
 
     public float getX() {
         return x;

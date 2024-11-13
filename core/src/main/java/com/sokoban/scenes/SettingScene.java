@@ -102,10 +102,8 @@ public class SettingScene extends SokoyoScene {
 
         // 添加 UI
         stage.addActor(returnButton);
-        stage.addActor(mipmapCheckbox.getCheckbox());
-        stage.addActor(mipmapCheckbox.getCheckboxText());
-        stage.addActor(vsyncCheckbox.getCheckbox());
-        stage.addActor(vsyncCheckbox.getCheckboxText());
+        mipmapCheckbox.addActorsToStage(stage);
+        vsyncCheckbox.addActorsToStage(stage);
         masterVolumeSlider.addActorsToStage(stage);
         musicVolumeSlider.addActorsToStage(stage);
         effectsVolumeSlider.addActorsToStage(stage);

@@ -3,6 +3,7 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
@@ -101,6 +102,17 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
     public void addActorsToStage(Stage stage) {
         numberDigitDisplayObjects.forEach(dig -> stage.addActor(dig));
         if (showDecimalPoint) stage.addActor(decimalPoint);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Actor> getAllActors() {
+        List<Actor> actors = new ArrayList<>();
+        actors.add(decimalPoint);
+        actors.addAll(numberDigitDisplayObjects);
+        return actors;
     }
 
     /**

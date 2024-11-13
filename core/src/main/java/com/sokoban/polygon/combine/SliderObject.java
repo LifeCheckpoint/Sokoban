@@ -1,5 +1,9 @@
 package com.sokoban.polygon.combine;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
@@ -108,6 +112,18 @@ public class SliderObject extends SokobanCombineObject{
         stage.addActor(hintTextImage);
         stage.addActor(slider);
         combinedNumberDisplayObject.addActorsToStage(stage);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Actor> getAllActors() {
+        List<Actor> actors = new ArrayList<>();
+        actors.add(hintTextImage);
+        actors.add(slider);
+        actors.addAll(combinedNumberDisplayObject.getAllActors());
+        return actors;
     }
 
     public PureSliderObject getSlider() {
