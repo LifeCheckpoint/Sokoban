@@ -1,8 +1,16 @@
 package com.sokoban.core.settings;
 
 public class GameSettings {
-    public GraphicsSettings graphics;
-    public SoundSettings sound;
+    public GraphicsSettings graphics = new GraphicsSettings();
+    public SoundSettings sound = new SoundSettings();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GameSettings)) return false;
+        GameSettings gameSettings = (GameSettings) obj;
+
+        return getGraphics().equals(gameSettings.getGraphics()) && getSound().equals(gameSettings.getSound());
+    }
 
     public GraphicsSettings getGraphics() {
         return graphics;

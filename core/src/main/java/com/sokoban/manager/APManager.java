@@ -58,6 +58,7 @@ public class APManager {
         Mipmap("img/button/mipmap.png"),
         ParticleGray("img/particle1.png"),
         PlayerNormal("img/player_normal.png"),
+        SaveButton("img/button/save.png"),
         SettingsButton("img/button/settings.png"),
         StartGameButton("img/button/start_game.png"),
         Vsync("img/button/vsync.png"),

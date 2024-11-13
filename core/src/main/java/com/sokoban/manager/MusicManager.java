@@ -96,8 +96,12 @@ public class MusicManager {
         }
     }
 
-    // 设置音量
+    /**
+     * 设置音量
+     * @param volume 音量，介于 0~1
+     */
     public void setVolume(float volume) {
+        if (volume < 0 || volume > 1) Gdx.app.error("MusicManager", String.format("Volumn is not in range. Expect (0, 1), get %.2f", volume));
         this.volume = Math.max(0, Math.min(volume, 1));
         if (currentMusic != null) {
             currentMusic.setVolume(this.volume);

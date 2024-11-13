@@ -5,6 +5,17 @@ public class SoundSettings {
     public float musicVolume;
     public float effectsVolume;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof SoundSettings)) return false;
+        SoundSettings graphicSettings = (SoundSettings) obj;
+        
+        if (getMasterVolume() != graphicSettings.getMasterVolume()) return false;
+        if (getMusicVolume() != graphicSettings.getMusicVolume()) return false;
+        if (getEffectsVolume() != graphicSettings.getEffectsVolume()) return false;
+        return true;
+    }
+
     public float getMasterVolume() {
         return masterVolume;
     }

@@ -33,6 +33,7 @@ public class ScreenManager {
      */
     public void setScreenWithoutSaving(SokoyoScene screen) {
         if (currentScreen != null) {
+            currentScreen.hide();
             currentScreen.dispose();
         }
         currentScreen = screen;
@@ -60,6 +61,7 @@ public class ScreenManager {
             Gdx.app.error("ScreenManager", "The Previous / Current Screen is not exists");
             return;
         }
+        currentScreen.hide();
         currentScreen.dispose();
         currentScreen = screenStack.pop();
         currentScreen.show();
