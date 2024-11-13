@@ -51,12 +51,12 @@ public class APManager {
         BoxTarget("img/target.png"),
         EffectsVolume("img/effects_volume.png"),
         ExitButton("img/button/exit.png"),
+        GrayPixel("img/particle1.png"),
         LeftArrowButton("img/button/left_arrow.png"),
         LoadingAssetsLabel("img/loading_assets.png"),
         MasterVolume("img/master_volume.png"),
-        MusicVolume("img/music_volume.png"),
         Mipmap("img/button/mipmap.png"),
-        ParticleGray("img/particle1.png"),
+        MusicVolume("img/music_volume.png"),
         PlayerNormal("img/player_normal.png"),
         SaveButton("img/button/save.png"),
         SettingsButton("img/button/settings.png"),
@@ -140,10 +140,6 @@ public class APManager {
     
     /**
      * 向映射表加入资源
-     * <br><br>
-     * <b>只有 Texture, Music Audio Sound Skin 可以使用路径缩写</b>
-     * <br><br>
-     * <b> Atlas 等文件使用全称而非路径缩写</b>
      * @param resourceClass 资源类型
      * @param resourcePath 资源路径
      */
