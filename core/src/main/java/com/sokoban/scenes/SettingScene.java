@@ -14,6 +14,7 @@ import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.utils.ActionUtils;
 
 /**
  * 设置界面
@@ -99,6 +100,14 @@ public class SettingScene extends SokoyoScene {
 
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
+
+        // 设置淡入动画
+        ActionUtils.FadeInEffectRand(returnButton);
+        mipmapCheckbox.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        vsyncCheckbox.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        masterVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        musicVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        effectsVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
 
         // 添加 UI
         stage.addActor(returnButton);

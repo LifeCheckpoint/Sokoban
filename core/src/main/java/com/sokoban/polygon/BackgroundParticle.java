@@ -3,8 +3,8 @@ package com.sokoban.polygon;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.sokoban.MathUtilsEx;
 import com.sokoban.enums.ParticleEnums;
+import com.sokoban.utils.MathUtilsEx;
 
 // 继承自 TextureSquare 的粒子类
 public class BackgroundParticle extends TextureSquare {

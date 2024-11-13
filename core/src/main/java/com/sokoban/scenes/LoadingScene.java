@@ -8,6 +8,7 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.WhiteProgressBar;
 import com.sokoban.polygon.container.ImageLabelContainer;
+import com.sokoban.utils.ActionUtils;
 
 /**
  * 素材加载界面
@@ -47,6 +48,9 @@ public class LoadingScene extends SokoyoScene {
         // 加载文本标签设置
         label = new ImageLabelContainer(gameMain, 0.007f).create(APManager.ImageAssets.LoadingAssetsLabel);
         label.setPosition((stage.getWidth() - label.getWidth()) / 2, 0.3f * viewport.getWorldHeight());
+
+        ActionUtils.FadeInEffectRand(progressBar);
+        ActionUtils.FadeInEffectRand(label);
 
         stage.addActor(progressBar);
         stage.addActor(label);

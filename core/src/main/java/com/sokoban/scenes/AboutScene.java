@@ -10,6 +10,7 @@ import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.container.ImageLabelContainer;
+import com.sokoban.utils.ActionUtils;
 
 /**
  * 关于界面
@@ -78,6 +79,9 @@ public class AboutScene extends SokoyoScene {
 
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
+
+        ActionUtils.FadeInEffectRand(returnButton);
+        ActionUtils.FadeInEffectRand(infoLabel);
 
         // 添加 UI
         stage.addActor(returnButton);

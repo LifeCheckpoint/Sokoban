@@ -1,4 +1,4 @@
-package com.sokoban;
+package com.sokoban.utils;
 
 import com.badlogic.gdx.math.Vector2;
 

@@ -3,15 +3,16 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
-import com.sokoban.MathUtilsEx;
 import com.sokoban.manager.APManager;
 import com.sokoban.polygon.PureSliderObject;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.container.ImageLabelContainer;
+import com.sokoban.utils.MathUtilsEx;
 
 /**
  * 支持文本与计数器的 Slider 组合对象
@@ -51,33 +52,39 @@ public class SliderObject extends SokobanCombineObject{
     /**
      * 初始化
      * @param SliderHintResourceEnum 滑动条提示文本资源枚举
-     * @param toMapMinValue 实际最小
-     * @param toMapMaxValue 实际最大
+     * @param originalMapMinValue 实际最小
+     * @param originalMapMaxValue 实际最大
      * @param initialValue 实际初始
      * @param integerDigits 整数显示位数
      * @param decimalDigits 小数显示位数
      * @param buff 间距
      */
-    private void init(APManager.ImageAssets SliderHintResourceEnum, float toMapMinValue, float toMapMaxValue, 
+    private void init(APManager.ImageAssets SliderHintResourceEnum, float originalMapMinValue, float originalMapMaxValue, 
                         float initialValue, int integerDigits, int decimalDigits, float buff) {
         
+        // 异常值处理
+        if (originalMapMinValue > initialValue || originalMapMaxValue < initialValue) {
+            Gdx.app.error("SliderObject", 
+                            String.format("The initial value is out of bound! Expect (%.2f, %.2f), get %.2f", originalMapMinValue, originalMapMaxValue, initialValue));
+            initialValue = originalMapMinValue > initialValue ? originalMapMinValue : originalMapMaxValue;
+        }
         this.value = initialValue;
         this.buff = buff;
 
-        setOriginalMapMinValue(toMapMinValue);
-        setOriginalMapMaxValue(toMapMaxValue);
+        setOriginalMapMinValue(originalMapMinValue);
+        setOriginalMapMaxValue(originalMapMaxValue);
 
         ImageLabelContainer TextContainer = new ImageLabelContainer(gameMain, DEFAULT_TEXT_SCALE);
         combinedNumberDisplayObject = new CombinedNumberDisplayObject(gameMain, integerDigits, decimalDigits, initialValue); // 计数器显示
         hintTextImage = TextContainer.create(SliderHintResourceEnum); // 提示文本
-        slider = new PureSliderObject(gameMain, MathUtilsEx.linearMap(initialValue, toMapMinValue, toMapMaxValue, MIN_VALUE, MAX_VALUE)); // 滑块条
+        slider = new PureSliderObject(gameMain, MathUtilsEx.linearMap(initialValue, originalMapMinValue, originalMapMaxValue, MIN_VALUE, MAX_VALUE)); // 滑块条
 
         if (decimalDigits == 0) combinedNumberDisplayObject.setShowDecimalPoint(false);
 
         slider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
             public void onValueUpdate(float value) {
-                combinedNumberDisplayObject.setValue(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, toMapMinValue, toMapMaxValue));
+                combinedNumberDisplayObject.setValue(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, originalMapMinValue, originalMapMaxValue));
                 // 调用 SliderObject 自定义更新事件
                 if (callback != null) callback.onValueUpdate(value);
                 // System.out.println(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, toMapMinValue, toMapMaxValue));

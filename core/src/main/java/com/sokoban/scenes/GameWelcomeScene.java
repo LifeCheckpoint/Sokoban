@@ -26,7 +26,8 @@ import com.sokoban.manager.MusicManager;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
-import com.sokoban.polygon.container.ButtonCheckboxContainers;;
+import com.sokoban.polygon.container.ButtonCheckboxContainers;
+import com.sokoban.utils.ActionUtils;;
 
 /**
  * 游戏开始欢迎界面
@@ -157,7 +158,8 @@ public class GameWelcomeScene extends SokoyoScene {
                 TextureSquare square = new TextureSquare(backgroundTextures[MathUtils.random(0, backgroundTextures.length - 1)]);
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
-                square.setAlpha(backgroundAlpha);
+                // square.setAlpha(backgroundAlpha);
+                ActionUtils.FadeInEffectRand(square, backgroundAlpha);
                 stage.addActor(square); // 添加到stage中
                 backgroundGrid[row][col] = square;
             }
@@ -183,21 +185,26 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setPosition(4f, 4f);
         playerObject.setSize(1f, 1f);
 
-        // 添加 UI
-        stage.addActor(startGameButton.getCheckbox());
-        stage.addActor(aboutButton.getCheckbox());
-        stage.addActor(exitButton.getCheckbox());
-        stage.addActor(settingsButton.getCheckbox());
+        // 设置淡入动画
+        ActionUtils.FadeInEffectRand(playerObject);
+        startGameButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        aboutButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        exitButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        settingsButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
 
-        stage.addActor(startGameButton.getCheckboxText());
-        stage.addActor(aboutButton.getCheckboxText());
-        stage.addActor(exitButton.getCheckboxText());
-        stage.addActor(settingsButton.getCheckboxText());
+        // 添加 UI
+        startGameButton.addActorsToStage(stage);
+        aboutButton.addActorsToStage(stage);
+        exitButton.addActorsToStage(stage);
+        settingsButton.addActorsToStage(stage);
 
         stage.addActor(playerObject);
     }
 
-    // 随机交换相邻的两个矩形
+    /** 
+     * 随机交换相邻的两个矩形
+     * 虽然有小 BUG 但是懒得修
+     */
     public void swapRandomAdjacentSquares() {
         final int[][] deltaPos = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         int row = MathUtils.random(0, backgroundRow - 1);

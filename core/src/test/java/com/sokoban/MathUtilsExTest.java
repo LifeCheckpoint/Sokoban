@@ -1,6 +1,8 @@
 package com.sokoban;
 
 import com.badlogic.gdx.math.Vector2;
+import com.sokoban.utils.MathUtilsEx;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -320,6 +320,7 @@ public class SpineObject extends Actor implements Disposable {
             skeleton.updateWorldTransform();
             
             // 正常绘制骨骼
+            skeleton.getColor().a = parentAlpha * getColor().a;  // 设置骨骼的透明度
             skeletonRenderer.draw(batch, skeleton);
             
             // 调试绘制（未测试）
