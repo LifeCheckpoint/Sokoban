@@ -3,6 +3,7 @@ package com.sokoban.polygon.combine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
@@ -14,10 +15,10 @@ import com.sokoban.polygon.container.ImageButtonContainer;
  * 带 Image 文本的复选框类
  * @author Life_Checkpoint
  */
-public class CheckboxObject {
+public class CheckboxObject extends SokobanCombineObject {
     private PureCheckboxObject checkbox;
     private Image checkboxText;
-    private float x, y, width, height, buff;
+    private float buff;
 
     private final float DEFAULT_TEXT_SCALE = 0.005f;
     private final float DEFAULT_BUFF = 0.16f;
@@ -28,26 +29,30 @@ public class CheckboxObject {
     private boolean checkboxType;
 
     public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxImageResourceEnum, boolean isChecked, boolean isEnabled) {
+        super(gameMain);
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxImageResourceEnum);
-        init(gameMain, CheckboxImage, isChecked, isEnabled, DEFAULT_BUFF);
+        init(CheckboxImage, isChecked, isEnabled, DEFAULT_BUFF);
     }
 
     public CheckboxObject(Main gameMain, Image checkboxText, boolean isChecked, boolean isEnabled) {
-        init(gameMain, checkboxText, isChecked, isEnabled, DEFAULT_BUFF);
+        super(gameMain);
+        init(checkboxText, isChecked, isEnabled, DEFAULT_BUFF);
     }
 
     public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled, float buff) {
+        super(gameMain);
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);
-        init(gameMain, CheckboxImage, isChecked, isEnabled, buff);
+        init(CheckboxImage, isChecked, isEnabled, buff);
     }
 
     public CheckboxObject(Main gameMain, Image checkboxText, boolean isChecked, boolean isEnabled, float buff) {
-        init(gameMain, checkboxText, isChecked, isEnabled, buff);
+        super(gameMain);
+        init(checkboxText, isChecked, isEnabled, buff);
     }
 
-    protected void init(Main gameMain, Image checkboxText, boolean isChecked, boolean isEnabled, float buff) {
+    protected void init(Image checkboxText, boolean isChecked, boolean isEnabled, float buff) {
         this.checkbox = new PureCheckboxObject(gameMain);
         this.checkboxText = checkboxText;
         this.buff = buff;
@@ -99,13 +104,23 @@ public class CheckboxObject {
     }
 
     /**
-     * 设置组件位置
+     * {@inheritDoc}
      */
+    @Override
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
         checkbox.setPosition(x, y + height / 2 - checkbox.getHeight() / 2);
         checkboxText.setPosition(x + checkbox.getWidth() + buff, y + height / 2 - checkboxText.getHeight() / 2);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addActorsToStage(Stage stage) {
+        stage.addActor(checkboxText);
+        stage.addActor(checkbox);
     }
 
     public PureCheckboxObject getCheckbox() {
@@ -123,21 +138,4 @@ public class CheckboxObject {
             return null;
         }
     }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
 }

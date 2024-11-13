@@ -1,5 +1,6 @@
 package com.sokoban.polygon.combine;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.MathUtilsEx;
@@ -12,14 +13,14 @@ import com.sokoban.polygon.container.ImageLabelContainer;
  * 支持文本与计数器的 Slider 组合对象
  * @author Life_Checkpoint
  */
-public class SliderObject {
+public class SliderObject extends SokobanCombineObject{
+    private boolean showFirstZeros;
+    private CombinedNumberDisplayObject combinedNumberDisplayObject;
+    private float buff;
     private float originalMapMinValue, originalMapMaxValue;
-    private float x, y, width, height, buff;
+    private float value;
     private Image hintTextImage;
     private PureSliderObject slider;
-    private CombinedNumberDisplayObject combinedNumberDisplayObject;
-    private float value;
-    private boolean showFirstZeros;
     private ValueUpdateCallback callback = null; // SliderObject 自定义更新事件，与 slider 本身更新事件不一致
 
     private final float DEFAULT_TEXT_SCALE = 0.005f;
@@ -27,22 +28,24 @@ public class SliderObject {
     private final float MIN_VALUE = 0f, MAX_VALUE = 1f;
 
     public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum) {
-        init(gameMain, SliderHintResourceEnum, 0f, 1f, 0, 0, 2, DEFAULT_BUFF);
+        super(gameMain);
+        init(SliderHintResourceEnum, 0f, 1f, 0, 0, 2, DEFAULT_BUFF);
     }
 
     public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum, 
                         float toMapMinValue, float toMapMaxValue, float initialValue, int integerDigits, int decimalDigits) {
-        init(gameMain, SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, DEFAULT_BUFF);
+        super(gameMain);
+        init(SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, DEFAULT_BUFF);
     }
 
     public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum, 
                         float toMapMinValue, float toMapMaxValue, float initialValue, int integerDigits, int decimalDigits, float buff) {
-        init(gameMain, SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, buff);
+        super(gameMain);
+        init(SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, buff);
     }
 
     /**
      * 初始化
-     * @param gameMain 全局句柄
      * @param SliderHintResourceEnum 滑动条提示文本资源枚举
      * @param toMapMinValue 实际最小
      * @param toMapMaxValue 实际最大
@@ -51,8 +54,8 @@ public class SliderObject {
      * @param decimalDigits 小数显示位数
      * @param buff 间距
      */
-    private void init(Main gameMain, APManager.ImageAssets SliderHintResourceEnum, 
-                        float toMapMinValue, float toMapMaxValue, float initialValue, int integerDigits, int decimalDigits, float buff) {
+    private void init(APManager.ImageAssets SliderHintResourceEnum, float toMapMinValue, float toMapMaxValue, 
+                        float initialValue, int integerDigits, int decimalDigits, float buff) {
         
         this.value = initialValue;
         this.buff = buff;
@@ -78,6 +81,10 @@ public class SliderObject {
         setPosition(0f, 0f);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void setPosition(float x, float y) {
         width = hintTextImage.getWidth() + buff + slider.getWidth() + buff + combinedNumberDisplayObject.getWidth();
         height = Math.max(Math.max(hintTextImage.getHeight(), slider.getHeight()), combinedNumberDisplayObject.getHeight());
@@ -90,8 +97,15 @@ public class SliderObject {
         combinedNumberDisplayObject.setPosition(x + hintTextImage.getWidth() + buff + slider.getWidth() + buff, y);
     }
 
-    public void updatePosition() {
-        setPosition(x, y);
+    /**
+     * {@inheritDoc}
+     * @param stage
+     */
+    @Override
+    public void addActorsToStage(Stage stage) {
+        stage.addActor(hintTextImage);
+        stage.addActor(slider);
+        combinedNumberDisplayObject.addActorsToStage(stage);
     }
 
     public PureSliderObject getSlider() {
@@ -137,21 +151,5 @@ public class SliderObject {
     public float getValue() {
         // TODO
         return value;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
     }
 }

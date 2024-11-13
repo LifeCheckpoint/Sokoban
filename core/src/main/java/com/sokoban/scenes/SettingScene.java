@@ -32,6 +32,8 @@ public class SettingScene extends SokoyoScene {
     private CheckboxObject vsyncCheckbox;
 
     private SliderObject masterVolumeSlider;
+    private SliderObject musicVolumeSlider;
+    private SliderObject effectsVolumeSlider;
 
     public SettingScene(Main gameMain) {
         super(gameMain);
@@ -41,11 +43,17 @@ public class SettingScene extends SokoyoScene {
         super.init();
 
         buttonContainer = new ImageButtonContainer(gameMain);
-        // labelContainer = new ImageLabelContainer(0.3f);
 
-        // 初始化按钮
+        // 返回按钮
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.3f, 8.3f);
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Return!");
+                gameMain.getScreenManager().returnPreviousScreen();
+            }
+        });
 
         // Mipmap 设置
         mipmapCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Mipmap, gameMain.getSettingManager().gameSettings.graphics.mipmap, true, 0.16f);
@@ -61,21 +69,33 @@ public class SettingScene extends SokoyoScene {
         masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
                                 0f, 100f, gameMain.getSettingManager().gameSettings.sound.masterVolume * 100, 3, 1);
         masterVolumeSlider.setPosition(2f, 5f);
+        musicVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MusicVolume, 
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.musicVolume * 100, 3, 1);
+        musicVolumeSlider.setPosition(2f, 4.2f);
+        effectsVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.EffectsVolume, 
+                                0f, 100f, gameMain.getSettingManager().gameSettings.sound.effectsVolume * 100, 3, 1);
+        effectsVolumeSlider.setPosition(2f, 3.4f);
+
+        // 滑块条响应
         masterVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
+            @Override
+            public void onValueUpdate(float value) {
+                gameMain.getMusicManager().setVolume(value * musicVolumeSlider.getSlider().getValue());
+            }
+        });
+        musicVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
             public void onValueUpdate(float value) {
                 gameMain.getMusicManager().setVolume(value);
             }
         });
-
-        // 返回按钮监听
-        returnButton.addListener(new ClickListener() {
+        effectsVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Return!");
-                gameMain.getScreenManager().returnPreviousScreen();
+            public void onValueUpdate(float value) {
+                gameMain.getMusicManager().setVolume(value * masterVolumeSlider.getSlider().getValue());
             }
         });
+
 
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
@@ -86,10 +106,9 @@ public class SettingScene extends SokoyoScene {
         stage.addActor(mipmapCheckbox.getCheckboxText());
         stage.addActor(vsyncCheckbox.getCheckbox());
         stage.addActor(vsyncCheckbox.getCheckboxText());
-        stage.addActor(masterVolumeSlider.getHintTextImage());
-        stage.addActor(masterVolumeSlider.getSlider());
-        stage.addActor(masterVolumeSlider.getCombinedNumberDisplayObject().getDecimalPoint());
-        masterVolumeSlider.getCombinedNumberDisplayObject().getNumberDigitDisplayObjects().forEach(dig -> stage.addActor(dig));
+        masterVolumeSlider.addActorsToStage(stage);
+        musicVolumeSlider.addActorsToStage(stage);
+        effectsVolumeSlider.addActorsToStage(stage);
     }
 
     // 输入事件处理
@@ -102,8 +121,8 @@ public class SettingScene extends SokoyoScene {
             graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();
 
             soundSet.masterVolume = masterVolumeSlider.getSlider().getValue();
-            soundSet.musicVolume = 1.0f;
-            soundSet.effectsVolume = 1.0f;
+            soundSet.musicVolume = musicVolumeSlider.getSlider().getValue();
+            soundSet.effectsVolume = effectsVolumeSlider.getSlider().getValue();
 
             gameMain.getSettingManager().writeSettings();
             System.out.println("Save");

@@ -3,6 +3,7 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
@@ -13,8 +14,8 @@ import com.sokoban.polygon.container.ImageLabelContainer;
  * 组合数字显示类
  * @author Life_Checkpoint
  */
-public class CombinedNumberDisplayObject {
-    private float x, y, width, height, buff;
+public class CombinedNumberDisplayObject extends SokobanCombineObject {
+    private float buff;
     private Image decimalPoint;
     private int integerDigits, decimalDigits;
     private boolean showFirstZeros;
@@ -24,18 +25,21 @@ public class CombinedNumberDisplayObject {
     private final float DEFAULT_POINT_SCALE = 0.003f;
 
     public CombinedNumberDisplayObject(Main gameMain, int integerDigits, int decimalDigits) {
-        init(gameMain, integerDigits, decimalDigits, 0, DEFAULT_BUFF);
+        super(gameMain);
+        init(integerDigits, decimalDigits, 0, DEFAULT_BUFF);
     }
 
     public CombinedNumberDisplayObject(Main gameMain, int integerDigits, int decimalDigits, float initialValue) {
-        init(gameMain, integerDigits, decimalDigits, initialValue, DEFAULT_BUFF);
+        super(gameMain);
+        init(integerDigits, decimalDigits, initialValue, DEFAULT_BUFF);
     }
 
     public CombinedNumberDisplayObject(Main gameMain, int integerDigits, int decimalDigits, float initialValue, float buff) {
-        init(gameMain, integerDigits, decimalDigits, initialValue, buff);
+        super(gameMain);
+        init(integerDigits, decimalDigits, initialValue, buff);
     }
 
-    private void init(Main gameMain, int integerDigits, int decimalDigits, float initialValue, float buff) {
+    private void init(int integerDigits, int decimalDigits, float initialValue, float buff) {
         this.integerDigits = integerDigits;
         this.decimalDigits = decimalDigits;
         numberDigitDisplayObjects = new ArrayList<>();
@@ -62,10 +66,9 @@ public class CombinedNumberDisplayObject {
     }
 
     /**
-     * 设置位置
-     * @param x
-     * @param y
+     * {@inheritDoc}
      */
+    @Override
     public void setPosition(float x, float y) {
         // 整数
         for (int i = 0; i < integerDigits; i++) {
@@ -87,6 +90,16 @@ public class CombinedNumberDisplayObject {
 
         width = (integerDigits + decimalDigits) * (numberDigitDisplayObjects.get(0).getWidth() + buff) + 2 * buff + decimalPoint.getWidth();
         height = numberDigitDisplayObjects.get(0).getHeight();
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param stage
+     */
+    @Override
+    public void addActorsToStage(Stage stage) {
+        numberDigitDisplayObjects.forEach(dig -> stage.addActor(dig));
+        stage.addActor(decimalPoint);
     }
 
     /**
@@ -157,21 +170,5 @@ public class CombinedNumberDisplayObject {
 
     public void setShowFirstZeros(boolean showFirstZeros) {
         this.showFirstZeros = showFirstZeros;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
     }
 }
