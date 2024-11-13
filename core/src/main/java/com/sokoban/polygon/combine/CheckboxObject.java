@@ -92,7 +92,7 @@ public class CheckboxObject extends SokobanCombineObject {
         this.checkboxType = checkboxType;
 
         // 点击响应判定
-        checkbox.setResponsable(!checkboxType);
+        checkbox.setResponsable(checkboxType);
     }
 
     /**
