@@ -87,7 +87,6 @@ public class SliderObject extends SokobanCombineObject{
                 combinedNumberDisplayObject.setValue(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, originalMapMinValue, originalMapMaxValue));
                 // 调用 SliderObject 自定义更新事件
                 if (callback != null) callback.onValueUpdate(value);
-                // System.out.println(MathUtilsEx.linearMap(value, MIN_VALUE, MAX_VALUE, toMapMinValue, toMapMaxValue));
             }
         });
 

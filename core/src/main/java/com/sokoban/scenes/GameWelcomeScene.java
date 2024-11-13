@@ -112,7 +112,7 @@ public class GameWelcomeScene extends SokoyoScene {
         startGameButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Start Game!");
+                startGame();
             }
         });
 
@@ -120,7 +120,6 @@ public class GameWelcomeScene extends SokoyoScene {
         aboutButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("About...");
                 gameMain.getScreenManager().setScreen(new AboutScene(gameMain));
             }
         });
@@ -129,7 +128,7 @@ public class GameWelcomeScene extends SokoyoScene {
         exitButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Exit");
+                Gdx.app.log("GameWelcomeScene", "Game would exit");
                 gameMain.exit();
             }
         });
@@ -138,7 +137,6 @@ public class GameWelcomeScene extends SokoyoScene {
         settingsButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Settings");
                 gameMain.getScreenManager().setScreen(new SettingScene(gameMain));
             }
         });
@@ -342,8 +340,8 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // 输入事件处理
     private void input() {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            System.out.println("Space");
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            startGame();
         }
     }
 
@@ -369,7 +367,7 @@ public class GameWelcomeScene extends SokoyoScene {
 
     // 游戏正式开始
     public void startGame() {
-        System.out.println("Game start.");
+        Gdx.app.log("GameWelcomeScene", "Game Start");
     }
 }
 

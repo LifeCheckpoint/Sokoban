@@ -59,7 +59,6 @@ public class AboutScene extends SokoyoScene {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Return!");
                 gameMain.getScreenManager().returnPreviousScreen();
             }
         });
@@ -70,7 +69,7 @@ public class AboutScene extends SokoyoScene {
             public void clicked(InputEvent event, float x, float y) {
                 clickLabelCount += 1;
                 if (clickLabelCount >= 10) {
-                    System.out.println("Colorful eggs");
+                    Gdx.app.log("AboutScene", "A Colorful eggs is trigged");
                     stage.addActor(infoLabelEgg);
                     infoLabel.remove();
                 }
