@@ -62,7 +62,9 @@ public class APManager {
         SettingsButton("img/button/settings.png"),
         StartGameButton("img/button/start_game.png"),
         Vsync("img/button/vsync.png"),
-        WhitePixel("img/white_pixel.png");
+        WhitePixel("img/white_pixel.png"),
+
+        FontpageMetaNormal("font/meta-normal.png");
 
         private final String alias;
         ImageAssets(String alias) {this.alias = alias;}
