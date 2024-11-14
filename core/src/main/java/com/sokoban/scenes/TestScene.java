@@ -1,10 +1,8 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
-import com.sokoban.polygon.FontExtractor;
+import com.sokoban.polygon.combine.ImageFontStringObject;
 
 public class TestScene extends SokoyoScene {
     private Main gameMain;
@@ -17,12 +15,9 @@ public class TestScene extends SokoyoScene {
     @Override
     public void init() {
         super.init();
-        APManager.ImageAssets[] metaNormalEnum = new APManager.ImageAssets[1];
-        metaNormalEnum[0] = APManager.ImageAssets.FontpageMetaNormal;
-        FontExtractor fontExtractor = new FontExtractor(gameMain, metaNormalEnum, gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString());
-        Image testChar = fontExtractor.getCharImage('A');
-        testChar.setPosition(3f, 3f);
-        stage.addActor(testChar);
+        ImageFontStringObject testString = new ImageFontStringObject(gameMain, "Hello World", 0.02f);
+        testString.setPosition(3f, 3f);
+        testString.addActorsToStage(stage);
     }
 
     // 重绘逻辑

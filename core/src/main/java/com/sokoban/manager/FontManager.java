@@ -1,23 +1,35 @@
-package com.sokoban.polygon;
+package com.sokoban.manager;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FontExtractor {
-    // 存储每个字符的 TextureRegion
+/**
+ * 位图字体管理器，从 BitmapFont 文件中读取字体
+ * @author ChatGPT
+ */
+public class FontManager {
+    /** 
+     * 存储每个字符的 TextureRegion
+     */
     private Map<Character, TextureRegion> charMap;
+    
     private Texture[] pages;
     private Main gameMain;
 
-    public FontExtractor(Main gameMain, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
+    /**
+     * 位图字体管理器构造
+     * @param gameMain 全局句柄
+     * @param pageFileEnums 字体页位图资源枚举
+     * @param fntFileData fnt 字体数据文件内容
+     */
+    public FontManager(Main gameMain, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
         this.gameMain = gameMain;
         
         // 初始化字体页数组和字符映射
@@ -33,6 +45,10 @@ public class FontExtractor {
         parseFntFileData(fntFileData);
     }
 
+    /**
+     * fnt 文件格式解析
+     * @param fntFileData fnt 文件内容
+     */
     private void parseFntFileData(String fntFileData) {
         String[] lines = fntFileData.split("\n");
 
@@ -72,6 +88,17 @@ public class FontExtractor {
      */
     public Image getCharImage(char character) {
         ImageLabelContainer charImageLabelContainer = new ImageLabelContainer(gameMain);
+        return charImageLabelContainer.create(new TextureRegionDrawable(getCharRegion(character)));
+    }
+
+    /**
+     * 获取字符的 Image
+     * @param character 字符
+     * @param scaling 缩放比例
+     * @return 字符对应 Image
+     */
+    public Image getCharImage(char character, float scaling) {
+        ImageLabelContainer charImageLabelContainer = new ImageLabelContainer(gameMain, scaling);
         return charImageLabelContainer.create(new TextureRegionDrawable(getCharRegion(character)));
     }
 }
