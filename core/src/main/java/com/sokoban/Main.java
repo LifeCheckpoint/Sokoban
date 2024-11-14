@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
+import com.sokoban.scenes.TestScene;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.MusicManager;
@@ -18,12 +19,17 @@ import com.sokoban.manager.ScreenManager;
  * <b>游戏中心类，负责全局句柄分发与初始资源加载</b>
  */
 public class Main extends ApplicationAdapter {
+    private int runMode;
     private APManager apManager;
     private SettingManager setManager;
     private ScreenManager screenManager;
     private MusicManager musicManager;
     
     private int backGroundColorRGBA = 0x101010ff;
+
+    public Main(int runMode) {
+        this.runMode = runMode;
+    }
 
     /**
      * 获得资源管理句柄
@@ -70,7 +76,8 @@ public class Main extends ApplicationAdapter {
         musicManager = new MusicManager(this);
 
         screenManager = new ScreenManager();
-        screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
+        if (runMode == 0) screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
+        if (runMode == 2) screenManager.setScreen(new LoadingScene(this, new TestScene(this), apManager));
     }
 
     // 重绘逻辑

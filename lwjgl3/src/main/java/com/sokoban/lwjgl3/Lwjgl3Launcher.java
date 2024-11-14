@@ -1,5 +1,6 @@
 package com.sokoban.lwjgl3;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.sokoban.CoreTest;
@@ -7,28 +8,39 @@ import com.sokoban.Main;
 
 /** Launches Sokoban. */
 public class Lwjgl3Launcher {
+    /**
+     * 程序启动方式
+     * 0 = 正常 GUI 启动
+     * 1 = 核心测试 CoreTest
+     * 2 = 场景测试 SceneTest
+     */
+    static int runMode = 0;
     public static void main(String[] args) {
-        // 选择是否进入测试模式
-        boolean runTests = false;
-
+        
         // 检查启动参数
         for (String arg : args) {
             if (arg.equals("--test")) {
-                runTests = true;
+                runMode = 1;
+                break;
+            }
+
+            if (arg.equals("--guitest")) {
+                runMode = 2;
                 break;
             }
         }
 
-        if (!runTests) {
+        if (runMode == 0 || runMode == 2) {
             if (StartupHelper.startNewJvmIfRequired()) return;
-            createApplication();
-        } else {
+            createApplication(new Main(runMode));
+            
+        } else if (runMode == 1) {
             CoreTest.main();
         }
     }
 
-    private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+    private static Lwjgl3Application createApplication(ApplicationListener entry) {
+        return new Lwjgl3Application(entry, getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
