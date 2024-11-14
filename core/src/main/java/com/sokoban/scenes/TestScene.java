@@ -23,7 +23,6 @@ public class TestScene extends SokoyoScene {
         ImageFontStringObject testString2 = new ImageFontStringObject(gameMain, "Hello World But MsgBox!", 0.02f);
         HintMessageBox msgBox = new HintMessageBox(gameMain, testString2);
         msgBox.setPosition(8f, 1f);
-        System.out.println(msgBox.getFrame().getWidth());
         msgBox.addActorsToStage(stage);
     }
 

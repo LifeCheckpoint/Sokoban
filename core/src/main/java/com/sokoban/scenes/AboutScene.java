@@ -8,6 +8,7 @@ import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.container.ImageLabelContainer;
 import com.sokoban.utils.ActionUtils;
@@ -70,6 +71,11 @@ public class AboutScene extends SokoyoScene {
                 clickLabelCount += 1;
                 if (clickLabelCount >= 10) {
                     Gdx.app.log("AboutScene", "A Colorful eggs is trigged");
+                    
+                    HintMessageBox colorfulEggTriggedHintBox = new HintMessageBox(gameMain, "Something is trigged...");
+                    colorfulEggTriggedHintBox.setPosition(8f, 0.5f);
+                    colorfulEggTriggedHintBox.addActorsToStage(stage);
+ 
                     stage.addActor(infoLabelEgg);
                     infoLabel.remove();
                 }

@@ -13,6 +13,7 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
@@ -136,7 +137,7 @@ public class SettingScene extends SokoyoScene {
 
     // 输入事件处理
     private void input() {
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S) && isSettingUpdated()) {
             saveSettings();
         }
     }
@@ -166,6 +167,11 @@ public class SettingScene extends SokoyoScene {
 
     private void saveSettings() {
         Gdx.app.log("SettingScene", "settings would be saved.");
+
+        HintMessageBox saveSettingsHintBox = new HintMessageBox(gameMain, "Settings saved.");
+        saveSettingsHintBox.setPosition(8f, 0.5f);
+        saveSettingsHintBox.addActorsToStage(stage);
+
         gameMain.getSettingManager().gameSettings = getCurrentSettings();
         gameMain.getSettingManager().writeSettings();
     }

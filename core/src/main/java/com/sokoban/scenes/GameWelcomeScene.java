@@ -157,7 +157,7 @@ public class GameWelcomeScene extends SokoyoScene {
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
                 // square.setAlpha(backgroundAlpha);
-                ActionUtils.FadeInEffect(square, backgroundAlpha);
+                ActionUtils.FadeInEffect(square, backgroundAlpha, MathUtils.random(0f, 0.5f));
                 stage.addActor(square); // 添加到stage中
                 backgroundGrid[row][col] = square;
             }

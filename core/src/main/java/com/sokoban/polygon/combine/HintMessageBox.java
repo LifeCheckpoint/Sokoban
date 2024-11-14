@@ -26,6 +26,18 @@ public class HintMessageBox extends SokobanCombineObject {
     private final float FRAME_WIDTH = 10f, FRAME_HEIGHT = 0.6f;
     private final float DEFAULT_DURATION_TIME = 3f;
 
+    public HintMessageBox(Main gameMain, String hintText) {
+        super(gameMain);
+        ImageFontStringObject hintTextImage = new ImageFontStringObject(gameMain, hintText, 0.02f);
+        init(hintTextImage, DEFAULT_DURATION_TIME);
+    }
+
+    public HintMessageBox(Main gameMain, String hintText, float durationTime) {
+        super(gameMain);
+        ImageFontStringObject hintTextImage = new ImageFontStringObject(gameMain, hintText, 0.02f);
+        init(hintTextImage, durationTime);
+    }
+
     public HintMessageBox(Main gameMain, ImageFontStringObject hintTextImage) {
         super(gameMain);
         init(hintTextImage, DEFAULT_DURATION_TIME);
