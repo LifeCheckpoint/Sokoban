@@ -10,7 +10,6 @@ public class TestScene extends SokoyoScene {
 
     public TestScene(Main gameMain) {
         super(gameMain);
-        this.gameMain = gameMain;
     }
 
     @Override
