@@ -86,14 +86,14 @@ public class APManager {
      * <br><br>
      * 只有 atlas 会被统一读取，Json <b>不会</b>被统一读取
      */
-    public enum SpineAtlasAssets {
+    public enum SpineAssets {
         Player1("spine/test_player1/player1_sp.atlas|spine/test_player1/player1_sp.json"),
         Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
         Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
         Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json");
 
         private final String alias;
-        SpineAtlasAssets(String alias) {this.alias = alias;}
+        SpineAssets(String alias) {this.alias = alias;}
         public String getAlias() {return alias;}
         public String getAliasAtlas() {return alias.split("\\|")[0];}
         public String getAliasJson() {return alias.split("\\|")[1];}
@@ -133,7 +133,7 @@ public class APManager {
         }
 
         // 加载 SpineAssets
-        for (SpineAtlasAssets spineAsset : SpineAtlasAssets.values()) {
+        for (SpineAssets spineAsset : SpineAssets.values()) {
             addAsset(TextureAtlas.class, spineAsset.getAliasAtlas());
         }
     }
@@ -223,7 +223,7 @@ public class APManager {
      * @param resourceEnum Spine 枚举
      * @return 指定资源
      */
-    public TextureAtlas get(SpineAtlasAssets resourceEnum) {
+    public TextureAtlas get(SpineAssets resourceEnum) {
         return get(resourceEnum.getAliasAtlas(), TextureAtlas.class);
     }
 

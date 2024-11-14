@@ -57,7 +57,7 @@ public class SpineObject extends Actor implements Disposable {
      * 构造函数
      * @throws IllegalArgumentException 如果资源加载失败
      */
-    public SpineObject(Main gameMain, APManager.SpineAtlasAssets atlasEnum) {
+    public SpineObject(Main gameMain, APManager.SpineAssets atlasEnum) {
         // 加载纹理图集
         atlas = gameMain.getAssetsPathManager().get(atlasEnum);
         if (atlas == null) {
