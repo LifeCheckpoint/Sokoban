@@ -157,7 +157,7 @@ public class GameWelcomeScene extends SokoyoScene {
                 square.setPosition((row - 1) * backgroundSquareScale, (col - 1) * backgroundSquareScale);
                 square.setSize(backgroundSquareSize, backgroundSquareSize);
                 // square.setAlpha(backgroundAlpha);
-                ActionUtils.FadeInEffectRand(square, backgroundAlpha);
+                ActionUtils.FadeInEffect(square, backgroundAlpha);
                 stage.addActor(square); // 添加到stage中
                 backgroundGrid[row][col] = square;
             }
@@ -184,11 +184,11 @@ public class GameWelcomeScene extends SokoyoScene {
         playerObject.setSize(1f, 1f);
 
         // 设置淡入动画
-        ActionUtils.FadeInEffectRand(playerObject);
-        startGameButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        aboutButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        exitButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        settingsButton.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        ActionUtils.FadeInEffect(playerObject);
+        startGameButton.getAllActors().forEach(ActionUtils::FadeInEffect);
+        aboutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
+        exitButton.getAllActors().forEach(ActionUtils::FadeInEffect);
+        settingsButton.getAllActors().forEach(ActionUtils::FadeInEffect);
 
         // 添加 UI
         startGameButton.addActorsToStage(stage);

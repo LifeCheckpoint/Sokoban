@@ -117,12 +117,12 @@ public class SettingScene extends SokoyoScene {
         bgParticle.startCreateParticles();
 
         // 设置淡入动画
-        ActionUtils.FadeInEffectRand(returnButton);
-        mipmapCheckbox.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        vsyncCheckbox.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        masterVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        musicVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
-        effectsVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffectRand);
+        ActionUtils.FadeInEffect(returnButton);
+        mipmapCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
+        vsyncCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
+        masterVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
+        musicVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
+        effectsVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
 
         // 添加 UI
         stage.addActor(returnButton);

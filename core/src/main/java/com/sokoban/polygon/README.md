@@ -5,3 +5,5 @@
 已经换成 `Spine`
 
 但是实测发现 `Table` 有 bug，无法很好地接管 `Spine` 对象. 只能手搓轮子了.
+
+写了一个 `ImageFontStringObject` 对象，规避 `FitViewport` 的不兼容问题

@@ -11,32 +11,53 @@ import com.sokoban.polygon.action.FadeToAction;
  * @author Life_Checkpoint
  */
 public class ActionUtils {
-    /**
-     * 随机时间淡入
-     * @param actor actor 对象
-     */
-    public static void FadeInEffectRand(Actor actor) {
-        FadeInEffectRand(actor, 1f);
-    }
+    // 注，该类最好重构
 
     /**
      * 随机时间淡入
      * @param actor actor 对象
-     * @param targetAlpha 目标透明度
      */
-    public static void FadeInEffectRand(Actor actor, float targetAlpha) {
-        float delayTime = MathUtils.random(0f, 0.3f);
+    public static void FadeInEffect(Actor actor) {
+        FadeInEffect(actor, 1f, MathUtils.random(0f, 0.3f));
+    }
+
+    /**
+     * 指定时间淡入
+     * @param actor actor 对象
+     * @param delayTime 延迟时间
+     */
+    public static void FadeInEffect(Actor actor, float delayTime) {
+        FadeInEffect(actor, 1f, delayTime);
+    }
+
+    /**
+     * 淡入
+     * @param actor actor 对象
+     * @param targetAlpha 目标透明度
+     * @param delayTime 延迟时间
+     */
+    public static void FadeInEffect(Actor actor, float targetAlpha, float delayTime) {
         actor.getColor().a = 0f;
-        actor.addAction(Actions.sequence(Actions.delay(delayTime), new FadeToAction(0f, targetAlpha, 0.5f, Interpolation.sine))); // 添加淡入动作
+        actor.addAction(Actions.sequence(Actions.delay(delayTime), new FadeToAction(0f, targetAlpha, 0.5f, Interpolation.sine)));
     }
 
     /**
      * 随机时间淡出
      * @param actor actor 对象
      */
-    public static void FadeOutEffectRand(Actor actor) {
+    public static void FadeOutEffect(Actor actor) {
         float delayTime = MathUtils.random(0f, 0.3f);
         actor.getColor().a = 1f;
-        actor.addAction(Actions.sequence(Actions.delay(delayTime), Actions.fadeOut(0.5f, Interpolation.sine))); // 添加淡入动作
+        actor.addAction(Actions.sequence(Actions.delay(delayTime), Actions.fadeOut(0.5f, Interpolation.sine)));
+    }
+
+    /**
+     * 固定时间后，随机时间淡出
+     * @param actor actor 对象
+     * @param delayTime 延迟时间
+     */
+    public static void FadeOutEffect(Actor actor, float delayTime) {
+        actor.getColor().a = 1f;
+        actor.addAction(Actions.sequence(Actions.delay(delayTime), Actions.delay(MathUtils.random(0f, 0.3f)), Actions.fadeOut(0.5f, Interpolation.sine)));
     }
 }

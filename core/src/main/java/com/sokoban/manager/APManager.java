@@ -92,7 +92,8 @@ public class APManager {
         Player1("spine/test_player1/player1_sp.atlas|spine/test_player1/player1_sp.json"),
         Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
         Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
-        Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json");
+        Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json"),
+        Rectangle("spine/rec/rec.atlas|spine/rec/rec.json");
 
         private final String alias;
         SpineAssets(String alias) {this.alias = alias;}

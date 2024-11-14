@@ -49,8 +49,8 @@ public class LoadingScene extends SokoyoScene {
         label = new ImageLabelContainer(gameMain, 0.007f).create(APManager.ImageAssets.LoadingAssetsLabel);
         label.setPosition((stage.getWidth() - label.getWidth()) / 2, 0.3f * viewport.getWorldHeight());
 
-        ActionUtils.FadeInEffectRand(progressBar);
-        ActionUtils.FadeInEffectRand(label);
+        ActionUtils.FadeInEffect(progressBar);
+        ActionUtils.FadeInEffect(label);
 
         stage.addActor(progressBar);
         stage.addActor(label);

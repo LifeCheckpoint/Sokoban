@@ -22,6 +22,8 @@ public class ImageFontStringObject extends SokobanCombineObject {
     private final float DEFAULT_BUFF = 0f;
     private final APManager.ImageAssets[] DEFAULT_PAGE_FILE = new APManager.ImageAssets[1];
     private final String DEFAULT_FNT_FILE_DATA;
+    /** 改进空格显示，由 1 个拓展到 SPACE_REPEAT 个 */
+    private final int SPACE_REPEAT = 6;
 
     public ImageFontStringObject(Main gameMain, String stringContent) {
         super(gameMain);
@@ -47,6 +49,8 @@ public class ImageFontStringObject extends SokobanCombineObject {
     }
 
     private void init(String stringContent, float buff, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
+        // 空格显示改进
+        stringContent = stringContent.replace(" ", new String(" ").repeat(SPACE_REPEAT));
         this.stringContent = stringContent;
         this.buff = buff;
         
@@ -81,8 +85,10 @@ public class ImageFontStringObject extends SokobanCombineObject {
             integrateX += charImageObject.get(i).getWidth() + (i == stringContent.length() - 1 ? 0 : buff);
         }
 
-        width = integrateX - x;
-        height = maxHeight;
+        this.x = x;
+        this.y = y;
+        this.width = integrateX - x;
+        this.height = maxHeight;
     }
 
     /**

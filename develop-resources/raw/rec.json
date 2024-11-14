@@ -1,0 +1,16 @@
+{"skeleton":{"images":"rec/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"side","bone":"root","attachment":"side"},
+	{"name":"r","bone":"root","attachment":"r"},
+	{"name":"l","bone":"root","attachment":"l"}
+],
+"skins":{
+	"default":{
+		"l":{"l":{"x":19,"y":32,"width":28,"height":58}},
+		"r":{"r":{"x":1005,"y":32,"width":28,"height":58}},
+		"side":{"side":{"x":512,"y":32,"width":962,"height":58}}
+	}
+},
+"animations":{"animation":{}}
+}

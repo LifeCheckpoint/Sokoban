@@ -79,8 +79,8 @@ public class AboutScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        ActionUtils.FadeInEffectRand(returnButton);
-        ActionUtils.FadeInEffectRand(infoLabel);
+        ActionUtils.FadeInEffect(returnButton);
+        ActionUtils.FadeInEffect(infoLabel);
 
         // 添加 UI
         stage.addActor(returnButton);
