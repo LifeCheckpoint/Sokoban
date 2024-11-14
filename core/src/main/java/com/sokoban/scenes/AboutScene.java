@@ -46,7 +46,6 @@ public class AboutScene extends SokoyoScene {
         buttonContainer = new ImageButtonContainer(gameMain);
         labelContainer = new ImageLabelContainer(gameMain, 0.008f);
 
-        // 初始化按钮
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 

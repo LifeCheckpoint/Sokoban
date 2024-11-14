@@ -368,6 +368,7 @@ public class GameWelcomeScene extends SokoyoScene {
     // 游戏正式开始
     public void startGame() {
         Gdx.app.log("GameWelcomeScene", "Game Start");
+        gameMain.getScreenManager().setScreen(new LevelChooseScene(gameMain));
     }
 }
 
