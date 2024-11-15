@@ -27,8 +27,9 @@ public class Main extends ApplicationAdapter {
     
     private int backGroundColorRGBA = 0x101010ff;
 
-    public Main(int runMode) {
+    public Main(int runMode, SettingManager settingManagerCore) {
         this.runMode = runMode;
+        this.setManager = settingManagerCore;
     }
 
     /**
@@ -66,10 +67,6 @@ public class Main extends ApplicationAdapter {
     // 主游戏创建
     @Override
     public void create() {
-        setManager = new SettingManager("./settings/global.json");
-        
-        Gdx.graphics.setVSync(setManager.gameSettings.graphics.vsync);
-        
         apManager = new APManager(this);
         apManager.preloadAllAssets();
 

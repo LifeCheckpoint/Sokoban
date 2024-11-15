@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.sokoban.CoreTest;
 import com.sokoban.Main;
+import com.sokoban.core.settings.SettingManager;
 
 /** Launches Sokoban. */
 public class Lwjgl3Launcher {
@@ -15,6 +16,8 @@ public class Lwjgl3Launcher {
      * 2 = 场景测试 SceneTest
      */
     static int runMode = 0;
+    static SettingManager settingManagerCore;
+
     public static void main(String[] args) {
         
         // 检查启动参数
@@ -29,10 +32,14 @@ public class Lwjgl3Launcher {
                 break;
             }
         }
+        
+        // 尝试载入设置
+        settingManagerCore = new SettingManager("./settings/global.json");
 
+        // 启动对应前端
         if (runMode == 0 || runMode == 2) {
             if (StartupHelper.startNewJvmIfRequired()) return;
-            createApplication(new Main(runMode));
+            createApplication(new Main(runMode, settingManagerCore));
             
         } else if (runMode == 1) {
             CoreTest.main();
@@ -45,13 +52,15 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
+
+        // 初始化前端 GUI
         configuration.setTitle("Sokoban");
-        configuration.useVsync(true);
+        configuration.useVsync(settingManagerCore.gameSettings.graphics.vsync);
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
         configuration.setWindowedMode(1920, 1080);
         configuration.setResizable(false);
         configuration.setWindowIcon("sokoban_icon64.png");
-        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, 16);
+        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, settingManagerCore.gameSettings.graphics.msaa);
         return configuration;
     }
 }

@@ -3,6 +3,7 @@ package com.sokoban.core.settings;
 public class GraphicsSettings {
     public boolean mipmap;
     public boolean vsync;
+    public int msaa;
 
     @Override
     public boolean equals(Object obj) {
@@ -11,6 +12,7 @@ public class GraphicsSettings {
         
         if (isMipmap() != graphicSettings.isMipmap()) return false;
         if (isVsync() != graphicSettings.isVsync()) return false;
+        if (getMsaa() != graphicSettings.getMsaa()) return false;
         return true;
     }
 
@@ -25,5 +27,11 @@ public class GraphicsSettings {
     }
     public void setVsync(boolean vsync) {
         this.vsync = vsync;
+    }
+    public int getMsaa() {
+        return msaa;
+    }
+    public void setMsaa(int msaa) {
+        this.msaa = msaa;
     }
 }
