@@ -13,6 +13,7 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.CombinedNumberDisplayObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -29,10 +30,13 @@ public class SettingScene extends SokoyoScene {
 
     // UI
     private ImageButtonContainer buttonContainer;
+    private ImageButtonContainer buttonContainer2;
     private Image returnButton, saveButton;
 
     private CheckboxObject mipmapCheckbox;
     private CheckboxObject vsyncCheckbox;
+    private Image msaaButton;
+    private CombinedNumberDisplayObject msaaValueDisplayer;
 
     private SliderObject masterVolumeSlider;
     private SliderObject musicVolumeSlider;
@@ -49,6 +53,7 @@ public class SettingScene extends SokoyoScene {
         super.init();
 
         buttonContainer = new ImageButtonContainer(gameMain);
+        buttonContainer2 = new ImageButtonContainer(gameMain, 0.004f);
 
         // 返回 保存
         returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
@@ -79,21 +84,57 @@ public class SettingScene extends SokoyoScene {
 
         // 垂直同步设置
         vsyncCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Vsync, currentSettings.graphics.vsync, true, 0.16f);
-        vsyncCheckbox.setPosition(2f, 6f);
+        vsyncCheckbox.setPosition(2f, 6.2f);
         vsyncCheckbox.setCheckboxType(true);
+
+        // MSAA 设置
+        msaaButton = buttonContainer2.create(APManager.ImageAssets.MSAA);
+        msaaButton.setPosition(2f, 5.4f);
+        msaaValueDisplayer = new CombinedNumberDisplayObject(gameMain, 2, 0, currentSettings.graphics.msaa);
+        msaaValueDisplayer.setPosition(msaaButton.getX() + msaaButton.getWidth() + 0.2f, 5.4f);
+        msaaValueDisplayer.setShowDecimalPoint(false);
+        msaaValueDisplayer.setShowFirstZeros(false);
+
+        msaaButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                switch (currentSettings.graphics.msaa) {
+                    case 0:
+                        currentSettings.graphics.msaa = 2;
+                        break;
+                    case 2:
+                        currentSettings.graphics.msaa = 4;
+                        break;
+                    case 4:
+                        currentSettings.graphics.msaa = 8;
+                        break;
+                    case 8:
+                        currentSettings.graphics.msaa = 16;
+                        break;
+                    case 16:
+                        currentSettings.graphics.msaa = 32;
+                        break;
+                    case 32:
+                        currentSettings.graphics.msaa = 0;
+                        break;    
+                }
+
+                msaaValueDisplayer.setValue((float) currentSettings.graphics.msaa);
+            }
+        });
 
         // 音量设置
         masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
                                 0f, 100f, currentSettings.sound.masterVolume * 100, 3, 0);
-        masterVolumeSlider.setPosition(2f, 5f);
+
+                                masterVolumeSlider.setPosition(9f, 7f);
         musicVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MusicVolume, 
                                 0f, 100f, currentSettings.sound.musicVolume * 100, 3, 0);
-        musicVolumeSlider.setPosition(2f, 4.2f);
+        musicVolumeSlider.setPosition(9f, 6.2f);
         effectsVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.EffectsVolume, 
                                 0f, 100f, currentSettings.sound.effectsVolume * 100, 3, 0);
-        effectsVolumeSlider.setPosition(2f, 3.4f);
+        effectsVolumeSlider.setPosition(9f, 5.4f);
 
-        // 滑块条响应
         masterVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
             public void onValueUpdate(float value) {
@@ -117,22 +158,30 @@ public class SettingScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        // 设置淡入动画
-        ActionUtils.FadeInEffect(returnButton);
-        mipmapCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
-        vsyncCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
-        masterVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
-        musicVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
-        effectsVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
-
         // 添加 UI
         stage.addActor(returnButton);
+
         stage.addActor(saveButton);
         mipmapCheckbox.addActorsToStage(stage);
         vsyncCheckbox.addActorsToStage(stage);
+        stage.addActor(msaaButton);
+        msaaValueDisplayer.addActorsToStage(stage);
+
         masterVolumeSlider.addActorsToStage(stage);
         musicVolumeSlider.addActorsToStage(stage);
         effectsVolumeSlider.addActorsToStage(stage);
+
+        // 设置淡入动画
+        ActionUtils.FadeInEffect(returnButton);
+
+        mipmapCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
+        vsyncCheckbox.getAllActors().forEach(ActionUtils::FadeInEffect);
+        ActionUtils.FadeInEffect(msaaButton);
+        msaaValueDisplayer.getAllActors().forEach(ActionUtils::FadeInEffect);
+
+        masterVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
+        musicVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
+        effectsVolumeSlider.getAllActors().forEach(ActionUtils::FadeInEffect);
     }
 
     // 输入事件处理
@@ -157,6 +206,7 @@ public class SettingScene extends SokoyoScene {
 
         graphicsSet.mipmap = mipmapCheckbox.getCheckbox().getChecked();
         graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();
+        graphicsSet.msaa = msaaValueDisplayer.getShowingValueInt();
 
         soundSet.masterVolume = masterVolumeSlider.getSlider().getValue();
         soundSet.musicVolume = musicVolumeSlider.getSlider().getValue();

@@ -23,4 +23,12 @@ public class MathUtilsEx {
     public static float linearMap(float t, float originalMinValue, float originalMaxValue, float mapMinValue, float toMapMaxValue) {
         return (t - originalMinValue) / (originalMaxValue - originalMinValue) * (toMapMaxValue - mapMinValue) + mapMinValue;
     }
+
+    // 整数次方，防止小数精度误差
+    public static int pow(int base, int a) {
+        int result = 1;
+        if (a == 0) return 1;
+        for (int i = 0; i < a; i++) result *= base;
+        return result;
+    }
 }

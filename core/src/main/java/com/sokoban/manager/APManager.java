@@ -57,6 +57,7 @@ public class APManager {
         LoadingAssetsLabel("img/loading_assets.png"),
         MasterVolume("img/master_volume.png"),
         Mipmap("img/button/mipmap.png"),
+        MSAA("img/button/msaa.png"),
         MusicVolume("img/music_volume.png"),
         PlayerNormal("img/player_normal.png"),
         RightArrowButton("img/button/right_arrow.png"),

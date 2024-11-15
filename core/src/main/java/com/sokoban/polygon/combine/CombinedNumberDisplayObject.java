@@ -128,8 +128,8 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
 
             // 忽略首零
             if (!showFirstZeros) {
-                // 若为首零，且不单独为零，则隐藏
-                if (!zerosEndflag && numberDisplayObject.getValue() == 0 && (int) value != 0) numberDisplayObject.hide();
+                // 若为首零，且不为最后一位整数，则隐藏
+                if (!zerosEndflag && numberDisplayObject.getValue() == 0 && i != integerDigits - 1) numberDisplayObject.hide();
                 if (numberDisplayObject.getValue() != 0) {
                     numberDisplayObject.show();
                     zerosEndflag = true;
@@ -177,6 +177,28 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
 
     public Image getDecimalPoint() {
         return decimalPoint;
+    }
+
+    /**
+     * 获得当前显示的数位值
+     */
+    public float getShowingValue() {
+        // 整数部分
+        StringBuilder valueString = new StringBuilder();
+        for (int i = 0; i < integerDigits; i++) valueString.append(numberDigitDisplayObjects.get(i).getValue());
+        valueString.append(".");
+        for (int i = 0; i < decimalDigits; i++) valueString.append(numberDigitDisplayObjects.get(i + integerDigits).getValue());
+        return Float.parseFloat(valueString.toString());
+    }
+
+    /**
+     * 获得当前显示的整数数位值
+     */
+    public int getShowingValueInt() {
+        // 整数部分
+        StringBuilder valueString = new StringBuilder();
+        for (int i = 0; i < integerDigits; i++) valueString.append(numberDigitDisplayObjects.get(i).getValue());
+        return Integer.parseInt(valueString.toString());
     }
 
     public boolean isShowDecimalPoint() {
