@@ -23,7 +23,7 @@ import com.sokoban.utils.ActionUtils;
  * 设置界面
  * @author Life_Checkpoint
  */
-public class SettingScene extends SokoyoScene {
+public class SettingScene extends SokobanScene {
 
     // Background 粒子
     private BackgroundGrayParticleManager bgParticle;
@@ -159,17 +159,12 @@ public class SettingScene extends SokoyoScene {
         bgParticle.startCreateParticles();
 
         // 添加 UI
-        stage.addActor(returnButton);
+        addActorsToStage(returnButton, saveButton);
 
-        stage.addActor(saveButton);
-        mipmapCheckbox.addActorsToStage(stage);
-        vsyncCheckbox.addActorsToStage(stage);
-        stage.addActor(msaaButton);
-        msaaValueDisplayer.addActorsToStage(stage);
+        addCombinedObjectToStage(mipmapCheckbox, vsyncCheckbox, msaaValueDisplayer);
+        addActorsToStage(msaaButton);
 
-        masterVolumeSlider.addActorsToStage(stage);
-        musicVolumeSlider.addActorsToStage(stage);
-        effectsVolumeSlider.addActorsToStage(stage);
+        addCombinedObjectToStage(masterVolumeSlider, musicVolumeSlider, effectsVolumeSlider);
 
         // 设置淡入动画
         ActionUtils.FadeInEffect(returnButton);

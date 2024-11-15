@@ -9,13 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
 import com.sokoban.polygon.BackgroundParticle;
-import com.sokoban.scenes.SokoyoScene;
+import com.sokoban.scenes.SokobanScene;
 
 public class BackgroundGrayParticleManager {
     private float particleCreateInverval = 1f;
     private float minX, minY, maxX, maxY;
     private List<BackgroundParticle> backgroundParticle;
-    private SokoyoScene thisScene;
+    private SokobanScene thisScene;
     private Stage stage;
     private Texture particleTexture;
     private Timer.Task creatingTask;

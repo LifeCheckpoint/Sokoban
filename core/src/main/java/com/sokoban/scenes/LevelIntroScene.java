@@ -17,7 +17,7 @@ import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
-public class LevelIntroScene extends SokoyoScene {
+public class LevelIntroScene extends SokobanScene {
     private Levels level;
     private Image returnButton;
     private MouseMovingTraceManager moveTrace;
@@ -71,8 +71,7 @@ public class LevelIntroScene extends SokoyoScene {
         // 加速度管理器
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
 
-        stage.addActor(returnButton);
-        stage.addActor(playerSpine);
+        addActorsToStage(returnButton, playerSpine);
 
         ActionUtils.FadeInEffect(returnButton);
         ActionUtils.FadeInEffect(playerSpine);

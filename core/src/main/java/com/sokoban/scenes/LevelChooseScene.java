@@ -16,7 +16,7 @@ import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.scenes.LevelIntroScene.Levels;
 import com.sokoban.utils.ActionUtils;
 
-public class LevelChooseScene extends SokoyoScene {
+public class LevelChooseScene extends SokobanScene {
     private BackgroundGrayParticleManager bgParticle;
     private Image leftSelectButton, rightSelectButton;
     private Image returnButton, startButton;
@@ -90,11 +90,8 @@ public class LevelChooseScene extends SokoyoScene {
             }
         });
 
-        levelSelector.addActorsToStage(stage);
-        stage.addActor(returnButton);
-        stage.addActor(startButton);
-        stage.addActor(leftSelectButton);
-        stage.addActor(rightSelectButton);
+        addCombinedObjectToStage(levelSelector);
+        addActorsToStage(returnButton, startButton, leftSelectButton, rightSelectButton);
 
         // 淡入效果
         levelSelector.getAllActors().forEach(ActionUtils::FadeInEffect);

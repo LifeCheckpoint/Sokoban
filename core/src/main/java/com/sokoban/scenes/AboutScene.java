@@ -17,7 +17,7 @@ import com.sokoban.utils.ActionUtils;
  * 关于界面
  * @author Life_Checkpoint
  */
-public class AboutScene extends SokoyoScene {
+public class AboutScene extends SokobanScene {
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -88,8 +88,7 @@ public class AboutScene extends SokoyoScene {
         ActionUtils.FadeInEffect(infoLabel);
 
         // 添加 UI
-        stage.addActor(returnButton);
-        stage.addActor(infoLabel);
+        addActorsToStage(returnButton, infoLabel);
     }
 
     // 输入事件处理

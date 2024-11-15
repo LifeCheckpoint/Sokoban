@@ -7,7 +7,7 @@ import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
 
-public class TestScene extends SokoyoScene {
+public class TestScene extends SokobanScene {
     public TestScene(Main gameMain) {
         super(gameMain);
     }

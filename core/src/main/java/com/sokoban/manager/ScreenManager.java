@@ -4,15 +4,15 @@ import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.sokoban.scenes.SokoyoScene;
+import com.sokoban.scenes.SokobanScene;
 
 /**
  * 场景栈切换管理器
  * @author Life_Checkpoint
  */
 public class ScreenManager {
-    private SokoyoScene currentScreen;
-    private Stack<SokoyoScene> screenStack;
+    private SokobanScene currentScreen;
+    private Stack<SokobanScene> screenStack;
 
     public ScreenManager() {
         screenStack = new Stack<>();
@@ -22,7 +22,7 @@ public class ScreenManager {
      * 场景进入并彻底清理后台场景
      * @param screen 进入场景
      */
-    public void setScreenWithClear(SokoyoScene screen) {
+    public void setScreenWithClear(SokobanScene screen) {
         if (!screenStack.isEmpty()) clearScreenStack();
         setScreenWithoutSaving(screen);
     }
@@ -31,7 +31,7 @@ public class ScreenManager {
      * 场景进入，保持后台栈不变，不将当前场景压入后台
      * @param screen 进入场景
      */
-    public void setScreenWithoutSaving(SokoyoScene screen) {
+    public void setScreenWithoutSaving(SokobanScene screen) {
         if (currentScreen != null) {
             currentScreen.hide();
             currentScreen.dispose();
@@ -44,7 +44,7 @@ public class ScreenManager {
      * 场景进入，将当前场景压入后台
      * @param screen 进入场景
      */
-    public void setScreen(SokoyoScene screen) {
+    public void setScreen(SokobanScene screen) {
         if (currentScreen != null) {
             currentScreen.hide();
             screenStack.add(currentScreen);
@@ -68,7 +68,7 @@ public class ScreenManager {
     }
 
     // 获取当前屏幕
-    public SokoyoScene getCurrentScreen() {
+    public SokobanScene getCurrentScreen() {
         return currentScreen;
     }
     // 清理所有后台场景

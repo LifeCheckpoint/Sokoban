@@ -14,17 +14,17 @@ import com.sokoban.utils.ActionUtils;
  * 素材加载界面
  * @author Life_Checkpoint
  */
-public class LoadingScene extends SokoyoScene {
+public class LoadingScene extends SokobanScene {
 
     private BackgroundGrayParticleManager bgParticle;
     private Image label;
     private WhiteProgressBar progressBar;
     private SpriteBatch batch;
-    private SokoyoScene targetScreen;
+    private SokobanScene targetScreen;
     private float progress;
     private APManager assetsPathManager;
 
-    public LoadingScene(Main gameMain, SokoyoScene targetScreen, APManager assetsPathManager) {
+    public LoadingScene(Main gameMain, SokobanScene targetScreen, APManager assetsPathManager) {
         super(gameMain);
         this.targetScreen = targetScreen;
         this.assetsPathManager = assetsPathManager;
@@ -52,8 +52,7 @@ public class LoadingScene extends SokoyoScene {
         ActionUtils.FadeInEffect(progressBar);
         ActionUtils.FadeInEffect(label);
 
-        stage.addActor(progressBar);
-        stage.addActor(label);
+        addActorsToStage(progressBar, label);
 
         // 开始实际加载 Assets
         assetsPathManager.startAssetsLoading();

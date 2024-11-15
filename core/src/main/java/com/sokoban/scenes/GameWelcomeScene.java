@@ -32,7 +32,7 @@ import com.sokoban.utils.ActionUtils;;
  * 游戏开始欢迎界面
  * @author Life_Checkpoint
  */
-public class GameWelcomeScene extends SokoyoScene {
+public class GameWelcomeScene extends SokobanScene {
 
     // 画面相机跟踪
     private MouseMovingTraceManager moveTrace;
@@ -158,7 +158,7 @@ public class GameWelcomeScene extends SokoyoScene {
             }
         }
 
-        SokoyoScene thisScene = this;
+        SokobanScene thisScene = this;
         // 背景 Timer 控制网格矩形移动，交换随机相邻的两个矩形
         Timer.schedule(new Timer.Task() {
             @Override
@@ -178,10 +178,7 @@ public class GameWelcomeScene extends SokoyoScene {
         settingsButton.getAllActors().forEach(ActionUtils::FadeInEffect);
 
         // 添加 UI
-        startGameButton.addActorsToStage(stage);
-        aboutButton.addActorsToStage(stage);
-        exitButton.addActorsToStage(stage);
-        settingsButton.addActorsToStage(stage);
+        addCombinedObjectToStage(startGameButton, aboutButton, exitButton, settingsButton);
     }
 
     /** 
