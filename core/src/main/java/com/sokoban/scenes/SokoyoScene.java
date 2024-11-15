@@ -15,9 +15,8 @@ import com.sokoban.Main;
  * @author Life_Checkpoint
  */
 public abstract class SokoyoScene extends ApplicationAdapter implements Screen {
-    private boolean initFlag = false;
+    protected boolean initFlag = false;
 
-    // 子类控制权
     protected Stage stage;
     protected Viewport viewport;
     protected Main gameMain;
