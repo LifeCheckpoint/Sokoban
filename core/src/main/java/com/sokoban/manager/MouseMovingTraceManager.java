@@ -17,8 +17,15 @@ public class MouseMovingTraceManager {
     private Vector2 mousePos;
     private Vector2 screenCenter;
     private Vector2 mouse2CenterOffsetScaled;
+    private float actorOriginalX = 0f, actorOriginalY = 0f;
 
     public MouseMovingTraceManager(Viewport viewport) {
+        setViewPort(viewport);
+    }
+
+    public MouseMovingTraceManager(Viewport viewport, float actorOriginalX, float actorOriginalY) {
+        this.actorOriginalX = actorOriginalX;
+        this.actorOriginalY = actorOriginalY;
         setViewPort(viewport);
     }
 
@@ -51,7 +58,7 @@ public class MouseMovingTraceManager {
      * <br><br>
      * 参数均为<b>世界坐标</b>
      */
-    public void setPositionWithUpdate(Actor centralActor, float actorOriginalX, float actorOriginalY) {
+    public void setPositionWithUpdate(Actor centralActor) {
         Vector2 actorDeltaWorldPos = new Vector2(centralActor.getX() - actorOriginalX, centralActor.getY() - actorOriginalY);
 
         // 计算鼠标位置世界坐标以及偏移矢量
@@ -62,6 +69,22 @@ public class MouseMovingTraceManager {
         // 更新相机位置
         viewport.getCamera().position.set(mouse2CenterOffsetScaled.add(screenCenter).add(actorDeltaWorldPos), 0);
         viewport.getCamera().update();
+    }
+
+    public float getActorOriginalX() {
+        return actorOriginalX;
+    }
+
+    public void setActorOriginalX(float actorOriginalX) {
+        this.actorOriginalX = actorOriginalX;
+    }
+
+    public float getActorOriginalY() {
+        return actorOriginalY;
+    }
+
+    public void setActorOriginalY(float actorOriginalY) {
+        this.actorOriginalY = actorOriginalY;
     }
 
     public Viewport getViewPort() {

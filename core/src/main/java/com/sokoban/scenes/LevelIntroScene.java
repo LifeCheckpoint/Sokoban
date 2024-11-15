@@ -3,11 +3,11 @@ package com.sokoban.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
+import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -16,7 +16,8 @@ public class LevelIntroScene extends SokoyoScene {
     private Levels level;
     private Image returnButton;
     private MouseMovingTraceManager moveTrace;
-    SpineObject playerSpine;
+    private SpineObject playerSpine;
+    private AccelerationMovingManager accelerationManager;
 
     // 关卡名
     public enum Levels {
@@ -53,32 +54,14 @@ public class LevelIntroScene extends SokoyoScene {
         // 玩家
         playerSpine = new SpineObject(gameMain, APManager.SpineAssets.Player1);
         playerSpine.stayAnimationAtFirst("down");
-        playerSpine.setPosition(8f, 4.5f);
         playerSpine.setSize(1f, 1f);
+        playerSpine.setPosition(8f - playerSpine.getWidth() / 2, 4.5f - playerSpine.getHeight() / 2);
 
         // 视角跟随
-        moveTrace = new MouseMovingTraceManager(viewport);
-        stage.addListener(new InputListener() {
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                float speed = 0.1f;
-                switch (keycode) {
-                    case Keys.W:
-                        playerSpine.moveBy(0, speed);
-                        break;
-                    case Keys.S:
-                        playerSpine.moveBy(0, -speed);
-                        break;
-                    case Keys.A:
-                        playerSpine.moveBy(-speed, 0);
-                        break;
-                    case Keys.D:
-                        playerSpine.moveBy(speed, 0);
-                        break;
-                }
-                return false;
-            }
-        });
+        moveTrace = new MouseMovingTraceManager(viewport, 8f - playerSpine.getWidth() / 2, 4.5f - playerSpine.getHeight() / 2);
+
+        // 加速度管理器
+        accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
 
         stage.addActor(returnButton);
         stage.addActor(playerSpine);
@@ -93,6 +76,15 @@ public class LevelIntroScene extends SokoyoScene {
         
     }
 
+    // 处理键盘输入
+    private void input() {
+        if (Gdx.input.isKeyPressed(Keys.W)) accelerationManager.updateActorMove(AccelerationMovingManager.Direction.Up);
+        else if (Gdx.input.isKeyPressed(Keys.S)) accelerationManager.updateActorMove(AccelerationMovingManager.Direction.Down);
+        else if (Gdx.input.isKeyPressed(Keys.A)) accelerationManager.updateActorMove(AccelerationMovingManager.Direction.Left);
+        else if (Gdx.input.isKeyPressed(Keys.D)) accelerationManager.updateActorMove(AccelerationMovingManager.Direction.Right);
+        else accelerationManager.updateActorMove(AccelerationMovingManager.Direction.None);
+    }
+
     /**
      * 关卡 origin 初始化
      */
@@ -102,10 +94,8 @@ public class LevelIntroScene extends SokoyoScene {
 
     // 重绘逻辑
     private void draw() {
-        // 在更新主视角后更新相对视角
-        // viewport.getCamera().position.set(playerSpine.getX(), playerSpine.getY(), 0);
-        // viewport.getCamera().update();
-        moveTrace.setPositionWithUpdate(playerSpine, 8f, 4.5f);
+        // 更新鼠标跟踪、主角视角
+        moveTrace.setPositionWithUpdate(playerSpine);
         // stage 更新
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
@@ -114,6 +104,7 @@ public class LevelIntroScene extends SokoyoScene {
     // 主渲染帧
     @Override
     public void render(float delta) {
+        input();
         draw();
     }
 
