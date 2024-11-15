@@ -3,8 +3,11 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
@@ -51,36 +54,84 @@ public class WindowImageSelector extends SokobanCombineObject {
         ImageLabelContainer windowContainer = new ImageLabelContainer(gameMain, 0.0005f);
         for (APManager.ImageAssets windowImageEnum : WindowImageEnums) windows.add(windowContainer.create(windowImageEnum));
         
-        // 设置初始位置
-        Image currentWindow = windows.get(0);
-        currentWindow.setSize(centralWidth, centralHeight);
-        float leftEdgeX = DEFAULT_SCREEN_CENTRE_X - centralWidth / 2, downEdgeY = DEFAULT_SCREEN_CENTRE_Y - centralHeight / 2;
-        currentWindow.setPosition(leftEdgeX, downEdgeY);
-        // 其它窗口位置
+        currentWindowIndex = 0;
         
-        for (int i = 1; i < windows.size(); i++) {
-            currentWindow = windows.get(i);
-            currentWindow.setSize(DEFAULT_SIDE_WIDTH, DEFAULT_SIDE_HEIGHT);
+        // 窗口大小
+        windows.forEach(window -> window.setSize(sideWidth, sideHeight));
+        windows.get(currentWindowIndex).setSize(centralWidth, centralHeight);
 
-            // 上一个窗口宽度 + buff = 当前窗口左边缘 x
-            leftEdgeX += windows.get(i - 1).getWidth() + buff;
-            currentWindow.setPosition(leftEdgeX, DEFAULT_SCREEN_CENTRE_Y - sideHeight / 2);
-        }
-
-        setCurrentWindowIndex(0);
+        setPosition(DEFAULT_SCREEN_CENTRE_X, DEFAULT_SCREEN_CENTRE_Y);
     }
 
     /**
      * {@inheritDoc}
      * <br><br>
-     * <b>注意，在 WindowImageSelector 中，此为居中坐标</b>
+     * 传入参数为<b>居中坐标</b>
+     * <br><br>
+     * 该方法<b>不会</b>产生动画效果
      */
     @Override
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
 
+        // 窗口位置
+        // 计算量不大，无需优化该 O(n^2) 分支
+        for (int i = 0; i < windows.size(); i++) {
+            windows.get(i).setPosition(getWindowTargetX(i), getWindowTargetY(i));
+        }
 
+        this.width = (windows.size() - 1) * (sideWidth + buff) + centralWidth;
+        this.height = centralHeight;
+    }
+
+    /**
+     * 更新当前窗口后，计算窗口理论目标 X
+     */
+    private float getWindowTargetX(int index) {
+        if (index < 0 || index >= windows.size()) {
+            Gdx.app.error("WindowImageSelector", String.format("Index %d out of range. Expect (0, %d)", index, windows.size()));
+            return 0f;
+        }
+
+        // 主窗口
+        if (index == currentWindowIndex) {
+            return x - centralWidth / 2;
+        }
+
+        // 主窗口前
+        if (index < currentWindowIndex) {
+            float beforeWindowX = x - centralWidth / 2;
+            
+            // 倒序遍历
+            for (int i = currentWindowIndex - 1; i >= 0; i--) {
+                // 后一个窗口左边缘 x - buff - 当前窗口宽度 = 当前窗口左边缘 x
+                beforeWindowX = beforeWindowX - buff - sideWidth;
+                if (i == index) return beforeWindowX;
+            }
+        }
+
+        // 主窗口后
+        if (index > currentWindowIndex) {
+            float afterWindowX = x - centralWidth / 2;
+    
+            for (int i = currentWindowIndex + 1; i < windows.size(); i++) {
+                // 上一个窗口宽度 + buff = 当前窗口左边缘 x
+                // 需判断上一个窗口是否为主窗口
+                afterWindowX = afterWindowX + (i - 1 == currentWindowIndex ? centralWidth : sideWidth) + buff;
+                if (i == index) return afterWindowX;
+            }
+        }
+
+        throw new IllegalStateException("Unreachable code");
+    }
+
+    /**
+     * 更新当前窗口后，计算窗口理论目标 Y
+     */
+    private float getWindowTargetY(int index) {
+        if (index == currentWindowIndex) return y - centralHeight / 2;
+        else return y - sideHeight / 2;
     }
 
     /**
@@ -102,11 +153,56 @@ public class WindowImageSelector extends SokobanCombineObject {
         return actors;
     }
 
-    public void setCurrentWindowIndex(int currentWindowIndex) {
-        // TODO
-        if (isInMoving()) return;
-        this.currentWindowIndex = currentWindowIndex;
+    /**
+     * 动画更新主窗口到下一窗口
+     */
+    public boolean setCurrentWindowToNext() {
+        return setCurrentWindowIndex(currentWindowIndex + 1);
+    }
 
+    /**
+     * 动画更新主窗口到下一窗口
+     */
+    public boolean setCurrentWindowToPre() {
+        return setCurrentWindowIndex(currentWindowIndex - 1);
+    }
+
+    /**
+     * 动画更新主窗口
+     * @param index 主窗口索引
+     */
+    public boolean setCurrentWindowIndex(int index) {
+        if (index < 0) {
+            Gdx.app.error("WindowImageSelector", "The first window has been reached");
+            return false;
+        }
+        if (index >= windows.size()) {
+            Gdx.app.error("WindowImageSelector", "The last window has been reached");
+            return false;
+        }
+
+        // 若正在执行动画，强制复位并执行下一个
+        if (isInMoving()) {
+            windows.forEach(Actor::clearActions);
+            setPosition(x, y);
+        }
+
+        lockMoving();
+
+        this.currentWindowIndex = index;
+
+        for (int i = 0; i < windows.size(); i++) {
+            // 执行动画，在完成后解锁
+            windows.get(i).addAction(Actions.sequence(
+                Actions.parallel(
+                    Actions.moveTo(getWindowTargetX(i), getWindowTargetY(i), 0.4f, Interpolation.pow3Out),
+                    Actions.sizeTo(i == index ? centralWidth : sideWidth, i == index ? centralHeight : sideHeight, 0.5f, Interpolation.pow2Out)
+                ),
+                Actions.run(() -> unlockMoving())
+            ));
+        }
+
+        return true;
     }
 
     public void lockMoving() {

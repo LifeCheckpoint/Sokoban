@@ -9,13 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.actioninterface.Observer;
 import com.sokoban.utils.ActionUtils;
 
 /**
  * 消息提示框组合对象
  * @author Life_Checkpoint
  */
-public class HintMessageBox extends SokobanCombineObject {
+public class HintMessageBox extends SokobanCombineObject implements Observer {
+    /** 当前所有消息框实例 */
+    private static final List<Observer> observers = new ArrayList<>();
+
     private ImageFontStringObject hintText;
     private SpineObject frame;
     private float durationTime;
@@ -49,6 +53,15 @@ public class HintMessageBox extends SokobanCombineObject {
     }
 
     private void init(ImageFontStringObject hintTextImage, float durationTime) {
+        // 注册当前提示框为观察者
+        observers.add(this);
+        // 通知所有观察者
+        for (Observer observer : observers) {
+            if (observer != this) {
+                observer.onNewInstanceCreated();
+            }
+        }
+
         this.hintText = hintTextImage;
         this.durationTime = durationTime;
         frame = new SpineObject(gameMain, APManager.SpineAssets.Rectangle);
@@ -57,6 +70,15 @@ public class HintMessageBox extends SokobanCombineObject {
 
         playIn();
         playOut();
+    }
+
+    /**
+     * 如果新提示框出现，则隐藏自身
+     */
+    @Override
+    public void onNewInstanceCreated() {
+        frame.hide();
+        hintText.getAllActors().forEach(Actor::remove);
     }
 
     /**
