@@ -181,8 +181,14 @@ public class SettingScene extends SokobanScene {
 
     // 输入事件处理
     private void input() {
+        // 保存
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S) && isSettingUpdated()) {
             saveSettings();
+        }
+
+        // 退出
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            gameMain.getScreenManager().returnPreviousScreen();
         }
     }
 

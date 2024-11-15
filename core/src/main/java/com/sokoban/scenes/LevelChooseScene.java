@@ -3,6 +3,7 @@ package com.sokoban.scenes;
 import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -71,22 +72,14 @@ public class LevelChooseScene extends SokobanScene {
         leftSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (levelSelector.setCurrentWindowToPre()) {
-                    HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
-                    msgBox.setPosition(8f, 0.5f);
-                    msgBox.addActorsToStage(stage);
-                }
+                gotoLeftWindow();
             }
         });
 
         rightSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (levelSelector.setCurrentWindowToNext()) {
-                    HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
-                    msgBox.setPosition(8f, 0.5f);
-                    msgBox.addActorsToStage(stage);
-                }
+                gotoRightWindow();
             }
         });
 
@@ -103,6 +96,29 @@ public class LevelChooseScene extends SokobanScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
     }
+
+    /**
+     * 到前一个窗口
+     */
+    private void gotoLeftWindow() {
+        if (levelSelector.setCurrentWindowToPre()) {
+            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+            msgBox.setPosition(8f, 0.5f);
+            msgBox.addActorsToStage(stage);
+        }
+    }
+
+    /**
+     * 到后一个窗口
+     */
+    private void gotoRightWindow() {
+        if (levelSelector.setCurrentWindowToNext()) {
+            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+            msgBox.setPosition(8f, 0.5f);
+            msgBox.addActorsToStage(stage);
+        }
+    }
+
 
     /**
      * 将索引转换为关卡常量枚举
@@ -123,6 +139,29 @@ public class LevelChooseScene extends SokobanScene {
         }
     }
 
+    // 输入事件处理
+    private void input() {
+        // 选择
+        if (Gdx.input.isKeyJustPressed(Keys.A) || Gdx.input.isKeyJustPressed(Keys.LEFT)) {
+            gotoLeftWindow();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Keys.D) || Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
+            gotoRightWindow();
+        }
+
+        // 退出
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            gameMain.getScreenManager().returnPreviousScreen();
+        }
+
+        // 进入
+        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+            Levels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
+            gameMain.getScreenManager().setScreen(new LevelIntroScene(gameMain, currentSelectedLevel));
+        }
+    }
+
     // 重绘逻辑
     private void draw() {
         moveTrace.setPositionWithUpdate();
@@ -134,6 +173,7 @@ public class LevelChooseScene extends SokobanScene {
     // 主渲染帧
     @Override
     public void render(float delta) {
+        input();
         draw();
     }
 

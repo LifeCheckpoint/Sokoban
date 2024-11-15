@@ -1,6 +1,7 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -92,7 +93,12 @@ public class AboutScene extends SokobanScene {
     }
 
     // 输入事件处理
-    private void input() {}
+    private void input() {
+        // 退出
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            gameMain.getScreenManager().returnPreviousScreen();
+        }
+    }
 
     // 重绘逻辑
     private void draw() {

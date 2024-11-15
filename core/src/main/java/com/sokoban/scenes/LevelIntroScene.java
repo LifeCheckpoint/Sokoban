@@ -14,6 +14,7 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
@@ -59,6 +60,10 @@ public class LevelIntroScene extends SokobanScene {
             }
         });
 
+        // 提示
+        HintMessageBox msgBox = new HintMessageBox(gameMain, level.getLevelName());
+        msgBox.setPosition(8f, 0.5f);
+
         // 玩家
         playerSpine = new SpineObject(gameMain, APManager.SpineAssets.Player1);
         playerSpine.stayAnimationAtFirst("down");
@@ -72,6 +77,7 @@ public class LevelIntroScene extends SokobanScene {
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
 
         addActorsToStage(returnButton, playerSpine);
+        addCombinedObjectToStage(msgBox);
 
         ActionUtils.FadeInEffect(returnButton);
         ActionUtils.FadeInEffect(playerSpine);
@@ -107,20 +113,25 @@ public class LevelIntroScene extends SokobanScene {
     // 处理键盘输入
     private void input() {
         // 加速度管理器管理移动
-        if (Gdx.input.isKeyPressed(Keys.W)) {
+        if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
             playerMoveAnimation(AccelerationMovingManager.Direction.Up);
         }
-        else if (Gdx.input.isKeyPressed(Keys.S)) {
+        else if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
             playerMoveAnimation(AccelerationMovingManager.Direction.Down);
         }
-        else if (Gdx.input.isKeyPressed(Keys.A)) {
+        else if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
             playerMoveAnimation(AccelerationMovingManager.Direction.Left);
         }
-        else if (Gdx.input.isKeyPressed(Keys.D)) {
+        else if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
             playerMoveAnimation(AccelerationMovingManager.Direction.Right);
         }
         else {
             playerMoveAnimation(AccelerationMovingManager.Direction.None);
+        }
+
+        // 退出
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            returnToPreviousScreen();
         }
     }
 
