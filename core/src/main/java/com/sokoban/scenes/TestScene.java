@@ -6,8 +6,6 @@ import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
 
 public class TestScene extends SokoyoScene {
-    private Main gameMain;
-
     public TestScene(Main gameMain) {
         super(gameMain);
     }

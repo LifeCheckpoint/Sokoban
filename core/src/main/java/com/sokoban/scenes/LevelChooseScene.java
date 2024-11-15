@@ -13,11 +13,13 @@ import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.WindowImageSelector;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.scenes.LevelIntroScene.Levels;
+import com.sokoban.utils.ActionUtils;
 
 public class LevelChooseScene extends SokoyoScene {
     private BackgroundGrayParticleManager bgParticle;
     private Image leftSelectButton, rightSelectButton;
-    private Image returnButton;
+    private Image returnButton, startButton;
     private MouseMovingTraceManager moveTrace;
     private WindowImageSelector levelSelector;
 
@@ -34,10 +36,13 @@ public class LevelChooseScene extends SokoyoScene {
         // 选择器
         levelSelector = new WindowImageSelector(gameMain, Arrays.asList(APManager.ImageAssets.ShowLevel1, APManager.ImageAssets.ShowLevel2, APManager.ImageAssets.ShowLevel3));
 
-        // 返回按钮
-        ImageButtonContainer returnButtonContainer = new ImageButtonContainer(gameMain);
-        returnButton = returnButtonContainer.create(APManager.ImageAssets.LeftArrowButton);
+        // 返回 进入按钮
+        ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
+        returnButton = controlButtonContainer.create(APManager.ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
+
+        startButton = controlButtonContainer.create(APManager.ImageAssets.RightArrowButton);
+        startButton.setPosition(13.6f, 0.6f);
 
         // 左右选择按钮
         ImageButtonContainer selectorButtonContainer = new ImageButtonContainer(gameMain);
@@ -55,12 +60,20 @@ public class LevelChooseScene extends SokoyoScene {
             }
         });
 
+        startButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Levels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
+                gameMain.getScreenManager().setScreen(new LevelIntroScene(gameMain, currentSelectedLevel));
+            }
+        });
+
         leftSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (levelSelector.setCurrentWindowToPre()) {
-                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Level-");
-                    msgBox.setPosition(8f, 0.1f);
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+                    msgBox.setPosition(8f, 0.5f);
                     msgBox.addActorsToStage(stage);
                 }
             }
@@ -70,8 +83,8 @@ public class LevelChooseScene extends SokoyoScene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (levelSelector.setCurrentWindowToNext()) {
-                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Level+");
-                    msgBox.setPosition(8f, 0.1f);
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+                    msgBox.setPosition(8f, 0.5f);
                     msgBox.addActorsToStage(stage);
                 }
             }
@@ -79,11 +92,38 @@ public class LevelChooseScene extends SokoyoScene {
 
         levelSelector.addActorsToStage(stage);
         stage.addActor(returnButton);
+        stage.addActor(startButton);
         stage.addActor(leftSelectButton);
         stage.addActor(rightSelectButton);
 
+        // 淡入效果
+        levelSelector.getAllActors().forEach(ActionUtils::FadeInEffect);
+        ActionUtils.FadeInEffect(returnButton);
+        ActionUtils.FadeInEffect(startButton);
+        ActionUtils.FadeInEffect(leftSelectButton);
+        ActionUtils.FadeInEffect(rightSelectButton);
+
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
+    }
+
+    /**
+     * 将索引转换为关卡常量枚举
+     * @param levelIndex 关卡索引
+     * @return 关卡枚举
+     */
+    private Levels getLevelEnum(int levelIndex) {
+        switch (levelIndex) {
+            case 0:
+                return Levels.Origin;
+            case 1:
+                return Levels.Moving;
+            case 2:
+                return Levels.Random;
+            default:
+                Gdx.app.error("LevelChooseScene", String.format("%d is not a valid level index, return origin.", levelIndex));
+                return Levels.Origin;
+        }
     }
 
     // 重绘逻辑

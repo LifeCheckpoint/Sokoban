@@ -59,6 +59,7 @@ public class APManager {
         Mipmap("img/button/mipmap.png"),
         MusicVolume("img/music_volume.png"),
         PlayerNormal("img/player_normal.png"),
+        RightArrowButton("img/button/right_arrow.png"),
         RightSquareArrow("img/button/right_square_arrow.png"),
         SaveButton("img/button/save.png"),
         SettingsButton("img/button/settings.png"),
