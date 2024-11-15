@@ -82,7 +82,6 @@ public class GameWelcomeScene extends SokoyoScene {
         MusicManager musicManager = gameMain.getMusicManager();
         musicManager.loadMusic(AudioEnums.Background1, APManager.MusicAssets.Light);
         musicManager.loadMusic(AudioEnums.Background2, APManager.MusicAssets.Rain);
-        musicManager.setVolume(0.2f);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
         // 鼠标跟踪

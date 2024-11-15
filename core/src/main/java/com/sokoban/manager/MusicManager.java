@@ -25,7 +25,7 @@ public class MusicManager {
         musicMap = new HashMap<>();
         this.apManager = gameMain.getAssetsPathManager();
         // 主音量 × 音乐音量
-        this.volume = gameMain.getSettingManager().gameSettings.sound.masterVolume * gameMain.getSettingManager().gameSettings.sound.musicVolume;
+        setVolume(gameMain.getSettingManager().gameSettings.sound.masterVolume * gameMain.getSettingManager().gameSettings.sound.musicVolume);
     }
 
     public void loadMusic(AudioEnums audioAlias, APManager.MusicAssets audioAssets) {
