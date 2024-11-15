@@ -46,6 +46,22 @@ public class LevelIntroScene extends SokoyoScene {
 
 
         stage.addActor(returnButton);
+
+        switch (level) {
+            case Origin:
+                setupLevelOrigin();
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 关卡 origin 初始化
+     */
+    private void setupLevelOrigin() {
+        
     }
 
     // 重绘逻辑

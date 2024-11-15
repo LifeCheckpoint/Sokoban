@@ -2,6 +2,8 @@ package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.sokoban.Main;
+import com.sokoban.manager.APManager;
+import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
 
@@ -21,6 +23,22 @@ public class TestScene extends SokoyoScene {
         HintMessageBox msgBox = new HintMessageBox(gameMain, testString2);
         msgBox.setPosition(8f, 1f);
         msgBox.addActorsToStage(stage);
+
+        // Spine 背景玩家装饰测试
+        SpineObject playerObject = new SpineObject(gameMain, APManager.SpineAssets.TestPlayer1);
+        playerObject.setAnimation(0, "left", true);
+
+        playerObject.setPosition(4f, 4f);
+        playerObject.setSize(1f, 1f);
+
+        SpineObject playerObject2 = new SpineObject(gameMain, APManager.SpineAssets.Player1);
+        playerObject2.setAnimation(0, "down", true);
+
+        playerObject2.setPosition(8f, 4f);
+        playerObject2.setSize(1f, 1f);
+
+        stage.addActor(playerObject2);
+        stage.addActor(playerObject);
     }
 
     // 重绘逻辑

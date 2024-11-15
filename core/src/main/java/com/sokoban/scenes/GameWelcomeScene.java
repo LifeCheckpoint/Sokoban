@@ -23,7 +23,6 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
-import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
@@ -64,9 +63,6 @@ public class GameWelcomeScene extends SokoyoScene {
     private CheckboxObject aboutButton;
     private CheckboxObject exitButton;
     private CheckboxObject settingsButton;
-
-    // Spine
-    private SpineObject playerObject;
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -175,15 +171,7 @@ public class GameWelcomeScene extends SokoyoScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
 
-        // Spine 背景玩家装饰测试
-        playerObject = new SpineObject(gameMain, APManager.SpineAssets.Player1);
-        playerObject.setAnimation(0, "left", true);
-
-        playerObject.setPosition(4f, 4f);
-        playerObject.setSize(1f, 1f);
-
         // 设置淡入动画
-        ActionUtils.FadeInEffect(playerObject);
         startGameButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         aboutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         exitButton.getAllActors().forEach(ActionUtils::FadeInEffect);
@@ -194,8 +182,6 @@ public class GameWelcomeScene extends SokoyoScene {
         aboutButton.addActorsToStage(stage);
         exitButton.addActorsToStage(stage);
         settingsButton.addActorsToStage(stage);
-
-        stage.addActor(playerObject);
     }
 
     /** 
