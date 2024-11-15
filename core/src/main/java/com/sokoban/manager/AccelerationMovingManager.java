@@ -11,10 +11,10 @@ public class AccelerationMovingManager {
     private float velocityY;
 
     public enum Direction {
-        None(0), Right(1), Down(2), Left(3), Up(4);
-        private int value;
-        Direction(int value) {this.value = value;}
-        public int getValue() {return value;}
+        None("none"), Right("right"), Down("down"), Left("left"), Up("up");
+        private String value;
+        Direction(String value) {this.value = value;}
+        public String getDirection() {return value;}
     }
     
     public AccelerationMovingManager(Actor actor, float acceleration, float maxSpeed, float friction) {
