@@ -18,7 +18,7 @@ import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
-public class LevelIntroScene extends SokobanScene {
+public class MapChooseScene extends SokobanScene {
     private Levels level;
     private Image returnButton;
     private MouseMovingTraceManager moveTrace;
@@ -39,7 +39,7 @@ public class LevelIntroScene extends SokobanScene {
         public String getLevelName() {return levelName;}
     }
 
-    public LevelIntroScene(Main gameMain, Levels levelEnum) {
+    public MapChooseScene(Main gameMain, Levels levelEnum) {
         super(gameMain);
         this.level = levelEnum;
     }
