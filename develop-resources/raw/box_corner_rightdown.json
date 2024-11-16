@@ -1,0 +1,20 @@
+{"skeleton":{"images":"box_corner_rightdown/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"frame","bone":"root","attachment":"frame"},
+	{"name":"r","bone":"root","attachment":"r"},
+	{"name":"d","bone":"root","attachment":"d"},
+	{"name":"down","bone":"root","attachment":"down"},
+	{"name":"up","bone":"root","attachment":"up"}
+],
+"skins":{
+	"default":{
+		"up":{"up":{"x":112,"y":37,"width":14,"height":56}},
+		"down":{"down":{"x":90.5,"y":15.5,"width":57,"height":13}},
+		"d":{"d":{"x":53.5,"y":15.5,"width":17,"height":9}},
+		"r":{"r":{"x":112.5,"y":75,"width":9,"height":18}},
+		"frame":{"frame":{"x":63,"y":65,"width":108,"height":108}}
+	}
+},
+"animations":{"animation":{}}
+}

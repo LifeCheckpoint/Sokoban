@@ -101,7 +101,9 @@ public class APManager {
         Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
         Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json"),
         Rectangle("spine/rec/rec.atlas|spine/rec/rec.json"),
-        Player1("spine/player_1/player_1.atlas|spine/player_1/player_1.json");        
+        Player1("spine/player_1/player_1.atlas|spine/player_1/player_1.json"),
+        
+        BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json");
 
         private final String alias;
         SpineAssets(String alias) {this.alias = alias;}

@@ -2,8 +2,10 @@ package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
-import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.BoxObject.BoxType;
+import com.sokoban.polygon.combine.GirdWorld;
+// import com.sokoban.manager.APManager;
+// import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
 
@@ -25,20 +27,30 @@ public class TestScene extends SokobanScene {
         msgBox.addActorsToStage(stage);
 
         // Spine 背景玩家装饰测试
-        SpineObject playerObject = new SpineObject(gameMain, APManager.SpineAssets.TestPlayer1);
-        playerObject.setAnimation(0, "left", true);
+        // SpineObject playerObject = new SpineObject(gameMain, APManager.SpineAssets.TestPlayer1);
+        // playerObject.setAnimation(0, "left", true);
 
-        playerObject.setPosition(4f, 4f);
-        playerObject.setSize(1f, 1f);
+        // playerObject.setPosition(4f, 4f);
+        // playerObject.setSize(1f, 1f);
 
-        SpineObject playerObject2 = new SpineObject(gameMain, APManager.SpineAssets.Player1);
-        playerObject2.setAnimation(0, "down", true);
+        // SpineObject playerObject2 = new SpineObject(gameMain, APManager.SpineAssets.Player1);
+        // playerObject2.setAnimation(0, "down", true);
 
-        playerObject2.setPosition(8f, 4f);
-        playerObject2.setSize(1f, 1f);
+        // playerObject2.setPosition(8f, 4f);
+        // playerObject2.setSize(1f, 1f);
 
-        stage.addActor(playerObject2);
-        stage.addActor(playerObject);
+        // stage.addActor(playerObject2);
+        // stage.addActor(playerObject);
+
+        // 小世界测试
+        GirdWorld girdWorld = new GirdWorld(gameMain, 6, 5, 0.8f);
+        girdWorld.addBox(BoxType.CornerRightDown, 0, 0);
+        girdWorld.addBox(BoxType.CornerRightDown, 4, 0);
+        girdWorld.addBox(BoxType.CornerRightDown, 0, 5);
+        girdWorld.addBox(BoxType.CornerRightDown, 4, 5);
+        girdWorld.remove(4, 5);
+        girdWorld.addBox(BoxType.CornerRightDown, 4, 4);
+        girdWorld.addActorsToStage(stage);
     }
 
     // 重绘逻辑

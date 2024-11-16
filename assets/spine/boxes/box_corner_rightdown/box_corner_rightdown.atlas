@@ -1,0 +1,41 @@
+
+box_corner_rightdown.png
+size: 128,123
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+d
+  rotate: false
+  xy: 22, 2
+  size: 17, 9
+  orig: 17, 9
+  offset: 0, 0
+  index: -1
+down
+  rotate: true
+  xy: 112, 6
+  size: 57, 13
+  orig: 57, 13
+  offset: 0, 0
+  index: -1
+frame
+  rotate: false
+  xy: 2, 13
+  size: 108, 108
+  orig: 108, 108
+  offset: 0, 0
+  index: -1
+r
+  rotate: true
+  xy: 2, 2
+  size: 9, 18
+  orig: 9, 18
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 112, 65
+  size: 14, 56
+  orig: 14, 56
+  offset: 0, 0
+  index: -1

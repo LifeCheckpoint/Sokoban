@@ -23,6 +23,7 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
+import com.sokoban.manager.SingleActionInstanceManager;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
@@ -63,6 +64,9 @@ public class GameWelcomeScene extends SokobanScene {
     private CheckboxObject aboutButton;
     private CheckboxObject exitButton;
     private CheckboxObject settingsButton;
+
+    // 动画单一实例管理
+    SingleActionInstanceManager SAIManager = new SingleActionInstanceManager(gameMain);
 
     public GameWelcomeScene(Main gameMain) {
         super(gameMain);
@@ -189,49 +193,50 @@ public class GameWelcomeScene extends SokobanScene {
         final int[][] deltaPos = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         int row = MathUtils.random(0, backgroundRow - 1);
         int col = MathUtils.random(0, backgroundCol - 1);
-        int row2 = -1, col2 = -1;
+        int row2, col2;
 
-        // 随机选取可用方向
+        // 计算可用方向
         List<Integer> possibleDirections = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             row2 = row + deltaPos[i][0];
             col2 = col + deltaPos[i][1];
             // 边界判定
-            if (0 <= row2 && row2 < backgroundRow && 0 <= col2 && col2 < backgroundCol) {
-                possibleDirections.add(i);
-            }
+            if (0 <= row2 && row2 < backgroundRow && 0 <= col2 && col2 < backgroundCol) possibleDirections.add(i);
         }
-
-        if (possibleDirections.isEmpty()) {
-            return;
-        }
+        if (possibleDirections.isEmpty()) return;
 
         // 随机选择有效方向
         int randomDirectionIndex = possibleDirections.get(MathUtils.random(0, possibleDirections.size() - 1));
         row2 = row + deltaPos[randomDirectionIndex][0];
         col2 = col + deltaPos[randomDirectionIndex][1];
 
-        final int row2F = row2, col2F = col2; // lambda 使用局部变量需要 final 修饰
-
         TextureSquare square1 = backgroundGrid[row][col];
         TextureSquare square2 = backgroundGrid[row2][col2];
+
+        if (SAIManager.isInAction(square1) || SAIManager.isInAction(square2)) return;
 
         float x1 = square1.getX();
         float y1 = square1.getY();
         float x2 = square2.getX();
         float y2 = square2.getY();
 
-        // 缓动
-        square1.addAction(Actions.sequence(
-            Actions.moveTo(x2, y2, 0.5f, Interpolation.sine),
-            Actions.run(() -> {
-                // 交换矩形数据位置
-                backgroundGrid[row][col] = square2;
-                backgroundGrid[row2F][col2F] = square1;
-            })
-        ));
+        // 先交换实际数组位置
+        backgroundGrid[row][col] = square2;
+        backgroundGrid[row2][col2] = square1;
 
-        square2.addAction(Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
+        // 缓动，动画管理防止冲突
+        SAIManager.executeAction(square1, Actions.moveTo(x2, y2, backgroundMoveDuration, Interpolation.sine));
+        SAIManager.executeAction(square2, Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
+
+        // square1.addAction(Actions.sequence(
+        //     Actions.moveTo(x2, y2, 0.5f, Interpolation.sine),
+        //     Actions.run(() -> {
+        //         // 交换矩形数据位置
+        //         backgroundGrid[row][col] = square2;
+        //         backgroundGrid[row2F][col2F] = square1;
+        //     })
+        // ));
+        // square2.addAction(Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
     }
 
     // 重绘逻辑
