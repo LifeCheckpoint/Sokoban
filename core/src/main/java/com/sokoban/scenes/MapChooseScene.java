@@ -3,8 +3,6 @@ package com.sokoban.scenes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -13,6 +11,8 @@ import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
+import com.sokoban.manager.OverlappingManager;
+import com.sokoban.manager.OverlappingManager.OverlapStatue;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
@@ -25,12 +25,13 @@ import com.sokoban.utils.ActionUtils;
 public class MapChooseScene extends SokobanScene {
     private AccelerationMovingManager accelerationManager;
     private AccelerationMovingManager.Direction preDirection = AccelerationMovingManager.Direction.None;
-    private boolean enableOverlapsCheck = true;
     private boolean isPlayerInMove;
     private Image returnButton;
     private Levels level;
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
+    private OverlappingManager overlapManager;
+    public TimerClock timer = null;
 
     private OriginLevel originLevel;
 
@@ -39,7 +40,6 @@ public class MapChooseScene extends SokobanScene {
      */
     private class OriginLevel {
         public GirdWorld gridMap;
-        public TimerClock timer = null;
     }
 
     // 关卡名
@@ -90,6 +90,10 @@ public class MapChooseScene extends SokobanScene {
         // 加速度管理器
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
 
+        // 碰撞管理器，这里只能添加共有物体
+        overlapManager = new OverlappingManager(gameMain, playerSpine);
+        overlapManager.addSecondaryObject(returnButton);
+
         addActorsToStage(returnButton, playerSpine);
         addCombinedObjectToStage(msgBox);
 
@@ -111,15 +115,16 @@ public class MapChooseScene extends SokobanScene {
      */
     public void returnToPreviousScreen() {
         stage.addAction(Actions.sequence(
-            // 渐隐所有物体并停止碰撞检测
+            // 停止碰撞检测并渐隐所有物体
             Actions.run(() -> {
+                overlapManager.disableAllCollision();
+
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                    originLevel.timer.remove();
+                    timer.remove();
                 }
-                enableOverlapsCheck = false;
             }),
             // 等待指定时间
             Actions.delay(0.5f),
@@ -175,34 +180,25 @@ public class MapChooseScene extends SokobanScene {
 
     // 全局碰撞检测
     private void overlapsCheck() {
-        if (!enableOverlapsCheck) return;
+        overlapManager.overlapsCheck();
 
         // Origin Level
-        if (originLevel != null) {
-            // 触碰返回按钮触发
-            if (returnButton != null && isOverlap(returnButton, playerSpine)) {
-                // 启动时钟，仅一次
-                if (originLevel.timer == null || originLevel.timer.isTimerStop()) {
-                    originLevel.timer = new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
-                        @Override
-                        public void clockEnd() {MapChooseScene.this.returnToPreviousScreen();}
-                    }, false);
-                    originLevel.timer.moveBy(-0.2f, 0);
-                    stage.addActor(originLevel.timer);
-                }
-            }
-            // 从返回按钮退出，停止启动时钟
-            if (originLevel.timer != null && !isOverlap(returnButton, playerSpine)) {
-                originLevel.timer.cancel();
-            }
+        // 触碰返回按钮触发
+        if (returnButton != null && overlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstOverlap) {
+            // 首次碰撞，启动时钟
+            timer = new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
+                @Override
+                public void clockEnd() {MapChooseScene.this.returnToPreviousScreen();}
+            }, false);
+            timer.moveBy(-0.2f, 0);
+            stage.addActor(timer);
+        }
+
+        // 从返回按钮退出，停止启动时钟
+        if (timer != null && overlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstLeave) {
+            timer.cancel();
         }
     
-    }
-
-    private boolean isOverlap(Actor actor1, Actor actor2) {
-        Rectangle rectangle1 = new Rectangle(actor1.getX(), actor1.getY(), actor1.getWidth(), actor1.getHeight());
-        Rectangle rectangle2 = new Rectangle(actor2.getX(), actor2.getY(), actor2.getWidth(), actor2.getHeight());
-        return rectangle1.overlaps(rectangle2);
     }
 
     /**
@@ -225,8 +221,10 @@ public class MapChooseScene extends SokobanScene {
     private void draw() {
         // 更新鼠标跟踪、主角视角
         moveTrace.setPositionWithUpdate(playerSpine);
-        // 处理碰撞事件
+        
+        // 更新碰撞检测器
         overlapsCheck();
+        
         // stage 更新
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

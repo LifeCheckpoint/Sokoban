@@ -16,6 +16,7 @@ public class TimerClock extends SpineObject {
 
     private final String TIMER_ANIMATION = "animation";
     private final float DEFAULT_SIZE = 0.5f;
+    private final float FADEOUT_DURATION = 0.3f;
 
     /**
      * 计时器小组件构造
@@ -58,7 +59,7 @@ public class TimerClock extends SpineObject {
     public void fadeOut() {
         timerStop = true;
         addAction(Actions.sequence(
-            Actions.fadeOut(0.1f, Interpolation.sine),
+            Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
             // 最后从舞台清除
             Actions.run(this::remove)
         ));
@@ -73,7 +74,7 @@ public class TimerClock extends SpineObject {
         timerStop = true;
         if (blocking) {
             addAction(Actions.sequence(
-                Actions.fadeOut(0.1f, Interpolation.sine),
+                Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
                 Actions.run(callback::clockEnd),
                 // 最后从舞台清除
                 Actions.run(this::remove)
@@ -81,7 +82,7 @@ public class TimerClock extends SpineObject {
         } else {
             addAction(Actions.sequence(
                 Actions.parallel(
-                    Actions.fadeOut(0.1f, Interpolation.sine),
+                    Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
                     Actions.run(callback::clockEnd)
                 ),
                 // 最后从舞台清除

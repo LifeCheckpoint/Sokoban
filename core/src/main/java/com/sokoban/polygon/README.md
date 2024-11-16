@@ -7,3 +7,5 @@
 但是实测发现 `Table` 有 bug，无法很好地接管 `Spine` 对象. 只能手搓轮子了.
 
 写了一个 `ImageFontStringObject` 对象，规避 `FitViewport` 的不兼容问题
+
+对于计时器小组件 `TimerClock` 以及其动效，感觉涉及到很多自动机状态管理的问题，手写逻辑显得很繁琐且复用性不佳，能否写一个管理器？
