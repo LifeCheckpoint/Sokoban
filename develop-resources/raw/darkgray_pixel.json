@@ -1,0 +1,12 @@
+{"skeleton":{"images":"darkgray_pixel/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"1","bone":"root","attachment":"1"}
+],
+"skins":{
+	"default":{
+		"1":{"1":{"x":32,"y":32,"width":66,"height":66}}
+	}
+},
+"animations":{"animation":{}}
+}

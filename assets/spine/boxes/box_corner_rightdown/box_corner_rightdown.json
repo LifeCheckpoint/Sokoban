@@ -4,8 +4,8 @@
 	"spine": "3.8.82",
 	"x": 9,
 	"y": 9,
-	"width": 110,
-	"height": 110,
+	"width": 128,
+	"height": 128,
 	"images": "./box_corner_rightdown/",
 	"audio": "D:/wroot/Sokoban/develop-resources/raw"
 },

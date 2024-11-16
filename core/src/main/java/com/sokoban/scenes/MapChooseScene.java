@@ -31,7 +31,7 @@ public class MapChooseScene extends SokobanScene {
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
     private OverlappingManager overlapManager;
-    public TimerClock timer = null;
+    public TimerClock timer;
 
     private OriginLevel originLevel;
 
@@ -192,7 +192,7 @@ public class MapChooseScene extends SokobanScene {
                 public void clockEnd() {MapChooseScene.this.returnToPreviousScreen();}
             }, false);
             timer.moveBy(-0.2f, 0);
-            stage.addActor(timer);
+            addActorsToStage(timer);
         }
 
         // 从返回按钮退出，停止启动时钟
@@ -219,18 +219,25 @@ public class MapChooseScene extends SokobanScene {
             {7, 10}, {7, 13}, {9, 12}, {9, 11}, {10, 5},
             {10, 11}, {10, 14}, {11, 13}, {11, 12}
         });
+        originLevel.gridMap.getTopLayer().addBox(BoxType.DarkGrayBack, new int[][] {
+            {0, 3}, {0, 1}, {0, 0}, {2, 4},
+            {2, 12}, {2, 13}, {4, 4}, {4, 11}, {5, 11},
+            {5, 16}, {6, 9}, {7, 10}, {8, 19}, {10, 0},
+            {7, 0}, {7, 1}, {9, 2}, {9, 3}, {10, 15},
+            {10, 10}, {10, 18}, {11, 6}, {11, 7}
+        });
         originLevel.gridMap.addLayer();
         originLevel.gridMap.getTopLayer().addBox(BoxType.CornerRightDown, new int[][] {
             {0, 4}, {2, 16}, {4, 8}, {5, 15},
             {6, 17}, {7, 9}, {9, 14}, {10, 5},
             {10, 11}, {11, 19}
         });
+
         originLevel.gridMap.setPosition(8f, 4.5f);
         // originLevel.gridMap.getLayer(1).getAllActors().forEach(actor -> actor.setZIndex(3));
         // originLevel.gridMap.getLayer(0).getAllActors().forEach(actor -> actor.setZIndex(4));
-
         originLevel.gridMap.addActorsToStage(stage);
-        stage.addActor(playerSpine);
+        addActorsToStage(playerSpine);
     }
 
     // 重绘逻辑

@@ -12,7 +12,8 @@ public class BoxObject extends SpineObject {
     /** 盒子 Spine 资源枚举 */
     public enum BoxType {
         CornerRightDown(SpineAssets.BoxCornerRightDown),
-        DarkBlueBack(SpineAssets.BoxDarkBlueBack);
+        DarkBlueBack(SpineAssets.BoxDarkBlueBack),
+        DarkGrayBack(SpineAssets.BoxDarkGrayBack);
 
         private final SpineAssets asset;
         BoxType(SpineAssets asset) {this.asset = asset;}
