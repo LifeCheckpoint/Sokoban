@@ -104,7 +104,8 @@ public class APManager {
         Player1("spine/player_1/player_1.atlas|spine/player_1/player_1.json"),
         Timer("spine/timer/timer.atlas|spine/timer/timer.json"),
         
-        BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json");
+        BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json"),
+        BoxDarkBlueBack("spine/boxes/darkblue_pixel/darkblue_pixel.atlas|spine/boxes/darkblue_pixel/darkblue_pixel.json");
 
         private final String alias;
         SpineAssets(String alias) {this.alias = alias;}

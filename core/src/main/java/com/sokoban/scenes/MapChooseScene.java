@@ -17,8 +17,8 @@ import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.actioninterface.ClockEndCallback;
-import com.sokoban.polygon.combine.GirdWorld;
 import com.sokoban.polygon.combine.HintMessageBox;
+import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
@@ -39,7 +39,7 @@ public class MapChooseScene extends SokobanScene {
      * Origin Level 组件
      */
     private class OriginLevel {
-        public GirdWorld gridMap;
+        public Stack2DGirdWorld gridMap;
     }
 
     // 关卡名
@@ -94,12 +94,7 @@ public class MapChooseScene extends SokobanScene {
         overlapManager = new OverlappingManager(gameMain, playerSpine);
         overlapManager.addSecondaryObject(returnButton);
 
-        addActorsToStage(returnButton, playerSpine);
-        addCombinedObjectToStage(msgBox);
-
-        ActionUtils.FadeInEffect(returnButton);
-        ActionUtils.FadeInEffect(playerSpine);
-
+        // 根据场景不同调用对应初始化
         switch (level) {
             case Origin:
                 setupLevelOrigin();
@@ -107,6 +102,12 @@ public class MapChooseScene extends SokobanScene {
             default:
                 break;
         }
+
+        addActorsToStage(returnButton, playerSpine);
+        addCombinedObjectToStage(msgBox);
+
+        ActionUtils.FadeInEffect(returnButton);
+        ActionUtils.FadeInEffect(playerSpine);
         
     }
 
@@ -123,7 +124,7 @@ public class MapChooseScene extends SokobanScene {
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                    timer.remove();
+                    if (timer != null) timer.remove();
                 }
             }),
             // 等待指定时间
@@ -206,15 +207,30 @@ public class MapChooseScene extends SokobanScene {
      */
     private void setupLevelOrigin() {
         originLevel = new OriginLevel();
+
+        // TODO 要把这些文件化
         
-        originLevel.gridMap = new GirdWorld(gameMain, 20, 12, 1f);
-        originLevel.gridMap.addBox(BoxType.CornerRightDown, new int[][] {
+        originLevel.gridMap = new Stack2DGirdWorld(gameMain, 20, 12, 1f);
+        originLevel.gridMap.addLayer();
+        originLevel.gridMap.getTopLayer().addBox(BoxType.DarkBlueBack, new int[][] {
+            {0, 4}, {0, 5}, {0, 6}, {1, 6},
+            {2, 16}, {2, 15}, {4, 8}, {4, 9}, {5, 9},
+            {5, 15}, {6, 17}, {7, 17}, {8, 17}, {10, 17},
+            {7, 10}, {7, 13}, {9, 12}, {9, 11}, {10, 5},
+            {10, 11}, {10, 14}, {11, 13}, {11, 12}
+        });
+        originLevel.gridMap.addLayer();
+        originLevel.gridMap.getTopLayer().addBox(BoxType.CornerRightDown, new int[][] {
             {0, 4}, {2, 16}, {4, 8}, {5, 15},
             {6, 17}, {7, 9}, {9, 14}, {10, 5},
             {10, 11}, {11, 19}
         });
+        originLevel.gridMap.setPosition(8f, 4.5f);
+        // originLevel.gridMap.getLayer(1).getAllActors().forEach(actor -> actor.setZIndex(3));
+        // originLevel.gridMap.getLayer(0).getAllActors().forEach(actor -> actor.setZIndex(4));
 
         originLevel.gridMap.addActorsToStage(stage);
+        stage.addActor(playerSpine);
     }
 
     // 重绘逻辑

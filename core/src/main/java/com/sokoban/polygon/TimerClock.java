@@ -59,9 +59,7 @@ public class TimerClock extends SpineObject {
     public void fadeOut() {
         timerStop = true;
         addAction(Actions.sequence(
-            Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
-            // 最后从舞台清除
-            Actions.run(this::remove)
+            Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine)
         ));
     }
 
@@ -75,18 +73,14 @@ public class TimerClock extends SpineObject {
         if (blocking) {
             addAction(Actions.sequence(
                 Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
-                Actions.run(callback::clockEnd),
-                // 最后从舞台清除
-                Actions.run(this::remove)
+                Actions.run(callback::clockEnd)
             ));
         } else {
             addAction(Actions.sequence(
                 Actions.parallel(
                     Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
                     Actions.run(callback::clockEnd)
-                ),
-                // 最后从舞台清除
-                Actions.run(this::remove)
+                )
             ));
             callback.clockEnd();
         }
