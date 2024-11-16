@@ -79,6 +79,18 @@ public class GirdWorld extends SokobanCombineObject {
     }
 
     /**
+     * 添加普通 Spine 组件，自动设置位置
+     * @param spineObject Spine 组件
+     * @param row 行，0 ~ gridHeight
+     * @param column 列，0 ~ gridWidth
+     */
+    public void addBox(SpineObject spineObject, int row, int column) {
+        Vector2 pos = getCellPosition(row, column);
+        spineObject.setPosition(pos.x, pos.y);
+        gridSpineObjects[row][column] = spineObject;
+    }
+
+    /**
      * 添加箱子类组件
      * @param boxType 箱子类型
      * @param row 行，0 ~ gridHeight
@@ -87,6 +99,18 @@ public class GirdWorld extends SokobanCombineObject {
     public void addBox(BoxType boxType, int row, int column) {
         Vector2 pos = getCellPosition(row, column);
         gridSpineObjects[row][column] = new BoxObject(gameMain, boxType, cellSize, pos.x, pos.y);
+    }
+
+    /**
+     * 添加箱子类组件
+     * @param boxType 箱子类型
+     * @param location 行 -> 列，0 ~ gridHeight， 0 ~ gridWidth
+     */
+    public void addBox(BoxType boxType, int[][] location) {
+        for (int i = 0; i < location.length; i++) {
+            Vector2 pos = getCellPosition(location[i][0], location[i][1]);
+            gridSpineObjects[location[i][0]][location[i][1]] = new BoxObject(gameMain, boxType, cellSize, pos.x, pos.y);
+        }
     }
 
     /**

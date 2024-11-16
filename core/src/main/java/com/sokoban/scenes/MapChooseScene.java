@@ -14,19 +14,33 @@ import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.TimerClock;
+import com.sokoban.polygon.BoxObject.BoxType;
+import com.sokoban.polygon.actioninterface.ClockEndCallback;
+import com.sokoban.polygon.combine.GirdWorld;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
 public class MapChooseScene extends SokobanScene {
-    private Levels level;
-    private Image returnButton;
-    private MouseMovingTraceManager moveTrace;
-    private SpineObject playerSpine;
     private AccelerationMovingManager accelerationManager;
-    private boolean isPlayerInMove;
     private AccelerationMovingManager.Direction preDirection = AccelerationMovingManager.Direction.None;
     private boolean enableOverlapsCheck = true;
+    private boolean isPlayerInMove;
+    private Image returnButton;
+    private Levels level;
+    private MouseMovingTraceManager moveTrace;
+    private SpineObject playerSpine;
+
+    private OriginLevel originLevel;
+
+    /**
+     * Origin Level 组件
+     */
+    private class OriginLevel {
+        public GirdWorld gridMap;
+        public TimerClock timer = null;
+    }
 
     // 关卡名
     public enum Levels {
@@ -95,12 +109,16 @@ public class MapChooseScene extends SokobanScene {
     /**
      * 返回按钮触发返回上一场景
      */
-    private void returnToPreviousScreen() {
+    public void returnToPreviousScreen() {
         stage.addAction(Actions.sequence(
             // 渐隐所有物体并停止碰撞检测
             Actions.run(() -> {
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+                if (originLevel != null) {
+                    originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
+                    originLevel.timer.remove();
+                }
                 enableOverlapsCheck = false;
             }),
             // 等待指定时间
@@ -158,9 +176,27 @@ public class MapChooseScene extends SokobanScene {
     // 全局碰撞检测
     private void overlapsCheck() {
         if (!enableOverlapsCheck) return;
-        if (returnButton != null && isOverlap(returnButton, playerSpine)) {
-            returnToPreviousScreen();
+
+        // Origin Level
+        if (originLevel != null) {
+            // 触碰返回按钮触发
+            if (returnButton != null && isOverlap(returnButton, playerSpine)) {
+                // 启动时钟，仅一次
+                if (originLevel.timer == null || originLevel.timer.isTimerStop()) {
+                    originLevel.timer = new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
+                        @Override
+                        public void clockEnd() {MapChooseScene.this.returnToPreviousScreen();}
+                    }, false);
+                    originLevel.timer.moveBy(-0.2f, 0);
+                    stage.addActor(originLevel.timer);
+                }
+            }
+            // 从返回按钮退出，停止启动时钟
+            if (originLevel.timer != null && !isOverlap(returnButton, playerSpine)) {
+                originLevel.timer.cancel();
+            }
         }
+    
     }
 
     private boolean isOverlap(Actor actor1, Actor actor2) {
@@ -173,7 +209,16 @@ public class MapChooseScene extends SokobanScene {
      * 关卡 origin 初始化
      */
     private void setupLevelOrigin() {
+        originLevel = new OriginLevel();
+        
+        originLevel.gridMap = new GirdWorld(gameMain, 20, 12, 1f);
+        originLevel.gridMap.addBox(BoxType.CornerRightDown, new int[][] {
+            {0, 4}, {2, 16}, {4, 8}, {5, 15},
+            {6, 17}, {7, 9}, {9, 14}, {10, 5},
+            {10, 11}, {11, 19}
+        });
 
+        originLevel.gridMap.addActorsToStage(stage);
     }
 
     // 重绘逻辑

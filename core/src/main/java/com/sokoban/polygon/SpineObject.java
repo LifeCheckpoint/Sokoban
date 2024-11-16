@@ -357,6 +357,23 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
+     * 设置动画总时长
+     * @param trackIndex 动画轨道
+     * @param totalTime 总时长 (s)
+     */
+    public void setAnimationTotalTime(int trackIndex, float totalTime) {
+        TrackEntry currentEntry = animationState.getCurrent(trackIndex);
+        if (currentEntry != null) {
+            float animationDuration = currentEntry.getAnimation().getDuration();
+            if (animationDuration > 0) {
+                float timeScale = animationDuration / totalTime;
+                currentEntry.setTimeScale(timeScale);
+            }
+        }
+        else Gdx.app.error("SpineObject", "No animation found on track index: " + trackIndex);
+    }
+
+    /**
      * 清理资源
      */
     @Override

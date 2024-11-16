@@ -1,0 +1,14 @@
+{"skeleton":{"images":"timer/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"cir","bone":"root","attachment":"cir"},
+	{"name":"point","bone":"root","attachment":"point"}
+],
+"skins":{
+	"default":{
+		"point":{"point":{"x":267,"y":345.5,"width":38,"height":161}},
+		"cir":{"cir":{"x":265.5,"y":266.5,"width":455,"height":473}}
+	}
+},
+"animations":{"animation":{}}
+}

@@ -1,0 +1,20 @@
+
+timer.png
+size: 517,459
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cir
+  rotate: true
+  xy: 2, 2
+  size: 455, 473
+  orig: 455, 473
+  offset: 0, 0
+  index: -1
+point
+  rotate: false
+  xy: 477, 296
+  size: 38, 161
+  orig: 38, 161
+  offset: 0, 0
+  index: -1
