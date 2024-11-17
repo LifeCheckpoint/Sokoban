@@ -180,7 +180,8 @@ public class SettingScene extends SokobanScene {
     }
 
     // 输入事件处理
-    private void input() {
+    @Override
+    public void input() {
         // 保存
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.S) && isSettingUpdated()) {
             saveSettings();
@@ -228,9 +229,8 @@ public class SettingScene extends SokobanScene {
     }
 
     // 重绘逻辑
-    private void draw() {
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
+    @Override
+    public void draw(float delta) {
         // 检查是否有设置更新
         if (isSettingUpdated()) {
             saveButton.setPosition(0.8f, 7f);
@@ -240,12 +240,8 @@ public class SettingScene extends SokobanScene {
         stage.draw();
     }
 
-    // 主渲染帧
     @Override
-    public void render(float delta) {
-        input();
-        draw();
-    }
+    public void logic(float delta) {}
 
     @Override
     public void hide() {

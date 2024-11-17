@@ -240,12 +240,10 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     // 重绘逻辑
-    private void draw() {
+    @Override
+    public void draw(float delta) {
         // 画面跟踪
         moveTrace.setPositionWithUpdate();
-        
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
 
         // 渲染模糊背景
         renderBlurredBackground();
@@ -326,21 +324,15 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     // 输入事件处理
-    private void input() {
+    @Override
+    public void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             startGame();
         }
     }
 
-    // 主渲染帧
     @Override
-    public void render(float delta) {
-        input();
-        draw();
-    }
-
-    @Override
-    public void hide() {}
+    public void logic(float delta) {}
 
     // 资源释放
     @Override

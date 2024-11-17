@@ -1,6 +1,7 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.sokoban.Main;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.GirdWorld;
@@ -54,20 +55,17 @@ public class TestScene extends SokobanScene {
     }
 
     // 重绘逻辑
-    private void draw() {
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
+    public void draw(float delta) {
         stage.draw();
     }
 
-    // 主渲染帧
     @Override
-    public void render(float delta) {
-        draw();
-    }
+    public void logic(float delta) {}
 
     @Override
-    public void hide() {}
+    public void input() {
+        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) System.out.println("space");
+    }
 
     // 资源释放
     @Override

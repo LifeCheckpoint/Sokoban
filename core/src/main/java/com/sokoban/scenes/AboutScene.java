@@ -92,30 +92,24 @@ public class AboutScene extends SokobanScene {
         addActorsToStage(returnButton, infoLabel);
     }
 
-    // 输入事件处理
-    private void input() {
+    @Override
+    public void input() {
         // 退出
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             gameMain.getScreenManager().returnPreviousScreen();
         }
     }
 
-    // 重绘逻辑
-    private void draw() {
+    @Override
+    public void draw(float delta) {
         // 相机跟踪
         moveTrace.setPositionWithUpdate();
-
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
+        
         stage.draw();
     }
 
-    // 主渲染帧
     @Override
-    public void render(float delta) {
-        input();
-        draw();
-    }
+    public void logic(float delta) {}
 
     @Override
     public void hide() {}

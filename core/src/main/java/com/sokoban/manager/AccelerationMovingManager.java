@@ -16,6 +16,7 @@ public class AccelerationMovingManager {
     private float friction;
     private float maxSpeedX, maxSpeedY;
     private float velocityX, velocityY;
+    private boolean noMoving = true;
     private float reactPositionX = 0f, reactPositionY = 0f;
     private Rectangle bound = null;
 
@@ -45,27 +46,42 @@ public class AccelerationMovingManager {
         this.velocityY = 0;
     }
 
-    public void updateActorMove(Direction direction) {
+    /**
+     * 更新速度，可多次更新
+     * @param direction 方向
+     */
+    public void updateVelocity(Direction direction) {
         // 根据方向更新速度
         switch (direction) {
             case Right:  // 向右
                 velocityX = Math.min(maxSpeedX, velocityX + accelerationX);
+                noMoving = false;
                 break;
             case Down:  // 向下
                 velocityY = Math.max(-maxSpeedY, velocityY - accelerationY);
+                noMoving = false;
                 break;
             case Left:  // 向左
                 velocityX = Math.max(-maxSpeedX, velocityX - accelerationX);
+                noMoving = false;
                 break;
             case Up:  // 向上
                 velocityY = Math.min(maxSpeedY, velocityY + accelerationY);
+                noMoving = false;
                 break;
             default:
+                noMoving = true;
                 break;
         }
+    }
+
+    /**
+     * 更新速度后，真正更新位移，仅更新一次
+     */
+    public void updateActorMove() {
 
         // 在没有按键输入时应用摩擦力
-        if (direction == Direction.None) {
+        if (noMoving) {
             applyFriction();
         }
 
@@ -88,10 +104,10 @@ public class AccelerationMovingManager {
         velocityY *= friction;
 
         // 当速度非常小时，将其归零以避免无限小
-        if (Math.abs(velocityX) < 0.001f) {
+        if (Math.abs(velocityX) < 0.00001f) {
             velocityX = 0;
         }
-        if (Math.abs(velocityY) < 0.001f) {
+        if (Math.abs(velocityY) < 0.00001f) {
             velocityY = 0;
         }
     }

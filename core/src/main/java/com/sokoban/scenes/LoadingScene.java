@@ -1,6 +1,5 @@
 package com.sokoban.scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
@@ -59,32 +58,27 @@ public class LoadingScene extends SokobanScene {
     }
 
     // 渲染进度并更新
-    private void draw() {
-        if (assetsPathManager.update()) {
-            // 所有资源加载完成后，切换到目标界面
-            gameMain.getScreenManager().setScreenWithoutSaving(targetScreen);
-        } else {
-            // 获取并更新进度值
-            progress = assetsPathManager.getProgress();
+    @Override
+    public void draw(float delta) {
+        progress = assetsPathManager.getProgress();
 
-            // 清除屏幕并绘制加载UI
-            batch.begin();
-            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60f)); // 更新舞台逻辑
-            stage.draw();
+        // 清除屏幕并绘制加载UI
+        batch.begin();
+        stage.draw();
 
-            // 更新进度条
-            progressBar.setValue(progress);
-            batch.end();
-        }
+        // 更新进度条
+        progressBar.setValue(progress);
+        batch.end();
     }
 
     @Override
-    public void render(float delta) {
-        draw();
+    public void logic(float delta) {
+        // 加载资源，并在所有资源加载完成后，切换到目标界面
+        if (assetsPathManager.update()) gameMain.getScreenManager().setScreenWithoutSaving(targetScreen);
     }
 
     @Override
-    public void hide() {}
+    public void input() {}
 
     @Override
     public void dispose() {

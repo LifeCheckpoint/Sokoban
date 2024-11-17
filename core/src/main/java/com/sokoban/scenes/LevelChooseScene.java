@@ -140,7 +140,8 @@ public class LevelChooseScene extends SokobanScene {
     }
 
     // 输入事件处理
-    private void input() {
+    @Override
+    public void input() {
         // 选择
         if (Gdx.input.isKeyJustPressed(Keys.A) || Gdx.input.isKeyJustPressed(Keys.LEFT)) {
             gotoLeftWindow();
@@ -163,22 +164,14 @@ public class LevelChooseScene extends SokobanScene {
     }
 
     // 重绘逻辑
-    private void draw() {
+    @Override
+    public void draw(float delta) {
         moveTrace.setPositionWithUpdate();
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
-    // 主渲染帧
     @Override
-    public void render(float delta) {
-        input();
-        draw();
-    }
-
-    @Override
-    public void hide() {}
+    public void logic(float delta) {}
 
     // 资源释放
     @Override

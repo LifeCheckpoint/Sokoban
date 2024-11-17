@@ -97,7 +97,7 @@ public class MapChooseScene extends SokobanScene {
         moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);
 
         // 加速度管理器
-        accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
+        accelerationManager = new AccelerationMovingManager(playerSpine, 0.001f, 0.04f, 0.96f);
         accelerationManager.setBound(-16f, 16f, -9f, 9f);
 
         // 碰撞管理器，这里只能添加共有物体
@@ -144,32 +144,54 @@ public class MapChooseScene extends SokobanScene {
         ));
     }
 
-    // 处理键盘输入
-    private void input() {
-        // 加速度管理器管理移动
-        if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
-            playerMoveAnimation(AccelerationMovingManager.Direction.Up);
+    // 处理连续键盘移动，需要累积处理
+    private void updateMovingInput() {
+        // 加速度管理器管理移动，反向按键混合将静止
+        boolean keyUp = Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP);
+        boolean keyLeft = Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT);
+        boolean keyDown = Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN);
+        boolean keyRight = Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT);
+
+        boolean inMove = false;
+
+        // System.out.printf("%s %s %s %s\n", keyUp, keyDown, keyLeft, keyRight);
+        
+        if (keyUp && !keyDown) {
+            updatePlayerVelocity(AccelerationMovingManager.Direction.Up);
+            inMove = true;
         }
-        else if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
-            playerMoveAnimation(AccelerationMovingManager.Direction.Down);
+        
+        if (keyDown && !keyUp) {
+            updatePlayerVelocity(AccelerationMovingManager.Direction.Down);
+            inMove = true;
         }
-        else if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
-            playerMoveAnimation(AccelerationMovingManager.Direction.Left);
+        
+        if (keyLeft && !keyRight) {
+            updatePlayerVelocity(AccelerationMovingManager.Direction.Left);
+            inMove = true;
         }
-        else if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            playerMoveAnimation(AccelerationMovingManager.Direction.Right);
-        }
-        else {
-            playerMoveAnimation(AccelerationMovingManager.Direction.None);
+        
+        if (keyRight && !keyLeft) {
+            updatePlayerVelocity(AccelerationMovingManager.Direction.Right);
+            inMove = true;
         }
 
+        if (!inMove) updatePlayerVelocity(AccelerationMovingManager.Direction.None);
+
+        // 完成速度更新后进行实际位移
+        accelerationManager.updateActorMove();
+    }
+
+    // 处理单次键盘输入
+    @Override
+    public void input() {
         // 退出
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             returnToPreviousScreen();
         }
     }
 
-    private void playerMoveAnimation(AccelerationMovingManager.Direction direction) {
+    private void updatePlayerVelocity(AccelerationMovingManager.Direction direction) {
         // 相同移动，仅第一次触发动画
         if (!isPlayerInMove && direction != AccelerationMovingManager.Direction.None) {
             playerSpine.setAnimation(0, direction.getDirection(), false);
@@ -182,7 +204,7 @@ public class MapChooseScene extends SokobanScene {
         }
 
         // 处理移动
-        accelerationManager.updateActorMove(direction);
+        accelerationManager.updateVelocity(direction);
         // 解锁动画
         if (direction == AccelerationMovingManager.Direction.None) isPlayerInMove = false;
         // 更新上一次移动
@@ -265,27 +287,23 @@ public class MapChooseScene extends SokobanScene {
     }
 
     // 重绘逻辑
-    private void draw() {
+    @Override
+    public void draw(float delta) {
         // 更新鼠标跟踪、主角视角
         moveTrace.setPositionWithUpdate(playerSpine);
+
+        // 更新移动检测
+        updateMovingInput();
         
         // 更新碰撞检测器
         overlapsCheck();
         
-        // stage 更新
-        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
-    // 主渲染帧
+    // 需要连续处理的输入逻辑
     @Override
-    public void render(float delta) {
-        input();
-        draw();
-    }
-
-    @Override
-    public void hide() {}
+    public void logic(float delta) {}
 
     // 资源释放
     @Override
