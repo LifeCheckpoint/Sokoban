@@ -1,7 +1,6 @@
-package com.sokoban;
+package com.sokoban.utils;
 
 import com.badlogic.gdx.math.Vector2;
-import com.sokoban.utils.MathUtilsEx;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -71,13 +70,23 @@ public class MathUtilsExTest {
     @Test void testLinear() {
         float result;
         result = MathUtilsEx.linearMap(2f, 1f, 3f, 4f, 5f);
-        Assert.assertEquals(result, 4.5, "Thr result for t=2 should be 4.5");
+        Assert.assertEquals(result, 4.5, "The result for t=2 should be 4.5");
 
         result = MathUtilsEx.linearMap(1f, 1f, 3f, 4f, 5f);
-        Assert.assertEquals(result, 4, "Thr result for t=1 should be 4");
+        Assert.assertEquals(result, 4, "The result for t=1 should be 4");
 
         result = MathUtilsEx.linearMap(3f, 1f, 3f, 4f, 5f);
-        Assert.assertEquals(result, 5, "Thr result for t=3 should be 5");
+        Assert.assertEquals(result, 5, "The result for t=3 should be 5");
+    }
+
+    // 距离测试
+    @Test void testDistance() {
+        float result;
+        result = MathUtilsEx.distance(114f, 514f, 191f, 981f);
+        Assert.assertTrue(Math.abs(result - 473.3053982f) < 0.1f, "The distance between (114, 514) and (191, 981) should be 473.3053982f");
+
+        result = MathUtilsEx.distance(999f, 888f, 999f, 888f);
+        Assert.assertTrue(Math.abs(result - 0f) < 0.0001f, "The distance between (999, 888) and (999, 888) should be 0f");
     }
 }
 
