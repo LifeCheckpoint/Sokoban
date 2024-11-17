@@ -1,14 +1,21 @@
 package com.sokoban.manager;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * 加速度管理器，用于位移的滑行效果
+ * @author Life_Checkpoint
+ * @author ChatGPT
+ */
 public class AccelerationMovingManager {
     private Actor actor;
     private float accelerationX, accelerationY;
-    private float maxSpeedX, maxSpeedY;
     private float friction;
-    private float velocityX;
-    private float velocityY;
+    private float maxSpeedX, maxSpeedY;
+    private float velocityX, velocityY;
+    private float reactPositionX = 0f, reactPositionY = 0f;
+    private Rectangle bound = null;
 
     public enum Direction {
         None("none"), Right("right"), Down("down"), Left("left"), Up("up");
@@ -60,8 +67,18 @@ public class AccelerationMovingManager {
             applyFriction();
         }
 
-        // 更新 actor 位置
+        // 检查 bound 并更新 actor 位置
+        if (bound != null) {
+            if (reactPositionX + velocityX < bound.getX()) velocityX = 0;
+            if (reactPositionX + velocityX > bound.getX() + bound.getWidth()) velocityX = 0;
+            if (reactPositionY + velocityY < bound.getY()) velocityY = 0;
+            if (reactPositionY + velocityY > bound.getY() + bound.getHeight()) velocityY = 0;
+        }
+        
         actor.moveBy(velocityX, velocityY);
+
+        reactPositionX += velocityX;
+        reactPositionY += velocityY;
     }
 
     private void applyFriction() {
@@ -75,6 +92,24 @@ public class AccelerationMovingManager {
         if (Math.abs(velocityY) < 0.001f) {
             velocityY = 0;
         }
+    }
+
+    /**
+     * 设置位移边界框，如果超出边界则禁止该方向位移
+     * @param left 左边界
+     * @param right 右边界
+     * @param down 下边界
+     * @param up 上边界
+     */
+    public void setBound(float left, float right, float down, float up) {
+        bound = new Rectangle(left, down, right - left, up - down);
+    }
+
+    /**
+     * 移出边界框
+     */
+    public void removeBound() {
+        bound = null;
     }
 
     public Actor getActor() {

@@ -98,6 +98,7 @@ public class MapChooseScene extends SokobanScene {
 
         // 加速度管理器
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
+        accelerationManager.setBound(-16f, 16f, -9f, 9f);
 
         // 碰撞管理器，这里只能添加共有物体
         overlapManager = new OverlappingManager(gameMain, playerSpine);
