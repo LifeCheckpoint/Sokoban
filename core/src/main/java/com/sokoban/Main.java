@@ -25,7 +25,7 @@ public class Main extends ApplicationAdapter {
     private ScreenManager screenManager;
     private MusicManager musicManager;
     
-    private int backGroundColorRGBA = 0x101010ff;
+    private Color backGroundColorRGBA = new Color(0x101010ff);
 
     public Main(int runMode, SettingManager settingManagerCore) {
         this.runMode = runMode;
@@ -79,10 +79,10 @@ public class Main extends ApplicationAdapter {
 
     // 重绘逻辑
     private void draw() {
-        ScreenUtils.clear(new Color(backGroundColorRGBA));
+        ScreenUtils.clear(backGroundColorRGBA);
 
         // 渲染当前屏幕
-        screenManager.render(Gdx.graphics.getDeltaTime());
+        screenManager.render();
     }
 
     // 输入事件处理

@@ -28,9 +28,9 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
     protected Main gameMain;
 
     /** 画面更新固定逻辑步长 */
-    private static final float UPDATE_TIME_STEP = 1 / 100f;
+    public static final float UPDATE_TIME_STEP = 1 / 100f;
     /** 单一帧内画面更新最大次数 */
-    private static final int FRAME_MAX_UPDATES = 5;
+    public static final int FRAME_MAX_UPDATES = 5;
     /** 当前累积的真实时间 */
     private float accumulatorIntegratedTime = 0f;
 
