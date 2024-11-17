@@ -13,7 +13,8 @@ public class BoxObject extends SpineObject {
     public enum BoxType {
         CornerRightDown(SpineAssets.BoxCornerRightDown),
         DarkBlueBack(SpineAssets.BoxDarkBlueBack),
-        DarkGrayBack(SpineAssets.BoxDarkGrayBack);
+        DarkGrayBack(SpineAssets.BoxDarkGrayBack),
+        GreenChest(SpineAssets.BoxGreenBox);
 
         private final SpineAssets asset;
         BoxType(SpineAssets asset) {this.asset = asset;}

@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.Main;
+import com.sokoban.utils.MathUtilsEx;
 
 /**
  * 碰撞检测管理器
@@ -216,7 +217,7 @@ public class OverlappingManager {
         float x1 = actor1.getX() + actor1.getWidth() / 2, y1 = actor1.getY() + actor1.getHeight() / 2;
         float x2 = actor2.getX() + actor2.getWidth() / 2, y2 = actor2.getY() + actor2.getHeight() / 2;
 
-        double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+        double distance = MathUtilsEx.distance(x1, y1, x2, y2);
         return distance < radius1 + radius2;
     }
 

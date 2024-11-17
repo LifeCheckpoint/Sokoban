@@ -106,7 +106,8 @@ public class APManager {
         
         BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json"),
         BoxDarkBlueBack("spine/boxes/darkblue_pixel/darkblue_pixel.atlas|spine/boxes/darkblue_pixel/darkblue_pixel.json"),
-        BoxDarkGrayBack("spine/boxes/darkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkgray_pixel/darkgray_pixel.json");
+        BoxDarkGrayBack("spine/boxes/darkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkgray_pixel/darkgray_pixel.json"),
+        BoxGreenBox("spine/boxes/green_box/green_box.atlas|spine/boxes/green_box/green_box.json");
 
         private final String alias;
         SpineAssets(String alias) {this.alias = alias;}

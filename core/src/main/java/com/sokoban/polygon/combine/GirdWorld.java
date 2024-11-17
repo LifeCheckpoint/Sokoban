@@ -25,7 +25,7 @@ public class GirdWorld extends SokobanCombineObject {
      * <br><br>
      * 如果内容不存在则被标记为 null，遍历方式为先行后列 (H -> W)
      */
-    SpineObject[][] gridSpineObjects;
+    Actor[][] gridSpineObjects;
 
     public GirdWorld(Main gameMain, int gridWidth, int gridHeight, float cellSize) {
         super(gameMain);
@@ -79,15 +79,28 @@ public class GirdWorld extends SokobanCombineObject {
     }
 
     /**
-     * 添加普通 Spine 组件，自动设置位置
-     * @param spineObject Spine 组件
+     * 添加普通 Actor 组件，自动设置位置
+     * @param actor Actor 组件
      * @param row 行，0 ~ gridHeight
      * @param column 列，0 ~ gridWidth
      */
-    public void addBox(SpineObject spineObject, int row, int column) {
+    public void add(Actor actor, int row, int column) {
         Vector2 pos = getCellPosition(row, column);
-        spineObject.setPosition(pos.x, pos.y);
-        gridSpineObjects[row][column] = spineObject;
+        actor.setPosition(pos.x, pos.y);
+        gridSpineObjects[row][column] = actor;
+    }
+
+    /**
+     * 添加普通 Actor 组件，自动设置位置
+     * @param actor Actor 组件
+     * @param location 行 -> 列，0 ~ gridHeight， 0 ~ gridWidth
+     */
+    public void add(Actor actor, int[][] location) {
+        for (int i = 0; i < location.length; i++) {
+            Vector2 pos = getCellPosition(location[i][0], location[i][1]);
+            gridSpineObjects[location[i][0]][location[i][1]] = actor;
+            actor.setPosition(pos.x, pos.y);
+        }
     }
 
     /**

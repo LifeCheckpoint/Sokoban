@@ -31,4 +31,9 @@ public class MathUtilsEx {
         for (int i = 0; i < a; i++) result *= base;
         return result;
     }
+
+    // 距离计算
+    public static float distance(float x1, float y1, float x2, float y2) {
+        return new Vector2(x1 - x2, y1 - y2).len();
+    }
 }

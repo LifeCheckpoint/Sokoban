@@ -1,8 +1,14 @@
 package com.sokoban.scenes;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,6 +27,7 @@ import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
+import com.sokoban.utils.MathUtilsEx;
 
 public class MapChooseScene extends SokobanScene {
     private AccelerationMovingManager accelerationManager;
@@ -32,6 +39,8 @@ public class MapChooseScene extends SokobanScene {
     private SpineObject playerSpine;
     private OverlappingManager overlapManager;
     public TimerClock timer;
+
+    private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
 
     private OriginLevel originLevel;
 
@@ -76,16 +85,16 @@ public class MapChooseScene extends SokobanScene {
 
         // 提示
         HintMessageBox msgBox = new HintMessageBox(gameMain, level.getLevelName());
-        msgBox.setPosition(8f, 0.5f);
+        msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
 
         // 玩家
         playerSpine = new SpineObject(gameMain, APManager.SpineAssets.Player1);
         playerSpine.stayAnimationAtFirst("down");
         playerSpine.setSize(1f, 1f);
-        playerSpine.setPosition(8f - playerSpine.getWidth() / 2, 4.5f - playerSpine.getHeight() / 2);
+        playerSpine.setPosition(SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);
 
         // 视角跟随
-        moveTrace = new MouseMovingTraceManager(viewport, 8f - playerSpine.getWidth() / 2, 4.5f - playerSpine.getHeight() / 2);
+        moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);
 
         // 加速度管理器
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.006f, 0.08f, 0.93f);
@@ -232,11 +241,25 @@ public class MapChooseScene extends SokobanScene {
             {6, 17}, {7, 9}, {9, 14}, {10, 5},
             {10, 11}, {11, 19}
         });
+        originLevel.gridMap.getTopLayer().addBox(BoxType.GreenChest, new int[][] {
+            {0, 5}, {1, 16}, {2, 16}, {6, 8}, {3, 5},
+            {6, 4}, {7, 9}, {7, 5}, {9, 13}, {0, 5},
+            {0, 11}, {10, 17}, {11, 19}
+        });
 
-        originLevel.gridMap.setPosition(8f, 4.5f);
+        originLevel.gridMap.setPosition(SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER);
         // originLevel.gridMap.getLayer(1).getAllActors().forEach(actor -> actor.setZIndex(3));
         // originLevel.gridMap.getLayer(0).getAllActors().forEach(actor -> actor.setZIndex(4));
         originLevel.gridMap.addActorsToStage(stage);
+
+        // 按照距离从近到远显示淡入
+        List<Actor> girdMapActorOrded = new ArrayList<>(originLevel.gridMap.getAllActors());
+        girdMapActorOrded.sort(Comparator.comparingDouble(actor -> MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER)));
+        girdMapActorOrded.forEach(actor -> ActionUtils.FadeInEffect(actor, MathUtils.random(
+            MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER) * 0.05f,
+            MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER) * 0.10f
+        )));
+
         addActorsToStage(playerSpine);
     }
 
