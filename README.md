@@ -24,15 +24,17 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |动画效果|▶️进行中|
 |设置配置|▶️进行中|
 
+当前版本 `0.2.2`
+
 ## Feature 项目特色
 
 1. 基于主流游戏引擎 `LibGDX` 开发，移植性强，可维护性高
 2. 允许素材异步加载，支持启用 `Mipmap` `MSAA` 等显示优化，以及加载场景界面
 3. 实现自定义的 GUI 组件，组件间通过 `gameMain` 分发全局控制句柄协调工作
 4. 通过高层抽象节省繁复画面元素操作，代码重用率高
-5. 基于 `TestNG` 的充分单元 / 覆盖率测试
-6. 完全原创的美术素材，附加素材源文件
-7. 充分运用 AI 工具，极大加快项目学习编程工作，使工作流在高度抽象的逻辑中进行，必要的底层细节在学习后可以交由 AI 实现
+5. 核心功能基于 `TestNG` 的充分单元 / 覆盖率测试
+6. 原创美术素材，附加素材源文件
+7. 充分运用 AI 工具，极大加快项目学习编程工作，使工作流在高度抽象的逻辑中进行
 
 ~~（只是因为要答辩所以写这些）~~
 
@@ -82,13 +84,74 @@ graphical framework.
 Any additional features beyond the basic requirements described above will earn points in this advanced category, including but not limited to:
 
 1. ▶️ Enhanced graphics and aesthetics
-2. ❌ More game modes design
-3. ❌ level selection interface 
+2. ▶️ More game modes design
+3. ▶️ level selection interface 
 4. ❌ Implementation of AI to achieve high scores
 5. ▶️ Adding some animated effects
 6. ❌ Adding game time display, save time in the archive, introducing a time-limited mode
-7. ❌ Adding props in the game 
-8. ❌ Adding maps of your own design
+7. ▶️ Adding props in the game 
+8. ▶️ Adding maps of your own design
+
+## Log 更新日志
+
+#### 0.2.2 update
+
+1. 新增箱子素材
+2. 优化一部分视觉效果
+3. 修复 `Esc` 键退出场景会崩溃的问题
+4. 修复 FPS 与游戏逻辑耦合的问题
+5. 修复键盘位移控制异常的问题
+6. 修复玩家行动位移边界
+
+#### 0.2.1 update
+
+1. 新增网格小世界组件
+2. 新增箱子素材
+3. 新增了计时器小组件
+4. 优化键盘操作逻辑
+5. 修复主界面箱子移动后会重叠的问题
+
+#### 0.2.0 update
+
+1. 新增了关卡选择场景，以及选择动效
+2. 新增了地图选择场景，支持自由移动
+3. 新增玩家形象及动画
+4. 新增调整 `MSAA` 设置项
+5. 优化计数器效果
+6. 修复初始音量与设置读取不一致的问题
+
+#### 0.1.4 update
+
+1. 新增对位图字体切分读取功能
+2. 新增字符串图像与提示条组件
+3. 新增设置保存功能
+4. 新增 GUI 测试屏幕
+5. 优化素材加载方式
+6. 修复复选框无法选中的 bug
+
+#### 0.1.3 update
+
+1. 新增垂直同步、音量设置
+2. 新增滑块条、计数器组件
+3. 优化一些组件的渐变加载
+
+#### 0.1.2 update
+
+1. 新增 `Json` 解析与测试
+2. 新增设置界面框架
+3. 重构素材加载机制，统一管理素材加载
+
+#### 0.1.1 update
+
+1. 新增对 `Spine` 组件的支持，这也是游戏的核心图形效果实现引擎之一
+2. 新增地图加载器的框架
+3. 新增复选框组件及其动画
+
+#### 0.1.0 Update
+
+`Sokoban` 项目的第一个初始界面搭建完成，包括背景音乐，粒子效果，鼠标跟踪，基础素材等等
+
+这是发布到 `main` 分支的第一个版本
 
 ## Structure 项目结构
 
