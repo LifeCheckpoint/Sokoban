@@ -139,10 +139,10 @@ public class InputTextField extends Actor {
                     }
 
                     // 处理空格输入
-                    if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                        insertText(" ");
-                        return;
-                    }
+                    // if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                    //     insertText(" ");
+                    //     return;
+                    // }
                 }
             }
 
