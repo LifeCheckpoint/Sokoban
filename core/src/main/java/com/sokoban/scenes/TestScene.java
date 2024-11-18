@@ -1,7 +1,7 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+// import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.sokoban.Main;
 import com.sokoban.polygon.InputTextField;
@@ -56,7 +56,7 @@ public class TestScene extends SokobanScene {
         girdWorld.addActorsToStage(stage);
 
         // 文本框测试
-        InputTextField textField = new InputTextField(gameMain);
+        InputTextField textField = new InputTextField(gameMain, 30);
         textField.setPosition(3f, 6f);
 
         addActorsToStage(textField);
@@ -74,18 +74,18 @@ public class TestScene extends SokobanScene {
     public void input() {
         if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
             // Windows 平台似乎不能使用
-            Gdx.input.getTextInput(new Input.TextInputListener() {
-                @Override
-                public void input(String inputText) {
-                    System.out.println(inputText);
-                }
+            // Gdx.input.getTextInput(new Input.TextInputListener() {
+            //     @Override
+            //     public void input(String inputText) {
+            //         System.out.println(inputText);
+            //     }
         
-                @Override
-                public void canceled() {
-                    // 如果用户取消输入
-                    System.out.println("Input canceled");
-                }
-            }, "Input", "hello?", "input sth.");  // 弹出输入框，默认文本是当前文本
+            //     @Override
+            //     public void canceled() {
+            //         // 如果用户取消输入
+            //         System.out.println("Input canceled");
+            //     }
+            // }, "Input", "hello?", "input sth.");  // 弹出输入框，默认文本是当前文本
         }
     }
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -20,22 +19,22 @@ import com.sokoban.polygon.combine.ImageFontStringObject;
 public class InputTextField extends Actor {
     private Main gameMain;
 
-    private String text = "";
-    private Color backgroundColor = Color.WHITE;
-    private Color textColor = Color.BLACK;
-    private Color cursorColor = Color.BLACK;
-    private float cursorBlinkTime = 0.5f;
     private boolean cursorVisible = true;
+    private Color backgroundColor = Color.WHITE;
+    private float cursorBlinkTime = 0.5f;
     private float cursorTimer = 0f;
-    private int cursorPosition = 0;
-    private Rectangle textBounds = new Rectangle();
     private ImageFontStringObject textImageObj;
+    private int cursorPosition = 0;
+    private int maxInputLength;
+    private String text = "";
     
     private final float PADDING_HEIGHT = 0.05f;
-    private final float DEFAULT_FIELD_HEIGHT = 0.9f;
+    private final float DEFAULT_FIELD_HEIGHT = 0.4f;
 
-    public InputTextField(Main gameMain) {
+    public InputTextField(Main gameMain, int maxInputLength) {
         this.gameMain = gameMain;
+        this.textImageObj = new ImageFontStringObject(gameMain, "", 0.02f);
+        this.maxInputLength = maxInputLength;
 
         addListener(new InputListener() {
             @Override
@@ -55,6 +54,15 @@ public class InputTextField extends Actor {
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
         textImageObj.setPosition(x + PADDING_HEIGHT, y + PADDING_HEIGHT);
+    }
+
+    /**
+     * 向文本中插入文本并移动光标
+     * @param insertText 光标位置
+     */
+    private void insertText(String insertText) {
+        text = text.substring(0, cursorPosition) + insertText + text.substring(cursorPosition);
+        cursorPosition += insertText.length();
     }
 
     /**
@@ -79,8 +87,8 @@ public class InputTextField extends Actor {
             boolean controlPressed = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
             boolean altPresses = Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT);
 
-            // 按下任意键
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            // 按下任意键，且长度不超过最大值
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) && text.length() < maxInputLength) {
                 // Ctrl + V （不允许 Shift 和 Alt 按下）
                 if (controlPressed && !shiftPressed && !altPresses && Gdx.input.isKeyJustPressed(Input.Keys.V)) {
                     // 处理粘贴
@@ -89,20 +97,52 @@ public class InputTextField extends Actor {
                         // 只允许输入字母数字下划线
                         if (!clipboardText.matches("^[a-zA-Z0-9_]+$")) return;
                         // 拼合光标前后与输入内容
-                        text = text.substring(0, cursorPosition) + clipboardText + text.substring(cursorPosition);
-                        // 移动光标
-                        cursorPosition += clipboardText.length();
+                        insertText(clipboardText);
                     }
 
                 // 如果任意控制键未被按下
                 } else if (!controlPressed && !altPresses) {
-                    String inputContent = Gdx.input.toString();
-                    // 只允许输入字母数字下划线
-                    if (!inputContent.matches("^[a-zA-Z0-9_]+$")) return;
-                    // 拼合光标前后与输入内容
-                    text = text.substring(0, cursorPosition) + inputContent + text.substring(cursorPosition);
-                    // 移动光标
-                    cursorPosition += inputContent.length();
+                    // 处理字母输入 (A-Z)
+                    for (int i = Input.Keys.A; i <= Input.Keys.Z; i++) {
+                        if (Gdx.input.isKeyJustPressed(i)) {
+                            char c = (char) ('a' + (i - Input.Keys.A));
+                            // 如果按下Shift键，转换为大写
+                            if (shiftPressed) c = Character.toUpperCase(c);
+
+                            insertText(String.valueOf(c));
+                            return;
+                        }
+                    }
+                    
+                    // 处理数字输入 (0-9)
+                    for (int i = Input.Keys.NUM_0; i <= Input.Keys.NUM_9; i++) {
+                        if (Gdx.input.isKeyJustPressed(i)) {
+                            char c = (char) (i - Input.Keys.NUM_0 + '0');
+                            insertText(String.valueOf(c));
+                            return;
+                        }
+                    }
+                    
+                    // 处理小键盘数字输入
+                    for (int i = Input.Keys.NUMPAD_0; i <= Input.Keys.NUMPAD_9; i++) {
+                        if (Gdx.input.isKeyJustPressed(i)) {
+                            char c = (char) (i - Input.Keys.NUMPAD_0 + '0');
+                            insertText(String.valueOf(c));
+                            return;
+                        }
+                    }
+                    
+                    // 处理下划线输入
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS) && shiftPressed) {
+                        insertText("_");
+                        return;
+                    }
+
+                    // 处理空格输入
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                        insertText(" ");
+                        return;
+                    }
                 }
             }
 
@@ -132,26 +172,20 @@ public class InputTextField extends Actor {
     // 绘制输入文本框组件
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        Texture whitePixel = gameMain.getAssetsPathManager().get(ImageAssets.GrayPixel);
+        Texture whitePixel = gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel);
+        Texture grayPixel = gameMain.getAssetsPathManager().get(ImageAssets.GrayPixel);
         // 绘制背景
         batch.setColor(backgroundColor);
-        batch.draw(whitePixel, getX(), getY(), getWidth(), getHeight());
+        batch.draw(grayPixel, getX(), getY(), getWidth(), getHeight());
 
         // 绘制文本
         textImageObj.reset(text);
         textImageObj.setPosition(getX() + PADDING_HEIGHT, getY() + PADDING_HEIGHT);
+        textImageObj.addActorsToStage(getStage());
 
         // 绘制光标
         if (getStage() != null && getStage().getKeyboardFocus() == this && cursorVisible) {
-            // 计算光标之前文本宽度
-            float textWidthBeforeCursor = 0f;
-            for (int i = 0; i < text.length(); i++) {
-                textWidthBeforeCursor += textImageObj.getCharImageObject().get(i).getWidth();
-            }
-
-            // 绘制光标
-            batch.setColor(cursorColor);
-            batch.draw(whitePixel, textBounds.x + textWidthBeforeCursor, textBounds.y, 1, textBounds.height);
+            batch.draw(whitePixel, getX() + textImageObj.getIntegrateWidth(cursorPosition), getY(), 0.05f, DEFAULT_FIELD_HEIGHT);
         }
     }
 
@@ -161,24 +195,6 @@ public class InputTextField extends Actor {
     public void setText(String text) {
         this.text = text;
         cursorPosition = text.length();
-    }
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-    public Color getTextColor() {
-        return textColor;
-    }
-    public void setTextColor(Color textColor) {
-        this.textColor = textColor;
-    }
-    public Color getCursorColor() {
-        return cursorColor;
-    }
-    public void setCursorColor(Color cursorColor) {
-        this.cursorColor = cursorColor;
     }
     public float getCursorBlinkTime() {
         return cursorBlinkTime;

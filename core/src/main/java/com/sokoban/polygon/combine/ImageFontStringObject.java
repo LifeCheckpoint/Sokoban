@@ -3,6 +3,7 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -73,6 +74,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
     }
 
     public void reset(String stringContent) {
+        charImageObject.forEach(Actor::remove);
         init(stringContent, buff, pageFileEnums, fntFileData);
     }
 
@@ -98,6 +100,27 @@ public class ImageFontStringObject extends SokobanCombineObject {
         this.y = y;
         this.width = integrateX - x;
         this.height = maxHeight;
+    }
+
+    /**
+     * 获取前 k 个文本框的宽度
+     * @param k 0 <= k < charImageObject.size()
+     * @return 宽度
+     */
+    public float getIntegrateWidth(int k) {
+        if (k == 0) return 0f;
+
+        if (k < 0 || k > charImageObject.size()) {
+            Gdx.app.error("ImageFontStringObject", String.format("%d is not a valid subscript. Expect (0, %d)", k, charImageObject.size()));
+            return 0f;
+        }
+        
+        // 计算累计宽度
+        float integrateWidth = 0;
+        for (int i = 0; i < k; i++) {
+            integrateWidth += charImageObject.get(i).getWidth() + (i == stringContent.length() - 1 ? 0 : buff);
+        }
+        return integrateWidth;
     }
 
     /**
