@@ -3,7 +3,7 @@ package com.sokoban.polygon;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.sokoban.enums.ParticleEnums;
+// import com.sokoban.enums.ParticleEnums;
 import com.sokoban.utils.MathUtilsEx;
 
 // 继承自 TextureSquare 的粒子类
@@ -18,6 +18,10 @@ public class BackgroundParticle extends TextureSquare {
     
     private float age = 0f;
     private float originAlpha = 1f;
+
+    public enum ParticleStatue {
+        In, Live, Out, Dead;
+    }
     
     public BackgroundParticle(float startX, float startY, Texture texture) {
         super(texture);
@@ -90,19 +94,19 @@ public class BackgroundParticle extends TextureSquare {
     }
 
     // 获取粒子当前生命状态
-    public ParticleEnums getParticleLifePeriod() {
-        if (age <= fadeInDuration) return ParticleEnums.In;
-        if (age <= fadeInDuration + lifetime) return ParticleEnums.Live;
-        if (age <= fadeInDuration + lifetime + fadeOutDuration) return ParticleEnums.Out;
-        return ParticleEnums.Dead;
+    public ParticleStatue getParticleLifePeriod() {
+        if (age <= fadeInDuration) return ParticleStatue.In;
+        if (age <= fadeInDuration + lifetime) return ParticleStatue.Live;
+        if (age <= fadeInDuration + lifetime + fadeOutDuration) return ParticleStatue.Out;
+        return ParticleStatue.Dead;
     }
 
     // 获取粒子当前生命状态相对时间
     public float getPeriodDeltaTime() {
-        ParticleEnums period = getParticleLifePeriod();
-        if (period == ParticleEnums.In) return age;
-        if (period == ParticleEnums.Live) return age - fadeInDuration;
-        if (period == ParticleEnums.Out) return age - fadeInDuration - lifetime;
+        ParticleStatue period = getParticleLifePeriod();
+        if (period == ParticleStatue.In) return age;
+        if (period == ParticleStatue.Live) return age - fadeInDuration;
+        if (period == ParticleStatue.Out) return age - fadeInDuration - lifetime;
         return age - fadeInDuration - lifetime - fadeOutDuration;
     }
 
@@ -112,14 +116,14 @@ public class BackgroundParticle extends TextureSquare {
         super.act(delta);
         age += delta;
         
-        ParticleEnums period = getParticleLifePeriod();
-        if (period == ParticleEnums.In) {
+        ParticleStatue period = getParticleLifePeriod();
+        if (period == ParticleStatue.In) {
             float t = Interpolation.sine.apply(getPeriodDeltaTime() / fadeInDuration);
             this.setAlpha(t * originAlpha);
             return;
         }
 
-        if (period == ParticleEnums.Live) {
+        if (period == ParticleStatue.Live) {
             float t = Interpolation.sine.apply(getPeriodDeltaTime() / lifetime);
             float x = MathUtilsEx.bezier(t, startX, startX + p1X, endX);
             float y = MathUtilsEx.bezier(t, startY, startY + p1Y, endY);
@@ -127,13 +131,13 @@ public class BackgroundParticle extends TextureSquare {
             return;
         }
 
-        if (period == ParticleEnums.Out) {
+        if (period == ParticleStatue.Out) {
             float t = Interpolation.sine.apply(getPeriodDeltaTime() / fadeOutDuration);
             this.setAlpha((1 - t) * originAlpha);
             return;
         }
 
-        if (period == ParticleEnums.Dead) {
+        if (period == ParticleStatue.Dead) {
             remove();
             super.remove();
             clear();

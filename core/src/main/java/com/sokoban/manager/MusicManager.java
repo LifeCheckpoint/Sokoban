@@ -3,7 +3,6 @@ package com.sokoban.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.sokoban.Main;
-import com.sokoban.enums.AudioEnums;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +14,15 @@ import java.util.Random;
  */
 public class MusicManager {
     private APManager apManager;
-    private AudioEnums currentMusicName;
+    private MusicAudio currentMusicName;
     private boolean isPlaying = false;
     private float volume = 1.0f;
-    private Map<AudioEnums, Music> musicMap;
+    private Map<MusicAudio, Music> musicMap;
     private Music currentMusic;
+
+    public enum MusicAudio {
+        Background1, Background2;
+    }
 
     public MusicManager(Main gameMain) {
         musicMap = new HashMap<>();
@@ -28,7 +31,7 @@ public class MusicManager {
         setVolume(gameMain.getSettingManager().gameSettings.sound.masterVolume * gameMain.getSettingManager().gameSettings.sound.musicVolume);
     }
 
-    public void loadMusic(AudioEnums audioAlias, APManager.MusicAssets audioAssets) {
+    public void loadMusic(MusicAudio audioAlias, APManager.MusicAssets audioAssets) {
         if (musicMap.containsKey(audioAlias)) {
             Gdx.app.log("MusicManager", "Music already loaded: " + audioAlias.toString());
             return;
@@ -38,7 +41,7 @@ public class MusicManager {
     }
 
     // 播放
-    public void play(AudioEnums audioName, boolean loop) {
+    public void play(MusicAudio audioName, boolean loop) {
         // 停止当前音乐
         if (currentMusic != null) {
             currentMusic.stop();
@@ -62,7 +65,7 @@ public class MusicManager {
 
     private void onMusicCompleted() {
         if (currentMusic != null) {
-            AudioEnums newRandomMusic = currentMusicName;
+            MusicAudio newRandomMusic = currentMusicName;
             if (musicMap.size() >= 2) {
                 do newRandomMusic = getRandomAudioEnum();
                 while (newRandomMusic == currentMusicName);
@@ -109,14 +112,14 @@ public class MusicManager {
     }
 
     // 切换到指定音乐
-    public void switchMusic(AudioEnums audioName) {
+    public void switchMusic(MusicAudio audioName) {
         if (currentMusic != null && currentMusic.isPlaying()) {
             currentMusic.stop();
         }
         play(audioName, true);
     }
 
-    public void switchMusic(AudioEnums audioName, boolean loop) {
+    public void switchMusic(MusicAudio audioName, boolean loop) {
         if (currentMusic != null && currentMusic.isPlaying()) {
             currentMusic.stop();
         }
@@ -136,8 +139,8 @@ public class MusicManager {
     }
 
     // 从 AudioEnums 中随机选择枚举
-    public AudioEnums getRandomAudioEnum() {
-        AudioEnums[] values = AudioEnums.values();  // 获取所有枚举值
+    public MusicAudio getRandomAudioEnum() {
+        MusicAudio[] values = MusicAudio.values();  // 获取所有枚举值
         Random random = new Random();
         int index = random.nextInt(values.length);  // 生成随机索引
         return values[index];  // 返回随机选中的枚举值

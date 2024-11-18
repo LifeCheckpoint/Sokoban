@@ -18,12 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
-import com.sokoban.enums.AudioEnums;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.SingleActionInstanceManager;
+import com.sokoban.manager.MusicManager.MusicAudio;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
@@ -80,8 +80,8 @@ public class GameWelcomeScene extends SokobanScene {
 
         // 背景音乐处理
         MusicManager musicManager = gameMain.getMusicManager();
-        musicManager.loadMusic(AudioEnums.Background1, APManager.MusicAssets.Light);
-        musicManager.loadMusic(AudioEnums.Background2, APManager.MusicAssets.Rain);
+        musicManager.loadMusic(MusicAudio.Background1, APManager.MusicAssets.Light);
+        musicManager.loadMusic(MusicAudio.Background2, APManager.MusicAssets.Rain);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
         // 鼠标跟踪
