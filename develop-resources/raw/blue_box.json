@@ -1,0 +1,12 @@
+{"skeleton":{"images":"iblue_box/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"bi","bone":"root","attachment":"bi"}
+],
+"skins":{
+	"default":{
+		"bi":{"bi":{"x":64,"y":64,"width":112,"height":112}}
+	}
+},
+"animations":{"animation":{}}
+}

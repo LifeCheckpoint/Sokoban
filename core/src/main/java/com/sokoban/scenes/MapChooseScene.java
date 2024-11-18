@@ -19,6 +19,7 @@ import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.OverlappingManager;
 import com.sokoban.manager.OverlappingManager.OverlapStatue;
+import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
@@ -37,7 +38,7 @@ public class MapChooseScene extends SokobanScene {
     private Levels level;
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
-    private OverlappingManager overlapManager;
+    private OverlappingManager playerOverlapManager;
     public TimerClock timer;
 
     private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
@@ -98,11 +99,11 @@ public class MapChooseScene extends SokobanScene {
 
         // 加速度管理器
         accelerationManager = new AccelerationMovingManager(playerSpine, 0.001f, 0.04f, 0.96f);
-        accelerationManager.setBound(-16f, 16f, -9f, 9f);
+        accelerationManager.addBound("MapBound", -16f, 16f, -9f, 9f);
 
         // 碰撞管理器，这里只能添加共有物体
-        overlapManager = new OverlappingManager(gameMain, playerSpine);
-        overlapManager.addSecondaryObject(returnButton);
+        playerOverlapManager = new OverlappingManager(gameMain, playerSpine);
+        playerOverlapManager.addSecondaryObject(returnButton);
 
         // 根据场景不同调用对应初始化
         switch (level) {
@@ -128,7 +129,7 @@ public class MapChooseScene extends SokobanScene {
         stage.addAction(Actions.sequence(
             // 停止碰撞检测并渐隐所有物体
             Actions.run(() -> {
-                overlapManager.disableAllCollision();
+                playerOverlapManager.disableAllCollision();
 
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
@@ -213,11 +214,11 @@ public class MapChooseScene extends SokobanScene {
 
     // 全局碰撞检测
     private void overlapsCheck() {
-        overlapManager.overlapsCheck();
+        playerOverlapManager.overlapsCheck();
 
         // Origin Level
         // 触碰返回按钮触发
-        if (returnButton != null && overlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstOverlap) {
+        if (returnButton != null && playerOverlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstOverlap) {
             // 首次碰撞，启动时钟
             timer = new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
                 @Override
@@ -228,8 +229,30 @@ public class MapChooseScene extends SokobanScene {
         }
 
         // 从返回按钮退出，停止启动时钟
-        if (timer != null && overlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstLeave) {
+        if (timer != null && playerOverlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstLeave) {
             timer.cancel();
+        }
+
+        // 对箱子的检测
+        for (Actor boxActor : originLevel.gridMap.getAllActors()) {
+            if (boxActor instanceof BoxObject) {
+                BoxObject boxObj = (BoxObject) boxActor;
+
+                // 碰撞普通箱子，变为激活状态
+                if (boxObj.getBoxType() == BoxType.GreenChest) {
+                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
+                        boxObj.resetBoxType(BoxType.GreenChestActive);
+                    }
+                }
+
+                // 离开激活箱子，变为普通状态
+                if (boxObj.getBoxType() == BoxType.GreenChestActive) {
+                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
+                        boxObj.resetBoxType(BoxType.GreenChest);
+                    }
+                }
+            }
+            
         }
     
     }
@@ -269,11 +292,36 @@ public class MapChooseScene extends SokobanScene {
             {6, 4}, {7, 9}, {7, 5}, {9, 13}, {0, 5},
             {0, 11}, {10, 17}, {11, 19}
         });
+        originLevel.gridMap.getTopLayer().addBox(BoxType.BlueChest, new int[][] {
+            {3, 6}, {2, 12}, {1, 0}, {7, 5}, {6, 3},
+            {9, 4}, {8, 5}, {6, 19}, {10, 10}, {3, 2},
+            {3, 11}, {11, 13}, {10, 0}
+        });
 
         originLevel.gridMap.setPosition(SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER);
         // originLevel.gridMap.getLayer(1).getAllActors().forEach(actor -> actor.setZIndex(3));
         // originLevel.gridMap.getLayer(0).getAllActors().forEach(actor -> actor.setZIndex(4));
         originLevel.gridMap.addActorsToStage(stage);
+
+        for (Actor boxActor : originLevel.gridMap.getAllActors()) {
+            if (boxActor instanceof BoxObject) {
+                BoxObject boxObj = (BoxObject) boxActor;
+                // 为所有 GreenBox 添加碰撞检测
+                if (boxObj.getBoxType() == BoxType.GreenChest) {
+                    playerOverlapManager.addSecondaryObject(boxObj);
+                }
+
+                // 为所有 BlueBox 添加边界
+                if (boxObj.getBoxType() == BoxType.BlueChest) {
+                    // TODO 这里的标签与位置强相关，临时设置，后续会改
+                    String BoxBlockTag = String.format("box[%.2f][%.2f]", boxObj.getX(), boxObj.getY());
+                    float blockX = boxObj.getX() - 8f, blockY = boxObj.getY() - 4.5f;
+                    accelerationManager.addBound(BoxBlockTag, blockX, blockX + boxObj.getSize(), blockY, blockY + boxObj.getSize());
+                }
+            }
+        }
+
+        
 
         // 按照距离从近到远显示淡入
         List<Actor> girdMapActorOrded = new ArrayList<>(originLevel.gridMap.getAllActors());

@@ -8,13 +8,18 @@ import com.sokoban.manager.APManager.SpineAssets;
  * @author Life_Checkpoint
  */
 public class BoxObject extends SpineObject {
+    private Main gameMain;
+    private BoxType boxType;
+    private float size;
     
     /** 盒子 Spine 资源枚举 */
     public enum BoxType {
         CornerRightDown(SpineAssets.BoxCornerRightDown),
         DarkBlueBack(SpineAssets.BoxDarkBlueBack),
         DarkGrayBack(SpineAssets.BoxDarkGrayBack),
-        GreenChest(SpineAssets.BoxGreenBox);
+        GreenChest(SpineAssets.BoxGreenBox),
+        GreenChestActive(SpineAssets.BoxGreenBoxLight),
+        BlueChest(SpineAssets.BoxBlueBox);
 
         private final SpineAssets asset;
         BoxType(SpineAssets asset) {this.asset = asset;}
@@ -33,6 +38,23 @@ public class BoxObject extends SpineObject {
         super(gameMain, boxType.getBoxAsset());
         setSize(size, size);
         setPosition(x, y);
+        this.gameMain = gameMain;
+        this.boxType = boxType;
+        this.size = size;
+    }
+
+    public boolean resetBoxType(BoxType boxType) {
+        boolean success = super.reset(gameMain, boxType.getBoxAsset());
+        if (success) this.boxType = boxType;
+        return success;
+    }
+
+    public BoxType getBoxType() {
+        return boxType;
+    }
+
+    public float getSize() {
+        return size;
     }
 
 }

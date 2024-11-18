@@ -374,15 +374,98 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
-     * 清理资源
+     * 重置Spine对象到新的资源
+     * @param gameMain 游戏主类实例
+     * @param atlasEnum 新的Spine资源枚举
+     * @return 是否重置成功
+     * @throws IllegalArgumentException 如果资源加载失败
+     */
+    public boolean reset(Main gameMain, APManager.SpineAssets atlasEnum) {
+        try {
+            // 保存当前的变换状态
+            float currentX = getX();
+            float currentY = getY();
+            float currentScaleX = this.scaleX;
+            float currentScaleY = this.scaleY;
+            boolean currentFlipX = this.flipX;
+            boolean currentFlipY = this.flipY;
+            
+            // 清理当前对象的状态
+            if (animationState != null) {
+                animationState.clearTracks();
+                animationState = null;
+            }
+            if (skeleton != null) {
+                skeleton = null;
+            }
+            
+            // 获取新的纹理图集引用（不dispose旧的，因为可能被其他对象使用）
+            TextureAtlas newAtlas = gameMain.getAssetsPathManager().get(atlasEnum);
+            if (newAtlas == null) {
+                throw new IllegalArgumentException("Failed to load atlas: " + atlasEnum.getAliasAtlas());
+            }
+            
+            // 更新atlas引用
+            atlas = newAtlas;
+            
+            // 创建新的Skeleton数据
+            SkeletonJson json = new SkeletonJson(atlas);
+            json.setScale(1f);
+            
+            skeletonData = json.readSkeletonData(gameMain.getAssetsPathManager().fileObj(atlasEnum.getAliasJson()));
+            if (skeletonData == null) {
+                throw new IllegalArgumentException("Failed to load skeleton data: " + atlasEnum.getAliasJson());
+            }
+            
+            // 重新初始化动画状态数据
+            animationData = new AnimationStateData(skeletonData);
+            animationData.setDefaultMix(defaultMixTime);
+            
+            // 如果渲染器为null才创建新的（避免重复创建）
+            if (batch == null) {
+                batch = new PolygonSpriteBatch();
+            }
+            if (skeletonRenderer == null) {
+                skeletonRenderer = new SkeletonRenderer();
+                skeletonRenderer.setPremultipliedAlpha(true);
+            }
+            
+            // 创建新的骨骼和动画状态
+            skeleton = new Skeleton(skeletonData);
+            animationState = new AnimationState(animationData);
+            
+            // 更新原始尺寸
+            originalWidth = skeletonData.getWidth();
+            originalHeight = skeletonData.getHeight();
+            
+            // 恢复变换状态
+            setPosition(currentX, currentY);
+            setScale(currentScaleX, currentScaleY);
+            setFlipX(currentFlipX);
+            setFlipY(currentFlipY);
+            
+            // 重置状态标志
+            isPaused = false;
+            isHide = false;
+            
+            return true;
+        } catch (Exception e) {
+            Gdx.app.error("SpineObject", "Failed to reset spine object: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 清理当前对象持有的资源
+     * 注意：此方法不会清理共享的TextureAtlas资源
      */
     @Override
     public void dispose() {
         if (batch != null) {
             batch.dispose();
+            batch = null;
         }
-        if (atlas != null) {
-            atlas.dispose();
-        }
+        // 不dispose atlas，因为它可能被其他对象共享
+        atlas = null;
     }
 }

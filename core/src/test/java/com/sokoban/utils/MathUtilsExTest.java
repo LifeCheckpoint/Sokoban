@@ -1,6 +1,8 @@
 package com.sokoban.utils;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sokoban.manager.AccelerationMovingManager.Direction;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -87,6 +89,57 @@ public class MathUtilsExTest {
 
         result = MathUtilsEx.distance(999f, 888f, 999f, 888f);
         Assert.assertTrue(Math.abs(result - 0f) < 0.0001f, "The distance between (999, 888) and (999, 888) should be 0f");
+    }
+
+    // 矩形测试
+    @Test
+    void testCrossEdge() {
+        Rectangle rectangle = new Rectangle(100, 100, 200, 200); // 创建一个矩形，左下角(100,100)，宽高200
+        Direction result;
+
+        // 测试穿越左边界（从内到外）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 50, 150);
+        Assert.assertEquals(result, Direction.Left, "Moving from (150, 150) to (50, 150) should cross the left edge");
+
+        // 测试穿越右边界（从内到外）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 350, 150);
+        Assert.assertEquals(result, Direction.Right, "Moving from (150, 150) to (350, 150) should cross the right edge");
+
+        // 测试穿越上边界（从内到外）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 150, 350);
+        Assert.assertEquals(result, Direction.Up, "Moving from (150, 150) to (150, 350) should cross the top edge");
+
+        // 测试穿越下边界（从内到外）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 150, 50);
+        Assert.assertEquals(result, Direction.Down, "Moving from (150, 150) to (150, 50) should cross the bottom edge");
+
+        // 测试穿越左边界（从外到内）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 50, 150, 150, 150);
+        Assert.assertEquals(result, Direction.Left, "Moving from (50, 150) to (150, 150) should cross the left edge");
+
+        // 测试穿越右边界（从外到内）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 350, 150, 150, 150);
+        Assert.assertEquals(result, Direction.Right, "Moving from (350, 150) to (150, 150) should cross the right edge");
+
+        // 测试穿越上边界（从外到内）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 350, 150, 150);
+        Assert.assertEquals(result, Direction.Up, "Moving from (150, 350) to (150, 150) should cross the top edge");
+
+        // 测试穿越下边界（从外到内）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 50, 150, 150);
+        Assert.assertEquals(result, Direction.Down, "Moving from (150, 50) to (150, 150) should cross the bottom edge");
+
+        // 测试内部移动（不穿越边界）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 200, 200);
+        Assert.assertEquals(result, Direction.None, "Moving inside rectangle should return None");
+
+        // 测试外部移动（不穿越边界）
+        result = MathUtilsEx.crossEdgeTest(rectangle, 50, 50, 75, 75);
+        Assert.assertEquals(result, Direction.None, "Moving outside rectangle should return None");
+
+        // 测试从同一点移动到同一点
+        result = MathUtilsEx.crossEdgeTest(rectangle, 150, 150, 150, 150);
+        Assert.assertEquals(result, Direction.None, "Moving from a point to the same point should return None");
     }
 }
 

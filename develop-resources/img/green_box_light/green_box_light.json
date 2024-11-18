@@ -1,0 +1,22 @@
+{
+"skeleton": { "hash": "7fLNcSf8HVUZ1CArvHMX0B6MiL0", "spine": "3.8.75", "images": "D:\\wroot\\Sokoban\\develop-resources\\raw\\images", "audio": "D:\\wroot\\Sokoban\\develop-resources\\raw" },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "box", "bone": "root", "attachment": "box" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"box": {
+				"box": { "x": 64, "y": 64, "width": 112, "height": 112 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

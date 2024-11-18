@@ -1,7 +1,12 @@
 package com.sokoban.manager;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.sokoban.utils.MathUtilsEx;
 
 // TODO 自定义边界框功能
 
@@ -18,7 +23,7 @@ public class AccelerationMovingManager {
     private float velocityX, velocityY;
     private boolean noMoving = true;
     private float reactPositionX = 0f, reactPositionY = 0f;
-    private Rectangle bound = null;
+    private Map<Object, Rectangle> taggedBound;
 
     public enum Direction {
         None("none"), Right("right"), Down("down"), Left("left"), Up("up");
@@ -44,6 +49,7 @@ public class AccelerationMovingManager {
         this.friction = friction;
         this.velocityX = 0;
         this.velocityY = 0;
+        this.taggedBound = new HashMap<>();
     }
 
     /**
@@ -85,16 +91,16 @@ public class AccelerationMovingManager {
             applyFriction();
         }
 
-        // 检查 bound 并更新 actor 位置
-        if (bound != null) {
-            if (reactPositionX + velocityX < bound.getX()) velocityX = 0;
-            if (reactPositionX + velocityX > bound.getX() + bound.getWidth()) velocityX = 0;
-            if (reactPositionY + velocityY < bound.getY()) velocityY = 0;
-            if (reactPositionY + velocityY > bound.getY() + bound.getHeight()) velocityY = 0;
-        }
+        // 检查阻挡情况，如有阻挡则设置速度为 0
+        taggedBound.values().forEach(bound -> {
+            if (bound != null) {
+                if (moveBlockTestX(bound)) velocityX = 0;
+                if (moveBlockTestY(bound)) velocityY = 0;
+            }
+        });
         
+        // 移动 actor，更新相对位置
         actor.moveBy(velocityX, velocityY);
-
         reactPositionX += velocityX;
         reactPositionY += velocityY;
     }
@@ -114,20 +120,79 @@ public class AccelerationMovingManager {
 
     /**
      * 设置位移边界框，如果超出边界则禁止该方向位移
+     * <br><br>
+     * 边界框应当是<b>相对原点坐标</b>，即相对起始位置的坐标
+     * @param tagObject 边界标签，不可重复
      * @param left 左边界
      * @param right 右边界
      * @param down 下边界
      * @param up 上边界
      */
-    public void setBound(float left, float right, float down, float up) {
-        bound = new Rectangle(left, down, right - left, up - down);
+    public void addBound(Object tagObject, float left, float right, float down, float up) {
+        System.out.printf("%.2f %.2f %.2f %.2f\n", left, right, down, up);
+        if (taggedBound.containsKey(tagObject)) {
+            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is exists.", tagObject.toString()));
+            return;
+        }
+        taggedBound.put(tagObject, new Rectangle(left, down, right - left, up - down));
     }
 
     /**
-     * 移出边界框
+     * 取消位移边界框
+     * @param tagObject 边界标签
      */
-    public void removeBound() {
-        bound = null;
+    public void removeBound(Object tagObject) {
+        if (!taggedBound.containsKey(tagObject)) {
+            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
+            return;
+        }
+        taggedBound.remove(tagObject);
+    }
+
+    /**
+     * 重置位移边界框
+     * @param tagObject 边界标签
+     * @param left 左边界
+     * @param right 右边界
+     * @param down 下边界
+     * @param up 上边界
+     */
+    public void resetBound(Object tagObject, float left, float right, float down, float up) {
+        if (!taggedBound.containsKey(tagObject)) {
+            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
+            return;
+        }
+        taggedBound.replace(tagObject, new Rectangle(left, down, right - left, up - down));
+    }
+
+    /**
+     * 测试移动是否会被阻挡
+     * @param rectangle 阻挡矩形框
+     * @param direction 移动方向
+     * @return 阻挡方向
+     */
+    public Direction moveBlockTest(Rectangle rectangle) {
+        return MathUtilsEx.crossEdgeTest(rectangle, reactPositionX, reactPositionY, reactPositionX + velocityX, reactPositionY + velocityY);
+    }
+
+    /**
+     * 测试 X 方向阻挡是否发生
+     * @param rectangle
+     * @return 阻挡是否发生
+     */
+    public boolean moveBlockTestX(Rectangle rectangle) {
+        Direction collideDirection = moveBlockTest(rectangle);
+        return collideDirection == Direction.Left || collideDirection == Direction.Right;
+    }
+
+    /**
+     * 测试 Y 方向阻挡是否发生
+     * @param rectangle
+     * @return 阻挡是否发生
+     */
+    public boolean moveBlockTestY(Rectangle rectangle) {
+        Direction collideDirection = moveBlockTest(rectangle);
+        return collideDirection == Direction.Up || collideDirection == Direction.Down;
     }
 
     public Actor getActor() {
