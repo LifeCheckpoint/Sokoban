@@ -234,7 +234,7 @@ public class MapChooseScene extends SokobanScene {
         }
 
         // 对箱子的检测
-        for (Actor boxActor : originLevel.gridMap.getAllActors()) {
+        if (originLevel != null) for (Actor boxActor : originLevel.gridMap.getAllActors()) {
             if (boxActor instanceof BoxObject) {
                 BoxObject boxObj = (BoxObject) boxActor;
 

@@ -45,7 +45,8 @@ public class TimerClock extends SpineObject {
     private void init(Actor followingObject, float timeDuration, ClockEndCallback callback, boolean blocking) {
         setSize(DEFAULT_SIZE, DEFAULT_SIZE);
         setPosition(followingObject.getX() + followingObject.getWidth() / 2, followingObject.getY() + followingObject.getHeight());
-        setAnimation(0, TIMER_ANIMATION, false);
+        stayAnimationAtFirst(TIMER_ANIMATION); // 虽然很莫名其妙但是能跑起来的代码就不要去碰它了
+        // setAnimation(0, TIMER_ANIMATION, false);
         setAnimationTotalTime(0, timeDuration);
         addAction(Actions.sequence(
             Actions.delay(timeDuration),
@@ -73,16 +74,17 @@ public class TimerClock extends SpineObject {
         if (blocking) {
             addAction(Actions.sequence(
                 Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
-                Actions.run(callback::clockEnd)
+                Actions.run(callback::clockEnd),
+                Actions.run(this::remove)
             ));
         } else {
             addAction(Actions.sequence(
                 Actions.parallel(
                     Actions.fadeOut(FADEOUT_DURATION, Interpolation.sine),
                     Actions.run(callback::clockEnd)
-                )
+                ),
+                Actions.run(this::remove)
             ));
-            callback.clockEnd();
         }
     }
 
