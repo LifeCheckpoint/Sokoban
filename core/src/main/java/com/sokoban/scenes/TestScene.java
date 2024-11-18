@@ -1,8 +1,10 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.sokoban.Main;
+import com.sokoban.polygon.InputTextField;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.GirdWorld;
 // import com.sokoban.manager.APManager;
@@ -52,6 +54,12 @@ public class TestScene extends SokobanScene {
         girdWorld.remove(4, 5);
         girdWorld.addBox(BoxType.CornerRightDown, 4, 4);
         girdWorld.addActorsToStage(stage);
+
+        // 文本框测试
+        InputTextField textField = new InputTextField(gameMain);
+        textField.setPosition(3f, 6f);
+
+        addActorsToStage(textField);
     }
 
     // 重绘逻辑
@@ -64,7 +72,21 @@ public class TestScene extends SokobanScene {
 
     @Override
     public void input() {
-        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) System.out.println("space");
+        if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+            // Windows 平台似乎不能使用
+            Gdx.input.getTextInput(new Input.TextInputListener() {
+                @Override
+                public void input(String inputText) {
+                    System.out.println(inputText);
+                }
+        
+                @Override
+                public void canceled() {
+                    // 如果用户取消输入
+                    System.out.println("Input canceled");
+                }
+            }, "Input", "hello?", "input sth.");  // 弹出输入框，默认文本是当前文本
+        }
     }
 
     // 资源释放

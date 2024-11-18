@@ -4,18 +4,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.sokoban.Main;
+import com.sokoban.manager.APManager.ImageAssets;
+import com.sokoban.polygon.combine.ImageFontStringObject;
 
+/**
+ * 文本框输入组件
+ * @author Claude
+ * @author Life_Checkpoint
+ */
 public class InputTextField extends Actor {
     private Main gameMain;
 
-    private BitmapFont font;
     private String text = "";
     private Color backgroundColor = Color.WHITE;
     private Color textColor = Color.BLACK;
@@ -24,110 +28,130 @@ public class InputTextField extends Actor {
     private boolean cursorVisible = true;
     private float cursorTimer = 0f;
     private int cursorPosition = 0;
-    private GlyphLayout layout = new GlyphLayout();
     private Rectangle textBounds = new Rectangle();
-    private float padding = 5f;
+    private ImageFontStringObject textImageObj;
+    
+    private final float PADDING_HEIGHT = 0.05f;
+    private final float DEFAULT_FIELD_HEIGHT = 0.9f;
 
-    public InputTextField(BitmapFont font, Main gameMain) {
+    public InputTextField(Main gameMain) {
         this.gameMain = gameMain;
-
-        this.font = font;
-        setSize(200, font.getCapHeight() + padding * 2);
 
         addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // 获得焦点
                 InputTextField.this.getStage().setKeyboardFocus(InputTextField.this);
-                cursorPosition = text.length();  // 直接使用 text，而不是 layout
+                cursorPosition = text.length();
                 return true;
             }
         });
+
+        setSize(6f, DEFAULT_FIELD_HEIGHT + PADDING_HEIGHT * 2);
+        setPosition(getX(), getY());
     }
 
     @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        textImageObj.setPosition(x + PADDING_HEIGHT, y + PADDING_HEIGHT);
+    }
+
+    /**
+     * 绘制文本框
+     */
+    @Override
     public void act(float delta) {
         super.act(delta);
+
+        // 光标闪动处理
         cursorTimer += delta;
         if (cursorTimer >= cursorBlinkTime) {
             cursorVisible = !cursorVisible;
             cursorTimer = 0f;
         }
 
+        // 获得焦点
         if (getStage() != null && getStage().getKeyboardFocus() == this) {
+
+            // 判断 shift 和 control 是否按下
             boolean shiftPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
             boolean controlPressed = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT);
+            boolean altPresses = Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT);
 
+            // 按下任意键
             if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-                if (controlPressed && !shiftPressed && Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+                // Ctrl + V （不允许 Shift 和 Alt 按下）
+                if (controlPressed && !shiftPressed && !altPresses && Gdx.input.isKeyJustPressed(Input.Keys.V)) {
                     // 处理粘贴
                     String clipboardText = Gdx.app.getClipboard().getContents();
                     if (clipboardText != null) {
+                        // 只允许输入字母数字下划线
+                        if (!clipboardText.matches("^[a-zA-Z0-9_]+$")) return;
+                        // 拼合光标前后与输入内容
                         text = text.substring(0, cursorPosition) + clipboardText + text.substring(cursorPosition);
+                        // 移动光标
                         cursorPosition += clipboardText.length();
                     }
-                } else if (!controlPressed && !shiftPressed) {
-                    // 处理字符输入
-                    Gdx.input.getTextInput(new Input.TextInputListener() {
-                        @Override
-                        public void input(String inputText) {
-                            // 当用户输入时，将输入的文本更新到文本框
-                            text = text.substring(0, cursorPosition) + inputText + text.substring(cursorPosition);
-                            cursorPosition += inputText.length();  // 更新光标位置
-                        }
-                
-                        @Override
-                        public void canceled() {
-                            // 如果用户取消输入
-                            System.out.println("Input canceled");
-                        }
-                    }, "Input", getText(), "");  // 弹出输入框，默认文本是当前文本
+
+                // 如果任意控制键未被按下
+                } else if (!controlPressed && !altPresses) {
+                    String inputContent = Gdx.input.toString();
+                    // 只允许输入字母数字下划线
+                    if (!inputContent.matches("^[a-zA-Z0-9_]+$")) return;
+                    // 拼合光标前后与输入内容
+                    text = text.substring(0, cursorPosition) + inputContent + text.substring(cursorPosition);
+                    // 移动光标
+                    cursorPosition += inputContent.length();
                 }
             }
 
+            // Backspace 删除
             if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && text.length() > 0 && cursorPosition > 0) {
-                // 处理退格删除
                 text = text.substring(0, cursorPosition - 1) + text.substring(cursorPosition);
                 cursorPosition--;
             }
-
+            
+            // Delete 键删除
             if (Gdx.input.isKeyJustPressed(Input.Keys.FORWARD_DEL) && cursorPosition < text.length()) {
-                // 处理Delete键删除
                 text = text.substring(0, cursorPosition) + text.substring(cursorPosition + 1);
             }
 
+            // 光标左移
             if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && cursorPosition > 0) {
-                // 处理光标左移
                 cursorPosition--;
             }
 
+            // 光标右移
             if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && cursorPosition < text.length()) {
-                // 处理光标右移
                 cursorPosition++;
             }
         }
     }
 
+    // 绘制输入文本框组件
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        Texture whitePixel = gameMain.getAssetsPathManager().get("white_pixel.png", Texture.class);
+        Texture whitePixel = gameMain.getAssetsPathManager().get(ImageAssets.GrayPixel);
         // 绘制背景
         batch.setColor(backgroundColor);
         batch.draw(whitePixel, getX(), getY(), getWidth(), getHeight());
 
         // 绘制文本
-        layout.setText(font, text);
-        font.setColor(textColor);
-        font.draw(batch, layout, getX() + padding, getY() + getHeight() - padding);
+        textImageObj.reset(text);
+        textImageObj.setPosition(getX() + PADDING_HEIGHT, getY() + PADDING_HEIGHT);
 
         // 绘制光标
         if (getStage() != null && getStage().getKeyboardFocus() == this && cursorVisible) {
-            // 使用 GlyphLayout 来计算光标之前的文本宽度
-            layout.setText(font, text.substring(0, cursorPosition));
-            textBounds.set(getX() + padding, getY() + padding, layout.width, font.getCapHeight());
+            // 计算光标之前文本宽度
+            float textWidthBeforeCursor = 0f;
+            for (int i = 0; i < text.length(); i++) {
+                textWidthBeforeCursor += textImageObj.getCharImageObject().get(i).getWidth();
+            }
 
             // 绘制光标
             batch.setColor(cursorColor);
-            batch.draw(whitePixel, textBounds.x + textBounds.width, textBounds.y, 1, textBounds.height);
+            batch.draw(whitePixel, textBounds.x + textWidthBeforeCursor, textBounds.y, 1, textBounds.height);
         }
     }
 
@@ -162,10 +186,7 @@ public class InputTextField extends Actor {
     public void setCursorBlinkTime(float cursorBlinkTime) {
         this.cursorBlinkTime = cursorBlinkTime;
     }
-    public float getPadding() {
-        return padding;
-    }
-    public void setPadding(float padding) {
-        this.padding = padding;
+    public float getPADDING_HEIGHT() {
+        return PADDING_HEIGHT;
     }
 }

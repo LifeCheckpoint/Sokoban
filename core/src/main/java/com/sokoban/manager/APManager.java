@@ -96,7 +96,6 @@ public class APManager {
      * 只有 atlas 会被统一读取，Json <b>不会</b>被统一读取
      */
     public enum SpineAssets {
-        // TestPlayer1("spine/test_player1/player1_sp.atlas|spine/test_player1/player1_sp.json"),
         Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
         Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
         Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json"),

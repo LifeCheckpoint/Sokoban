@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.FontManager;
+import com.sokoban.manager.APManager.ImageAssets;
 
 /**
  * 字符串显示类，由 Image 组合而成
@@ -17,6 +18,8 @@ import com.sokoban.manager.FontManager;
 public class ImageFontStringObject extends SokobanCombineObject {
     private float buff;
     private String stringContent;
+    private ImageAssets[] pageFileEnums;
+    private String fntFileData;
     List<Image> charImageObject;
 
     private final float DEFAULT_BUFF = 0f;
@@ -50,21 +53,27 @@ public class ImageFontStringObject extends SokobanCombineObject {
 
     private void init(String stringContent, float buff, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
         // 空格显示改进
-        stringContent = stringContent.replace(" ", new String(" ").repeat(SPACE_REPEAT));
+        String improvedString = stringContent.replace(" ", new String(" ").repeat(SPACE_REPEAT));
         this.stringContent = stringContent;
         this.buff = buff;
+        this.pageFileEnums = pageFileEnums;
+        this.fntFileData = fntFileData;
         
         charImageObject = new ArrayList<>();
         FontManager fontManager = new FontManager(gameMain, pageFileEnums, fntFileData);
 
         // 添加字符
-        for (int i = 0; i < stringContent.length(); i++) {
-            Image currentCharacter = fontManager.getCharImage(stringContent.charAt(i));
+        for (int i = 0; i < improvedString.length(); i++) {
+            Image currentCharacter = fontManager.getCharImage(improvedString.charAt(i));
             charImageObject.add(currentCharacter);
         }
 
         // 设置初始位置
         setPosition(0, 0);
+    }
+
+    public void reset(String stringContent) {
+        init(stringContent, buff, pageFileEnums, fntFileData);
     }
 
     /**
@@ -75,12 +84,12 @@ public class ImageFontStringObject extends SokobanCombineObject {
         float integrateX = x, maxHeight = -1f;
 
         // 计算最高高度
-        for (int i = 0; i < stringContent.length(); i++) {
+        for (int i = 0; i < charImageObject.size(); i++) {
             maxHeight = Math.max(maxHeight, charImageObject.get(i).getHeight());
         }
 
         // 计算累计宽度并移位
-        for (int i = 0; i < stringContent.length(); i++) {
+        for (int i = 0; i < charImageObject.size(); i++) {
             charImageObject.get(i).setPosition(integrateX, y);
             integrateX += charImageObject.get(i).getWidth() + (i == stringContent.length() - 1 ? 0 : buff);
         }
@@ -108,5 +117,9 @@ public class ImageFontStringObject extends SokobanCombineObject {
         List<Actor> actors = new ArrayList<>();
         actors.addAll(charImageObject);
         return actors;
+    }
+
+    public List<Image> getCharImageObject() {
+        return charImageObject;
     }
 }
