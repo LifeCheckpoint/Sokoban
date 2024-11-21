@@ -16,12 +16,11 @@ public class TestMap {
             map[i][0] = 1;
             map[i][4] = 1;
         }
-        Things player = new Things(1,1,0,1);
-        Things box1 = new Things(2,3,0,20);
-        Things box2 = new Things(3,3,0,20);
-        Things PosOfBox1 = new Things(3,2,0,30);
-        Things PosOfBox2 = new Things(2,4,0,30);
-
+        Things player = new Things(new pos(1,1,0),1);
+        Things box1 = new Things(new pos(2,3,0),20);
+        Things box2 = new Things(new pos(3,3,0),20);
+        Things PosOfBox1 = new Things(new pos(3,2,0),30);
+        Things PosOfBox2 = new Things(new pos(2,4,0),30);
 
 
     }
