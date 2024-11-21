@@ -1,25 +1,29 @@
 package com.sokoban.core.CORE;
 
 public class Things {
-    int x, y, z;
+    pos position;
     int TypeNumber;
     ObjType ObjType;
-    public Things(int x, int y, int z, int TypeNumber) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Things(pos position, int TypeNumber) {
         this.TypeNumber = TypeNumber;
         getObjType();
     }
     public void getObjType() {
         this.ObjType = method.mapper.MapNumToType(TypeNumber);
     }
+
+    public pos getPosition() {
+        return position;
+    }
+
+    public void setPosition(pos position) {
+        this.position = position;
+    }
 }
 
 
 class pos {
     int x, y, z;
-
     public int getX() {
         return x;
     }
