@@ -2,7 +2,9 @@ package com.sokoban.scenes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -39,7 +41,7 @@ public class MapChooseScene extends SokobanScene {
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
     private OverlappingManager playerOverlapManager;
-    public TimerClock timer;
+    public Map<Actor, TimerClock> timer;
 
     private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
 
@@ -105,6 +107,9 @@ public class MapChooseScene extends SokobanScene {
         playerOverlapManager = new OverlappingManager(gameMain, playerSpine);
         playerOverlapManager.addSecondaryObject(returnButton);
 
+        // 组件 - 计时器 字典
+        timer = new HashMap<>();
+
         // 根据场景不同调用对应初始化
         switch (level) {
             case Origin:
@@ -135,13 +140,39 @@ public class MapChooseScene extends SokobanScene {
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                    if (timer != null) timer.remove();
+                    // 清除计时器字典所有部件
+                    if (timer != null) for (TimerClock ti : timer.values()) ti.remove();
                 }
             }),
             // 等待指定时间
             Actions.delay(0.5f),
             // 返回上一界面
             Actions.run(() -> gameMain.getScreenManager().returnPreviousScreen())
+        ));
+    }
+
+    /**
+     * 进入游玩界面
+     */
+    public void enterGameScene() {
+        stage.addAction(Actions.sequence(
+            // 停止碰撞检测并渐隐所有物体
+            Actions.run(() -> {
+                playerOverlapManager.disableAllCollision();
+
+                returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+                playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+                if (originLevel != null) {
+                    originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
+                    // 清除计时器字典所有部件
+                    if (timer != null) for (TimerClock ti : timer.values()) ti.remove();
+                }
+            }),
+            // 等待指定时间
+            Actions.delay(0.5f),
+            // 进入游戏界面
+            // TODO map 选择
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level)))
         ));
     }
 
@@ -220,17 +251,22 @@ public class MapChooseScene extends SokobanScene {
         // 触碰返回按钮触发
         if (returnButton != null && playerOverlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstOverlap) {
             // 首次碰撞，启动时钟
-            timer = new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
-                @Override
-                public void clockEnd() {MapChooseScene.this.returnToPreviousScreen();}
-            }, false);
-            timer.moveBy(-0.2f, 0);
-            addActorsToStage(timer);
+            timer.put(returnButton, 
+                new TimerClock(gameMain, returnButton, 1.5f, new ClockEndCallback() {
+                    @Override
+                    public void clockEnd() {returnToPreviousScreen();}
+                }, false)
+            );
+            timer.get(returnButton).moveBy(-0.2f, 0);
+            addActorsToStage(timer.get(returnButton));
         }
 
         // 从返回按钮退出，停止启动时钟
         if (timer != null && playerOverlapManager.getActorOverlapState(returnButton) == OverlapStatue.FirstLeave) {
-            timer.cancel();
+            if (timer.containsKey(returnButton)) {
+                timer.get(returnButton).cancel();
+                timer.remove(returnButton);
+            }
         }
 
         // 对箱子的检测
@@ -238,17 +274,35 @@ public class MapChooseScene extends SokobanScene {
             if (boxActor instanceof BoxObject) {
                 BoxObject boxObj = (BoxObject) boxActor;
 
-                // 碰撞普通箱子，变为激活状态
+                // 碰撞普通箱子
                 if (boxObj.getBoxType() == BoxType.GreenChest) {
                     if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
+                        // 箱子变为激活状态
                         boxObj.resetBoxType(BoxType.GreenChestActive);
+
+                        // 触发计时器
+                        timer.put(boxObj, 
+                            new TimerClock(gameMain, boxObj, 1.5f, new ClockEndCallback() {
+                                @Override
+                                public void clockEnd() {enterGameScene();}
+                            }, false)
+                        );
+                        timer.get(boxObj).moveBy(-0.3f, 0);
+                        addActorsToStage(timer.get(boxObj));
                     }
                 }
 
-                // 离开激活箱子，变为普通状态
+                // 离开激活箱子
                 if (boxObj.getBoxType() == BoxType.GreenChestActive) {
                     if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
+                        // 箱子变为普通状态
                         boxObj.resetBoxType(BoxType.GreenChest);
+
+                        // 取消计时器
+                        if (timer.containsKey(boxObj)) {
+                            timer.get(boxObj).cancel();
+                            timer.remove(boxObj);
+                        }
                     }
                 }
             }
@@ -263,7 +317,7 @@ public class MapChooseScene extends SokobanScene {
     private void setupLevelOrigin() {
         originLevel = new OriginLevel();
 
-        // TODO 要把这些文件化
+        // TODO 将转换为文件读取初始化
         
         originLevel.gridMap = new Stack2DGirdWorld(gameMain, 20, 12, 1f);
         originLevel.gridMap.addLayer();

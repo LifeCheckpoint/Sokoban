@@ -1,1 +1,1 @@
-{"graphics":{"mipmap":true,"vsync":true,"msaa":16},"sound":{"masterVolume":0.0,"musicVolume":0.4,"effectsVolume":1.0}}
+{"graphics":{"mipmap":true,"vsync":true,"msaa":2},"sound":{"masterVolume":0.0,"musicVolume":0.4,"effectsVolume":1.0}}

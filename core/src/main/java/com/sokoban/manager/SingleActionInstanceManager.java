@@ -48,6 +48,7 @@ public class SingleActionInstanceManager {
      * @param resetEvent 重置工作，可为 null
      */
     public void executeAction(Actor actor, Action actions, ActionInstanceReset resetEvent) {
+        // TODO BUG
         actorState.put(actor, false);
 
         // 重置 -> 动画 -> 解锁

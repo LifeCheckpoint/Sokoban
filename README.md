@@ -67,7 +67,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 1. ❌ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
 2. ❌ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
-3. ❌ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
+3. ▶️ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
 4. ❌ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
 5. ❌ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
 

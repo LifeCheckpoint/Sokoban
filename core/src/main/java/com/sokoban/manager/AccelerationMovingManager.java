@@ -129,7 +129,6 @@ public class AccelerationMovingManager {
      * @param up 上边界
      */
     public void addBound(Object tagObject, float left, float right, float down, float up) {
-        System.out.printf("%.2f %.2f %.2f %.2f\n", left, right, down, up);
         if (taggedBound.containsKey(tagObject)) {
             Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is exists.", tagObject.toString()));
             return;
