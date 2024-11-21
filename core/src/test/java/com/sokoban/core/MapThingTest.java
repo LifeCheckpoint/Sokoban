@@ -9,7 +9,7 @@ import com.sokoban.core.CORE.Things;
 import com.sokoban.core.CORE.ObjectType;
 
 public class MapThingTest {
-        @Test
+    @Test
     public void testThingsConstructor() {
         // 创建一个 Things 对象，并检查它的初始状态
         Pos Position = new Pos(2, 3, 0);
