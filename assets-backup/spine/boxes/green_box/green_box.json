@@ -1,0 +1,31 @@
+{
+"skeleton": {
+	"hash": "1qHp15viUtU4ZBJqK5rzv1cq+mA",
+	"spine": "3.8.82",
+	"x": 8,
+	"y": 8,
+	"width": 128,
+	"height": 128,
+	"images": "./green_box/",
+	"audio": "D:/wroot/Sokoban/develop-resources/raw"
+},
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "bo", "bone": "root", "attachment": "bo" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"bo": {
+				"bo": { "x": 64, "y": 64, "width": 112, "height": 112 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

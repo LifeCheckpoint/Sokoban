@@ -1,0 +1,104 @@
+{
+"skeleton": {
+	"hash": "JzoVp1DGWTquJNRFNuKq6X7LrVE",
+	"spine": "3.8.82",
+	"x": 9,
+	"y": 9,
+	"width": 128,
+	"height": 128,
+	"images": "./box_corner_rightdown/",
+	"audio": "D:/wroot/Sokoban/develop-resources/raw"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": 89.02, "y": 14.31 },
+	{ "name": "bone2", "parent": "root", "x": 112.62, "y": 40.95 },
+	{ "name": "bone3", "parent": "root", "x": 52.86, "y": 15 },
+	{ "name": "bone4", "parent": "root", "x": 112.07, "y": 75.31 }
+],
+"slots": [
+	{ "name": "frame", "bone": "root", "attachment": "frame" },
+	{ "name": "r", "bone": "root", "attachment": "r" },
+	{ "name": "d", "bone": "root", "attachment": "d" },
+	{ "name": "down", "bone": "root", "attachment": "down" },
+	{ "name": "up", "bone": "root", "attachment": "up" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"up": {
+				"up": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 2, 6.38, -31.95, 1, 1, 2, -7.62, -31.95, 1, 1, 2, -7.62, 24.05, 1, 1, 2, 6.38, 24.05, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 14,
+					"height": 56
+				}
+			},
+			"down": {
+				"down": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 1, 29.98, -5.31, 1, 1, 1, -27.02, -5.31, 1, 1, 1, -27.02, 7.69, 1, 1, 1, 29.98, 7.69, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 57,
+					"height": 13
+				}
+			},
+			"d": {
+				"d": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 3, 9.14, -4, 1, 1, 3, -7.86, -4, 1, 1, 3, -7.86, 5, 1, 1, 3, 9.14, 5, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 17,
+					"height": 9
+				}
+			},
+			"frame": {
+				"frame": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 117, 11, 9, 11, 9, 119, 117, 119 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 108,
+					"height": 108
+				}
+			},
+			"r": {
+				"r": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 4, 4.93, -9.31, 1, 1, 4, -4.07, -9.31, 1, 1, 4, -4.07, 8.69, 1, 1, 4, 4.93, 8.69, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 9,
+					"height": 18
+				}
+			}
+		}
+	}
+],
+"animations": {
+	"active": {
+		"bones": {
+			"bone3": {
+				"translate": [
+					{ "y": 0.27 }
+				]
+			}
+		}
+	}
+}
+}

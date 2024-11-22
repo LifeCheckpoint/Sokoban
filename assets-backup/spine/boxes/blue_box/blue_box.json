@@ -1,0 +1,40 @@
+{
+	"skeleton": {
+		"hash": "WKQ6ln4nQtfPGFOci6FU3q7Tpmc",
+		"spine": "3.8.82",
+		"images": "D:\\wroot\\Sokoban\\develop-resources\\raw\\iblue_box",
+		"audio": "D:\\wroot\\Sokoban\\develop-resources\\raw",
+		"width": 128,
+		"height": 128
+	},
+	"bones": [
+		{
+			"name": "root"
+		}
+	],
+	"slots": [
+		{
+			"name": "bi",
+			"bone": "root",
+			"attachment": "bi"
+		}
+	],
+	"skins": [
+		{
+			"name": "default",
+			"attachments": {
+				"bi": {
+					"bi": {
+						"x": 64,
+						"y": 64,
+						"width": 112,
+						"height": 112
+					}
+				}
+			}
+		}
+	],
+	"animations": {
+		"animation": {}
+	}
+}
