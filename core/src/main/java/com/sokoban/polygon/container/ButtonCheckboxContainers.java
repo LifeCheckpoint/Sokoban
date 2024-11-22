@@ -36,4 +36,19 @@ public class ButtonCheckboxContainers {
         Image button = new ImageButtonContainer(gameMain).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
     }
+
+    /**
+     * 创建复选框装饰按钮
+     * @param gameMain 全局句柄
+     * @param internalpath 提示图像路径
+     * @param isChecked 是否选中
+     * @param isEnabled 是否启用
+     * @param buff 左右间距
+     * @param scaling 缩放大小
+     * @return CheckboxTextObject对象
+     */
+    public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff, float scaling) {
+        Image button = new ImageButtonContainer(gameMain, scaling).create(resourceEnum);
+        return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
+    }
 }
