@@ -128,7 +128,7 @@ public class GameWelcomeScene extends SokobanScene {
         exitButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Logger.info("GameWelcomeScene", "Game would exit");
+                Logger.info("GameWelcomeScene", "Game exit");
                 gameMain.exit();
             }
         });

@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.sokoban.CoreTest;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.core.settings.SettingManager;
 
 /** Launches Sokoban. */
@@ -38,10 +39,15 @@ public class Lwjgl3Launcher {
 
         // 启动对应前端
         if (runMode == 0 || runMode == 2) {
+            // GUI 测试 / 正常启动
+            Logger.debug("Lwjgl3Launcher", "Start mode: " + (runMode == 0 ? "Normal" : "GUI Test"));
+
             if (StartupHelper.startNewJvmIfRequired()) return;
             createApplication(new Main(runMode, settingManagerCore));
             
         } else if (runMode == 1) {
+            // 核心测试
+            Logger.debug("Main Thread", "Core Test");
             CoreTest.main();
         }
     }

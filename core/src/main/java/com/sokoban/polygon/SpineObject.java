@@ -193,6 +193,18 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
+     * 取消轨道动画
+     * @param trackIndex 动画轨道
+     */
+    public void clearAnimation(int trackIndex) {
+        try {
+            animationState.clearTrack(trackIndex);
+        } catch (Exception e) {
+            Logger.error("SpineObject", "Failed to clear animation: " + trackIndex + " - " + e.getMessage());
+        }
+    }
+
+    /**
      * 将动画保持停留在首帧
      * @param animationName 动画名称
      */

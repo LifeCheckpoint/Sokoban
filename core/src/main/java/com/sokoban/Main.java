@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
 import com.sokoban.scenes.TestScene;
+import com.sokoban.core.Logger;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.MusicManager;
@@ -66,12 +67,14 @@ public class Main extends ApplicationAdapter {
     // 主游戏创建
     @Override
     public void create() {
+        Logger.info("Main Thread", "Game start");
+
         apManager = new APManager(this);
         apManager.preloadAllAssets();
 
         musicManager = new MusicManager(this);
-
         screenManager = new ScreenManager();
+
         if (runMode == 0) screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
         if (runMode == 2) screenManager.setScreen(new LoadingScene(this, new TestScene(this), apManager));
     }

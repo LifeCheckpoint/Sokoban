@@ -111,7 +111,9 @@ public class APManager {
         BoxDarkBlueBack("spine/boxes/darkblue_pixel/darkblue_pixel.atlas|spine/boxes/darkblue_pixel/darkblue_pixel.json"),
         BoxDarkGrayBack("spine/boxes/darkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkgray_pixel/darkgray_pixel.json"),
         BoxGreenBox("spine/boxes/green_box/green_box.atlas|spine/boxes/green_box/green_box.json"),
-        BoxGreenBoxLight("spine/boxes/green_box_light/green_box_light.atlas|spine/boxes/green_box_light/green_box_light.json");
+        BoxBoxTarget("spine/boxes/box_target/box_target.atlas|spine/boxes/box_target/box_target.json"),
+        BoxGreenBoxLight("spine/boxes/green_box_light/green_box_light.atlas|spine/boxes/green_box_light/green_box_light.json"),
+        BoxPlayerTarget("spine/boxes/player_target/player_target.atlas|spine/boxes/player_target/player_target.json");
 
         private final String alias;
         SpineAssets(String alias) {this.alias = alias;}
@@ -157,6 +159,10 @@ public class APManager {
         for (SpineAssets spineAsset : SpineAssets.values()) {
             addAsset(TextureAtlas.class, spineAsset.getAliasAtlas());
         }
+
+        int preloadAssetsNum = ImageAssets.values().length + MusicAssets.values().length + SpineAssets.values().length;
+        int preserveAssetsNum = ShaderAssets.values().length;
+        Logger.info("AssetsPathManager", String.format("Preload %d Assets, preserve %d Assets", preloadAssetsNum, preserveAssetsNum));
     }
     
     /**

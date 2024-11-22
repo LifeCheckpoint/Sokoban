@@ -274,7 +274,7 @@ public class MapChooseScene extends SokobanScene {
             if (boxActor instanceof BoxObject) {
                 BoxObject boxObj = (BoxObject) boxActor;
 
-                // 碰撞普通箱子
+                // 碰撞普通绿色箱子
                 if (boxObj.getBoxType() == BoxType.GreenChest) {
                     if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
                         // 箱子变为激活状态
@@ -292,7 +292,7 @@ public class MapChooseScene extends SokobanScene {
                     }
                 }
 
-                // 离开激活箱子
+                // 离开绿色激活箱子
                 if (boxObj.getBoxType() == BoxType.GreenChestActive) {
                     if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
                         // 箱子变为普通状态
@@ -303,6 +303,24 @@ public class MapChooseScene extends SokobanScene {
                             timer.get(boxObj).cancel();
                             timer.remove(boxObj);
                         }
+                    }
+                }
+
+                // 碰撞箱子目标点
+                if (boxObj.getBoxType() == BoxType.BoxTarget) {
+                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
+                        // 箱子变为激活状态
+                        boxObj.setAnimation(1, "active", false);
+                        boxObj.setAnimationTotalTime(1, 0.3f);
+                    }
+                }
+
+                // 离开箱子目标点
+                if (boxObj.getBoxType() == BoxType.BoxTarget) {
+                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
+                        // 箱子目标点变为普通状态
+                        boxObj.setAnimation(1, "deactive", false);
+                        boxObj.setAnimationTotalTime(1, 0.5f);
                     }
                 }
             }
@@ -336,7 +354,7 @@ public class MapChooseScene extends SokobanScene {
             {10, 10}, {10, 18}, {11, 6}, {11, 7}
         });
         originLevel.gridMap.addLayer();
-        originLevel.gridMap.getTopLayer().addBox(BoxType.CornerRightDown, new int[][] {
+        originLevel.gridMap.getTopLayer().addBox(BoxType.BoxTarget, new int[][] {
             {0, 4}, {2, 16}, {4, 8}, {5, 15},
             {6, 17}, {7, 9}, {9, 14}, {10, 5},
             {10, 11}, {11, 19}
@@ -360,8 +378,9 @@ public class MapChooseScene extends SokobanScene {
         for (Actor boxActor : originLevel.gridMap.getAllActors()) {
             if (boxActor instanceof BoxObject) {
                 BoxObject boxObj = (BoxObject) boxActor;
-                // 为所有 GreenBox 添加碰撞检测
-                if (boxObj.getBoxType() == BoxType.GreenChest) {
+
+                // 为所有 GreenBox 与 BoxTarget 添加碰撞检测
+                if (boxObj.getBoxType() == BoxType.GreenChest ||boxObj.getBoxType() == BoxType.BoxTarget) {
                     playerOverlapManager.addSecondaryObject(boxObj);
                 }
 
@@ -371,6 +390,13 @@ public class MapChooseScene extends SokobanScene {
                     String BoxBlockTag = String.format("box[%.2f][%.2f]", boxObj.getX(), boxObj.getY());
                     float blockX = boxObj.getX() - 8f, blockY = boxObj.getY() - 4.5f;
                     accelerationManager.addBound(BoxBlockTag, blockX, blockX + boxObj.getSize(), blockY, blockY + boxObj.getSize());
+                }
+
+                // 为所有 BoxTarget 添加动画
+                if (boxObj.getBoxType() == BoxType.BoxTarget) {
+                    boxObj.setAnimation(0, "rotate", true);
+                    boxObj.setAnimationTotalTime(0, MathUtils.random(8f, 12f));
+                    boxObj.setFlipX(MathUtils.randomSign() > 0);
                 }
             }
         }

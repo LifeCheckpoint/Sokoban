@@ -1,0 +1,14 @@
+{"skeleton":{"images":"box_target/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"d","bone":"root","attachment":"d"},
+	{"name":"e","bone":"root","attachment":"e"}
+],
+"skins":{
+	"default":{
+		"e":{"e":{"x":64.5,"y":63.5,"width":43,"height":43}},
+		"d":{"d":{"x":64,"y":64,"width":112,"height":112}}
+	}
+},
+"animations":{"animation":{}}
+}

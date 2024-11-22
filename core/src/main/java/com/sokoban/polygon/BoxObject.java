@@ -5,6 +5,8 @@ import com.sokoban.manager.APManager.SpineAssets;
 
 /**
  * 盒子类，专用于盒子对象的显示
+ * <br><br>
+ * 目标点等对象在游戏前端属于盒子
  * @author Life_Checkpoint
  */
 public class BoxObject extends SpineObject {
@@ -19,7 +21,9 @@ public class BoxObject extends SpineObject {
         DarkGrayBack(SpineAssets.BoxDarkGrayBack),
         GreenChest(SpineAssets.BoxGreenBox),
         GreenChestActive(SpineAssets.BoxGreenBoxLight),
-        BlueChest(SpineAssets.BoxBlueBox);
+        BlueChest(SpineAssets.BoxBlueBox),
+        BoxTarget(SpineAssets.BoxBoxTarget),
+        PlayerTarget(SpineAssets.BoxPlayerTarget);
 
         private final SpineAssets asset;
         BoxType(SpineAssets asset) {this.asset = asset;}
@@ -43,6 +47,11 @@ public class BoxObject extends SpineObject {
         this.size = size;
     }
 
+    /**
+     * 重置箱子类型
+     * @param boxType 箱子类型
+     * @return
+     */
     public boolean resetBoxType(BoxType boxType) {
         boolean success = super.reset(gameMain, boxType.getBoxAsset());
         if (success) this.boxType = boxType;
