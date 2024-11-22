@@ -3,13 +3,13 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.polygon.PureCheckboxObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -140,7 +140,7 @@ public class CheckboxObject extends SokobanCombineObject {
     public PureCheckboxObject getCheckbox() {
         if (checkbox != null) return checkbox;
         else {
-            Gdx.app.error("CheckboxObject", "Checkbox hans't initalized.");
+            Logger.error("CheckboxObject", "Checkbox hans't initalized.");
             return null;
         }
     }
@@ -148,7 +148,7 @@ public class CheckboxObject extends SokobanCombineObject {
     public Image getCheckboxText() {
         if (checkboxText != null) return checkboxText;
         else {
-            Gdx.app.error("CheckboxObject", "CheckboxText hans't initalized.");
+            Logger.error("CheckboxObject", "CheckboxText hans't initalized.");
             return null;
         }
     }

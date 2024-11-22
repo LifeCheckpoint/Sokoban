@@ -1,5 +1,7 @@
 package com.sokoban;
 
+import com.sokoban.core.Logger;
+
 /**
  * <b>Sokoban 的后端测试</b>
  * <br><br>
@@ -7,7 +9,7 @@ package com.sokoban;
  */
 public class CoreTest {
     public static void main() {
-        System.out.println("Backend Test Started");
+        Logger.info("Backend Test start");
         // backend test
 
         

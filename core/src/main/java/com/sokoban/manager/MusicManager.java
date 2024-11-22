@@ -1,8 +1,8 @@
 package com.sokoban.manager;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class MusicManager {
 
     public void loadMusic(MusicAudio audioAlias, APManager.MusicAssets audioAssets) {
         if (musicMap.containsKey(audioAlias)) {
-            Gdx.app.log("MusicManager", "Music already loaded: " + audioAlias.toString());
+            Logger.warning("MusicManager", "Music already loaded: " + audioAlias.toString());
             return;
         }
         Music music = apManager.get(audioAssets);
@@ -59,7 +59,7 @@ public class MusicManager {
             currentMusic.setOnCompletionListener(music -> onMusicCompleted());
 
         } else {
-            Gdx.app.error("MusicManager", "Music not found: " + audioName);
+            Logger.error("MusicManager", "Music not found: " + audioName);
         }
     }
 
@@ -104,7 +104,7 @@ public class MusicManager {
      * @param volume 音量，介于 0~1
      */
     public void setVolume(float volume) {
-        if (volume < 0 || volume > 1) Gdx.app.error("MusicManager", String.format("Volumn is not in range. Expect (0, 1), get %.2f", volume));
+        if (volume < 0 || volume > 1) Logger.error("MusicManager", String.format("Volumn is not in range. Expect (0, 1), get %.2f", volume));
         this.volume = Math.max(0, Math.min(volume, 1));
         if (currentMusic != null) {
             currentMusic.setVolume(this.volume);

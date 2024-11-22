@@ -3,7 +3,7 @@ package com.sokoban.manager;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
+import com.sokoban.core.Logger;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.utils.MathUtilsEx;
@@ -130,7 +130,7 @@ public class AccelerationMovingManager {
      */
     public void addBound(Object tagObject, float left, float right, float down, float up) {
         if (taggedBound.containsKey(tagObject)) {
-            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is exists.", tagObject.toString()));
+            Logger.error("AccelerationMovingManager", String.format("The Tag Object %s is exists.", tagObject.toString()));
             return;
         }
         taggedBound.put(tagObject, new Rectangle(left, down, right - left, up - down));
@@ -142,7 +142,7 @@ public class AccelerationMovingManager {
      */
     public void removeBound(Object tagObject) {
         if (!taggedBound.containsKey(tagObject)) {
-            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
+            Logger.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
             return;
         }
         taggedBound.remove(tagObject);
@@ -158,7 +158,7 @@ public class AccelerationMovingManager {
      */
     public void resetBound(Object tagObject, float left, float right, float down, float up) {
         if (!taggedBound.containsKey(tagObject)) {
-            Gdx.app.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
+            Logger.error("AccelerationMovingManager", String.format("The Tag Object %s is not exists.", tagObject.toString()));
             return;
         }
         taggedBound.replace(tagObject, new Rectangle(left, down, right - left, up - down));

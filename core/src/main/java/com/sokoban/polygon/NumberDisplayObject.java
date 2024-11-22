@@ -1,7 +1,7 @@
 package com.sokoban.polygon;
 
-import com.badlogic.gdx.Gdx;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 
 /**
@@ -19,7 +19,7 @@ public class NumberDisplayObject extends SpineObject {
 
     public void setValue(int value) {
         if (value < 0 || value > 9) {
-            Gdx.app.error("NumbersDisplayObject", "Can not set a number not in 0~9");
+            Logger.error("NumbersDisplayObject", "Can not set a number not in 0~9");
             return;
         }
         this.value = value;

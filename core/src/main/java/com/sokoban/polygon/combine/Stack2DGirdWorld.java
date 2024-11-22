@@ -3,11 +3,11 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 
 /**
  * 多层堆叠的 GirdWorld，用于多层对象显示
@@ -98,7 +98,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      */
     public GirdWorld getLayer(int layer) {
         if (layer < 0 || layer >= stackGridWorld.size()) {
-            Gdx.app.error("Stack2DGridWorld", String.format("%d is not a valid layer, Expect (0, %d)", layer, stackGridWorld.size()));
+            Logger.error("Stack2DGridWorld", String.format("%d is not a valid layer, Expect (0, %d)", layer, stackGridWorld.size()));
             return new GirdWorld(gameMain, gridWidth, gridHeight, cellSize);
         }
 

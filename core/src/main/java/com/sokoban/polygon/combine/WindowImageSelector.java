@@ -3,13 +3,13 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
@@ -90,7 +90,7 @@ public class WindowImageSelector extends SokobanCombineObject {
      */
     private float getWindowTargetX(int index) {
         if (index < 0 || index >= windows.size()) {
-            Gdx.app.error("WindowImageSelector", String.format("Index %d out of range. Expect (0, %d)", index, windows.size()));
+            Logger.error("WindowImageSelector", String.format("Index %d out of range. Expect (0, %d)", index, windows.size()));
             return 0f;
         }
 
@@ -173,11 +173,9 @@ public class WindowImageSelector extends SokobanCombineObject {
      */
     public boolean setCurrentWindowIndex(int index) {
         if (index < 0) {
-            Gdx.app.error("WindowImageSelector", "The first window has been reached");
             return false;
         }
         if (index >= windows.size()) {
-            Gdx.app.error("WindowImageSelector", "The last window has been reached");
             return false;
         }
 

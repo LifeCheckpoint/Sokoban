@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.core.settings.GameSettings;
 import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
@@ -218,7 +219,7 @@ public class SettingScene extends SokobanScene {
     }
 
     private void saveSettings() {
-        Gdx.app.log("SettingScene", "settings would be saved.");
+        Logger.info("SettingScene", "settings would be saved.");
 
         HintMessageBox saveSettingsHintBox = new HintMessageBox(gameMain, "Settings saved.");
         saveSettingsHintBox.setPosition(8f, 0.5f);

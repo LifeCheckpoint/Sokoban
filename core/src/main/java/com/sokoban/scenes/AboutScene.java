@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
@@ -70,7 +71,7 @@ public class AboutScene extends SokobanScene {
             public void clicked(InputEvent event, float x, float y) {
                 clickLabelCount += 1;
                 if (clickLabelCount >= 10) {
-                    Gdx.app.log("AboutScene", "A Colorful eggs is trigged");
+                    Logger.info("AboutScene", "A Colorful eggs is trigged");
                     
                     HintMessageBox colorfulEggTriggedHintBox = new HintMessageBox(gameMain, "Something is trigged...");
                     colorfulEggTriggedHintBox.setPosition(8f, 0.5f);

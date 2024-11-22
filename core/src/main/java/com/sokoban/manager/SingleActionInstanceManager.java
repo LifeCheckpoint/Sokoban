@@ -3,11 +3,11 @@ package com.sokoban.manager;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.polygon.actioninterface.ActionInstanceReset;
 
 /**
@@ -65,7 +65,7 @@ public class SingleActionInstanceManager {
      */
     public void unlockActionState(Actor actor) {
         if (actor != null && actorState.containsKey(actor)) actorState.replace(actor, true);
-        else Gdx.app.log("SingleActionInstanceManager", "Object is null or not recorded.");
+        else Logger.warning("SingleActionInstanceManager", "Object is null or not recorded.");
     }
 
     /**

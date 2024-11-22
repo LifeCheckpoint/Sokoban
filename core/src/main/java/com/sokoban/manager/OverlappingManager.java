@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.utils.MathUtilsEx;
 
 /**
@@ -101,7 +101,7 @@ public class OverlappingManager {
         for (Actor secondaryObject : collisionSecondaryObject) {
             // 检查对象存在情况
             if (secondaryObject == null) {
-                Gdx.app.log("OverlappingManager", String.format("It exists an null object!"));
+                Logger.warning("OverlappingManager", String.format("It exists an null object!"));
                 continue;
             }
 
@@ -115,7 +115,7 @@ public class OverlappingManager {
                     collided = isOverlapCircle(collisionObject, secondaryObject);
                     break;
                 default:
-                    Gdx.app.error("OverlappingManager", String.format("%d is not a valid checking method", collisionMethod));
+                    Logger.error("OverlappingManager", String.format("%d is not a valid checking method", collisionMethod));
                     return new HashMap<>();
             }
 
@@ -168,7 +168,7 @@ public class OverlappingManager {
      */
     public OverlapStatue getActorOverlapState(Actor actor) {
         if (!collisionStatue.containsKey(actor)) {
-            Gdx.app.error("OverlappingManager", String.format("Object [%s] is not in checker.", actor.toString()));
+            Logger.error("OverlappingManager", String.format("Object [%s] is not in checker.", actor.toString()));
             return OverlapStatue.Disable;
         }
 

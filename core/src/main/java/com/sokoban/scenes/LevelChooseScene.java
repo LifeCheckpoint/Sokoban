@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
@@ -134,7 +135,7 @@ public class LevelChooseScene extends SokobanScene {
             case 2:
                 return Levels.Random;
             default:
-                Gdx.app.error("LevelChooseScene", String.format("%d is not a valid level index, return origin.", levelIndex));
+                Logger.error("LevelChooseScene", String.format("%d is not a valid level index, return origin.", levelIndex));
                 return Levels.Origin;
         }
     }

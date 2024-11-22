@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 
 /**
  * 统一资源管理器 AssetsPathManager
@@ -210,7 +211,7 @@ public class APManager {
                 } else if (resourceClass == TextureAtlas.class) {
                     assetManager.load(resourcePath, TextureAtlas.class);
                 } else {
-                    Gdx.app.log("AssetsPathManager", String.format("Unknow assets type: %s", resourceClass));
+                    Logger.error("AssetsPathManager", String.format("Unknow assets type: %s", resourceClass));
                 }
             }
         }
@@ -261,7 +262,7 @@ public class APManager {
     public <T> T get(String resourcePath, Class<T> resourceClass) {
         // 未实际加载的资源进行同步加载
         if (!assetManager.isLoaded(resourcePath)) {
-            Gdx.app.log("AssetsPathManager", resourcePath + " hasn't loaded by AssetManager. Load synchronously");
+            Logger.warning("AssetsPathManager", resourcePath + " hasn't loaded by AssetManager. Load synchronously");
             assetManager.load(resourcePath, resourceClass);
             assetManager.finishLoading();
         }

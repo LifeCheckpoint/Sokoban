@@ -3,11 +3,11 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.FontManager;
 import com.sokoban.manager.APManager.ImageAssets;
@@ -111,7 +111,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
         if (k == 0) return 0f;
 
         if (k < 0 || k > charImageObject.size()) {
-            Gdx.app.error("ImageFontStringObject", String.format("%d is not a valid subscript. Expect (0, %d)", k, charImageObject.size()));
+            Logger.error("ImageFontStringObject", String.format("%d is not a valid subscript. Expect (0, %d)", k, charImageObject.size()));
             return 0f;
         }
         

@@ -2,8 +2,8 @@ package com.sokoban.manager;
 
 import java.util.Stack;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.sokoban.core.Logger;
 import com.sokoban.scenes.SokobanScene;
 
 /**
@@ -58,7 +58,7 @@ public class ScreenManager {
      */
     public void returnPreviousScreen() {
         if (screenStack.isEmpty() || currentScreen == null) {
-            Gdx.app.error("ScreenManager", "The Previous / Current Screen is not exists");
+            Logger.error("ScreenManager", "The Previous / Current Screen is not exists");
             return;
         }
         currentScreen.hide();

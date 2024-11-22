@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
@@ -127,7 +128,7 @@ public class GameWelcomeScene extends SokobanScene {
         exitButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("GameWelcomeScene", "Game would exit");
+                Logger.info("GameWelcomeScene", "Game would exit");
                 gameMain.exit();
             }
         });
@@ -264,7 +265,7 @@ public class GameWelcomeScene extends SokobanScene {
         ShaderProgram.pedantic = false;
         blurShader = gameMain.getAssetsPathManager().get(APManager.ShaderAssets.Blur);
         if (!blurShader.isCompiled()) {
-            Gdx.app.error("Shader", "Compilation failed:\n" + blurShader.getLog());
+            Logger.error("Shader", "Compilation failed:\n" + blurShader.getLog());
             return;
         }
     }
@@ -346,7 +347,6 @@ public class GameWelcomeScene extends SokobanScene {
 
     // 游戏正式开始
     public void startGame() {
-        Gdx.app.log("GameWelcomeScene", "Game Start");
         gameMain.getScreenManager().setScreen(new LevelChooseScene(gameMain));
     }
 }

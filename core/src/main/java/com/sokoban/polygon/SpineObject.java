@@ -1,6 +1,5 @@
 package com.sokoban.polygon;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 
 /**
@@ -187,7 +187,7 @@ public class SpineObject extends Actor implements Disposable {
         try {
             return animationState.setAnimation(trackIndex, animationName, loop);
         } catch (Exception e) {
-            Gdx.app.error("SpineObject", "Failed to set animation: " + animationName + " - " + e.getMessage());
+            Logger.error("SpineObject", "Failed to set animation: " + animationName + " - " + e.getMessage());
             return null;
         }
     }
@@ -260,7 +260,7 @@ public class SpineObject extends Actor implements Disposable {
         try {
             return animationState.addAnimation(trackIndex, animationName, loop, delay);
         } catch (Exception e) {
-            Gdx.app.error("SpineObject", "Failed to add animation: " + animationName + " - " + e.getMessage());
+            Logger.error("SpineObject", "Failed to add animation: " + animationName + " - " + e.getMessage());
             return null;
         }
     }
@@ -341,7 +341,7 @@ public class SpineObject extends Actor implements Disposable {
             }
             
         } catch (Exception e) {
-            Gdx.app.error("SpineObject", "Failed to draw skeleton: " + e.getMessage());
+            Logger.error("SpineObject", "Failed to draw skeleton: " + e.getMessage());
         } finally {
             batch.end();
             // 恢复父级batch的绘制
@@ -370,7 +370,7 @@ public class SpineObject extends Actor implements Disposable {
                 currentEntry.setTimeScale(timeScale);
             }
         }
-        else Gdx.app.error("SpineObject", "No animation found on track index: " + trackIndex);
+        else Logger.error("SpineObject", "No animation found on track index: " + trackIndex);
     }
 
     /**
@@ -450,7 +450,7 @@ public class SpineObject extends Actor implements Disposable {
             
             return true;
         } catch (Exception e) {
-            Gdx.app.error("SpineObject", "Failed to reset spine object: " + e.getMessage());
+            Logger.error("SpineObject", "Failed to reset spine object: " + e.getMessage());
             return false;
         }
     }

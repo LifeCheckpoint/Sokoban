@@ -2,8 +2,8 @@ package com.sokoban.core.settings;
 
 import java.io.File;
 
-import com.badlogic.gdx.Gdx;
 import com.sokoban.core.JsonManager;
+import com.sokoban.core.Logger;
 
 public class SettingManager {
     private String settingsFilePath;
@@ -15,11 +15,11 @@ public class SettingManager {
     }
 
     public void readSettings() {
-        // TODO
+        // TODO 补全读取逻辑
         try {
             gameSettings = new JsonManager().loadEncryptedJson(settingsFilePath, GameSettings.class);
         } catch (Exception e) {
-            Gdx.app.error("SettingManager", "can't load / create setting files. " + e);
+            Logger.warning("SettingManager", "can't load / create setting files. " + e);
             System.exit(-1);
         }
     }
@@ -34,7 +34,7 @@ public class SettingManager {
             new JsonManager().saveEncryptedJson(settingsFilePath, gameSettings);
             return true;
         } catch (Exception e) {
-            Gdx.app.error("SettingManager", "can't create setting files. " + e);
+            Logger.error("SettingManager", "can't create setting files. " + e);
             return false;
         }
     
@@ -47,7 +47,7 @@ public class SettingManager {
     public void setSettingsFilePath(String settingsFilePath) {
         // TODO
         this.settingsFilePath = settingsFilePath;
-        if (!new File(settingsFilePath).exists()) Gdx.app.log("SettingManager", "Setting file " + settingsFilePath + "is not exists.");
+        if (!new File(settingsFilePath).exists()) Logger.warning("SettingManager", "Setting file " + settingsFilePath + "is not exists.");
     }
 }
 

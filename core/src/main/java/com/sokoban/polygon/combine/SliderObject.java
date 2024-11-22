@@ -3,11 +3,11 @@ package com.sokoban.polygon.combine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.polygon.PureSliderObject;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
@@ -64,7 +64,7 @@ public class SliderObject extends SokobanCombineObject{
         
         // 异常值处理
         if (originalMapMinValue > initialValue || originalMapMaxValue < initialValue) {
-            Gdx.app.error("SliderObject", 
+            Logger.error("SliderObject", 
                             String.format("The initial value is out of bound! Expect (%.2f, %.2f), get %.2f", originalMapMinValue, originalMapMaxValue, initialValue));
             initialValue = originalMapMinValue > initialValue ? originalMapMinValue : originalMapMaxValue;
         }
