@@ -68,7 +68,11 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
     @Override
     public void hide() {}
 
-    // 可在子类中覆盖并在初始化前调用 super.init() 确保基本初始化
+    /** 
+     * 屏幕初始化
+     * <br><br>
+     * 注意，<b>调用 super.init() 确保超类初始化</b>
+     */
     protected void init() {
         viewport = new FitViewport(16, 9); // 初始化视口
         stage = new Stage(viewport);       // 初始化舞台
@@ -76,16 +80,22 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
 
     /**
      * 抽象输入调用，子类必须实现
+     * <br><br>
+     * input 方法仅会执行<b>一次</b>
      */
     public abstract void input();
 
     /**
      * 抽象渲染调用，子类必须实现
+     * <br><br>
+     * 方法会执行<b>多次</b>以确保帧率同步
      */
     public abstract void draw(float delta);
 
     /**
      * 抽象逻辑调用，子类必须实现
+     * <br><br>
+     * logic 方法仅会执行<b>一次</b>
      */
     public abstract void logic(float delta);
 
