@@ -93,6 +93,15 @@ Any additional features beyond the basic requirements described above will earn 
 
 ## Log 更新日志
 
+#### 0.2.3 update
+
+1. 新增体积阻挡机制
+2. 新增主游戏界面
+3. 优化了代码逻辑
+4. 修复画面闪烁的问题
+5. 修复地图进入崩溃的问题
+6. 修复玩家移动异常的问题
+
 #### 0.2.2 update
 
 1. 新增箱子素材

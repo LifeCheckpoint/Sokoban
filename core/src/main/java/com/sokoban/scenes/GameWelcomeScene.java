@@ -188,7 +188,6 @@ public class GameWelcomeScene extends SokobanScene {
 
     /** 
      * 随机交换相邻的两个矩形
-     * 虽然有小 BUG 但是懒得修
      */
     public void swapRandomAdjacentSquares() {
         final int[][] deltaPos = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

@@ -313,6 +313,7 @@ public class MapChooseScene extends SokobanScene {
                     }
                 }
 
+                // FIXME 碰撞检测变为箱子右侧，坐标转换失误？
                 // 碰撞箱子目标点
                 if (boxObj.getBoxType() == BoxType.BoxTarget) {
                     if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
