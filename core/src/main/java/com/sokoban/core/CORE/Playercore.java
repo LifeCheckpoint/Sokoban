@@ -1,8 +1,7 @@
 package com.sokoban.core.CORE;
 
-import javax.swing.*;
-import java.lang.reflect.Type;
 import com.sokoban.core.CORE.TestMap;
+
 public class Playercore {
 
     public void moveUp(Things player) {
