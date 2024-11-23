@@ -63,7 +63,7 @@ public class JsonManager {
 
             
         } catch (Exception e) {
-            throw new Exception("保存加密 JSON 失败: " + e.getMessage(), e);
+            throw new Exception("Cannot save Json file " + filePath + " because" + e.getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class JsonManager {
             if (fileContent.indexOf("ENC", 0) == 0) {
                 String[] parts = fileContent.replaceFirst("ENC", "").split(":");
                 if (parts.length != 2) {
-                    throw new Exception("文件格式无效，无法解析");
+                    throw new Exception("Format of " + filePath + " is invalid.");
                 }
 
                 String encryptedJson = new String(Base64.getDecoder().decode(parts[0]), StandardCharsets.UTF_8);
@@ -89,7 +89,7 @@ public class JsonManager {
                 // 生成解密后 JSON 的 SHA-256 校验值并验证
                 String currentHash = generateSHA256Hash(decryptedJson);
                 if (!currentHash.equals(savedHash)) {
-                    throw new Exception("文件被篡改，校验失败");
+                    throw new Exception("Hash of " + filePath + " is not equal.");
                 }
 
                 // 将 JSON 字符串转换为对象
@@ -99,7 +99,7 @@ public class JsonManager {
             }
             
         } catch (Exception e) {
-            throw new Exception("加载加密 JSON 失败: " + e.getMessage(), e);
+            throw new Exception("Cannot read Json file " + filePath + " Because " + e.getMessage(), e);
         }
     }
 
