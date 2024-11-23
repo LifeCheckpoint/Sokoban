@@ -1,11 +1,7 @@
 package com.sokoban.core.user;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sokoban.core.Logger;
 
 /**
  * 用户信息类
@@ -16,47 +12,17 @@ public class UserInfo {
     private String userID;
     private String userPasswordHash;
     private Boolean rememberPassword;
-    private List<SaveArchiveInfo> saveArhives;
+    private List<SaveArchiveInfo> saveArchives;
 
     public UserInfo() {
-        userID = "";
-        userPasswordHash = "";
-        rememberPassword = false;
-        saveArhives = new ArrayList<>();
+        saveArchives = new ArrayList<>();
     }
 
     public UserInfo(String userID, String userPasswordHash, boolean rememberPassword) {
         this.userID = userID;
         this.userPasswordHash = userPasswordHash;
         this.rememberPassword = rememberPassword;
-        this.saveArhives = new ArrayList<>();
-    }
-
-    public String calculatePasswordHash(String password) {
-        if (password == null || password.isEmpty()) {
-            Logger.error("UserInfo", "Password cannot be null or empty");
-        }
-
-        try {
-            // 创建 SHA-256 消息摘要实例
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-
-            // 将字符串转换为字节数组并计算哈希值
-            byte[] hashBytes = digest.digest(password.getBytes());
-
-            // 将字节数组转换为十六进制字符串
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error calculating SHA-256 hash", e);
-        }
+        this.saveArchives = new ArrayList<>();
     }
 
     public String getUserID() {
@@ -77,11 +43,24 @@ public class UserInfo {
     public void setRememberPassword(Boolean rememberPassword) {
         this.rememberPassword = rememberPassword;
     }
-    public List<SaveArchiveInfo> getSaveArhives() {
-        return saveArhives;
+    public List<SaveArchiveInfo> getSaveArchives() {
+        return saveArchives;
     }
-    public void setSaveArhives(List<SaveArchiveInfo> saveArhives) {
-        this.saveArhives = saveArhives;
+    public void setSaveArchives(List<SaveArchiveInfo> saveArhives) {
+        this.saveArchives = saveArhives;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof UserInfo) {
+            UserInfo otherUserInfo = (UserInfo) obj;
+            if (!userID.equals(otherUserInfo.userID)) return false;
+            if (!userPasswordHash.equals(otherUserInfo.getUserPasswordHash())) return false;
+            if (!rememberPassword.equals(otherUserInfo.rememberPassword)) return false;
+            if (!saveArchives.equals(otherUserInfo.getSaveArchives())) return false;
+
+            return true;
+        } else return false;
     }
 
 }

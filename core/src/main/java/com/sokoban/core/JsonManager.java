@@ -35,15 +35,12 @@ public class JsonManager {
     // 从字符串生成 SecretKey，长度为 16 字节
     private SecretKey generateSecretKey(String key) {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        if (keyBytes.length < AES_KEY_SIZE) {
-            byte[] paddedKey = new byte[AES_KEY_SIZE];
-            System.arraycopy(keyBytes, 0, paddedKey, 0, keyBytes.length);
-            return new SecretKeySpec(paddedKey, ALGORITHM);
-        } else if (keyBytes.length > AES_KEY_SIZE) {
-            return new SecretKeySpec(keyBytes, 0, AES_KEY_SIZE, ALGORITHM);
-        }
-        return new SecretKeySpec(keyBytes, ALGORITHM);
+        byte[] finalKey = new byte[AES_KEY_SIZE];
+        // 填充至 16 字节，超长则截取前 16 字节
+        System.arraycopy(keyBytes, 0, finalKey, 0, Math.min(keyBytes.length, AES_KEY_SIZE));
+        return new SecretKeySpec(finalKey, ALGORITHM);
     }
+    
 
     // 加密并保存 JSON 数据到文件
     public void saveEncryptedJson(String filePath, Object data) throws Exception {
