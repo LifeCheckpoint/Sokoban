@@ -22,6 +22,13 @@ public class TestMap {
         Things PosOfBox1 = new Things(new Pos(3,2,0),30);
         Things PosOfBox2 = new Things(new Pos(2,4,0),30);
 
+        Things[] things = new Things[5];
+        things[0] = player;
+        things[1] = box1;
+        things[2] = box2;
+        things[3] = PosOfBox1;
+        things[4] = PosOfBox2;
+
 
     }
 }
