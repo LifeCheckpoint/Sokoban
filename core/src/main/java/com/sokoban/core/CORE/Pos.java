@@ -54,13 +54,12 @@ public class Pos {
         // 如果 obj 类型确实为 Pos 类
         if (obj instanceof Pos) {
             // 将类型对象转换为 Pos 类
-            Pos anotherPos = (Pos) obj; 
+            Pos anotherPos = (Pos) obj;
 
             if (x != anotherPos.x) return false;
             if (y != anotherPos.y) return false;
             if (z != anotherPos.z) return false;
             return true;
-
         } else {
             // 如果类型不是 Pos 类，这两个对象肯定不一样
             return false;
