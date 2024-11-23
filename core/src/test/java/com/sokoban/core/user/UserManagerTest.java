@@ -16,27 +16,19 @@ public class UserManagerTest {
     @BeforeClass
     public void setUp() {
         // 如果目录存在则删除
-        File testDir = new File(TEST_USER_DIR);
+        File testDir = new File("./test-files/bin/usr");
+
         if (testDir.exists()) {
-            deleteDirectory(testDir);
+            File[] files = testDir.listFiles();
+            for (File file : files) {
+                file.delete();
+            }
+
+            testDir.delete();
         }
         
         // 初始化
         userManager = new UserManager(TEST_USER_DIR);
-    }
-
-    private void deleteDirectory(File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    deleteDirectory(file);
-                } else {
-                    file.delete();
-                }
-            }
-        }
-        directory.delete();
     }
 
     @Test

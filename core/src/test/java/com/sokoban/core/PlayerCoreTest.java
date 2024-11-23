@@ -8,6 +8,10 @@ import com.sokoban.core.CORE.Playercore;
 import com.sokoban.core.CORE.Pos;
 import com.sokoban.core.CORE.Things;
 
+/**
+ * 测试玩家简单移动是否正确
+ * @author ChatGPT
+ */
 public class PlayerCoreTest {
 
     private Playercore playercore;

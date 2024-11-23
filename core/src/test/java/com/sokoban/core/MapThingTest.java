@@ -8,6 +8,10 @@ import com.sokoban.core.CORE.Pos;
 import com.sokoban.core.CORE.Things;
 import com.sokoban.core.CORE.ObjectType;
 
+/**
+ * 测试地图映射是否正常
+ * @author ChatGPT
+ */
 public class MapThingTest {
     @Test
     public void testThingsConstructor() {

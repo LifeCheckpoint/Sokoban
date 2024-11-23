@@ -4,13 +4,29 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 普通测试用例的地图加载器<br><br>
- * <b>地图格式</b><br><br>
- * ————————————<br><br>
- * 地图<br><br>操作<br><br>...<br><br>操作<br><br>地图<br><br>
- * ————————————<br><br>
+ * 普通测试用例的地图加载器
+ * <br><br>
+ * <b>地图格式</b>
+ * <br><br>
+ * ————————————
+ * <br><br>
+ * 地图
+ * <br><br>
+ * 操作
+ * <br><br>
+ * ...
+ * <br><br>
+ * 操作
+ * <br><br>
+ * 地图
+ * <br><br>
+ * ————————————
+ * <br><br>
  * 地图为二维字串，使用符号表进行编制，后续将会映射实际逻辑中的数字
+ * <br><br>
+ * 暂时未启用
  * @author Life_Checkpoint
+ * @author Claude
  */
 public class MapLoader {
 
@@ -131,7 +147,7 @@ public class MapLoader {
             // 复制实际字符
             System.arraycopy(lineChars, 0, map[i], 0, lineChars.length);
             // 用空格填充剩余部分
-            for (int j = lineChars.length; j < maxWidth; j++) map[i][j] = MapSignMapping.EMPTY_C;
+            for (int j = lineChars.length; j < maxWidth; j++) map[i][j] = MapSignMappingTest.EMPTY_C;
         }
 
         return map;
@@ -153,19 +169,19 @@ public class MapLoader {
 
                 // 匹配目标，有些目标有多种匹配
                 switch (cell) {
-                    case MapSignMapping.PLAYER_C:
-                    case MapSignMapping.PLAYER_ON_TARGET_C:
+                    case MapSignMappingTest.PLAYER_C:
+                    case MapSignMappingTest.PLAYER_ON_TARGET_C:
                         playerCount++;
                         break;
-                    case MapSignMapping.BOX_C:
-                    case MapSignMapping.BOX_ON_TARGET_C:
+                    case MapSignMappingTest.BOX_C:
+                    case MapSignMappingTest.BOX_ON_TARGET_C:
                         boxCount++;
                         break;
-                    case MapSignMapping.TARGET_C:
+                    case MapSignMappingTest.TARGET_C:
                         targetCount++;
                         break;
-                    case MapSignMapping.WALL_C:
-                    case MapSignMapping.EMPTY_C:
+                    case MapSignMappingTest.WALL_C:
+                    case MapSignMappingTest.EMPTY_C:
                         break;
                     default:
                         throw new InvalidMapException("Invalid character in map: " + cell);
@@ -180,7 +196,7 @@ public class MapLoader {
         if (boxCount == 0) throw new InvalidMapException("No boxes in map");
 
         // 箱子目标数对应检查
-        int targetNumber = targetCount + countCharInMap(map, MapSignMapping.BOX_ON_TARGET_C) + countCharInMap(map, MapSignMapping.PLAYER_ON_TARGET_C);
+        int targetNumber = targetCount + countCharInMap(map, MapSignMappingTest.BOX_ON_TARGET_C) + countCharInMap(map, MapSignMappingTest.PLAYER_ON_TARGET_C);
         if (targetNumber != boxCount) throw new InvalidMapException("Mismatch between box count and target count");
     }
 
@@ -212,16 +228,16 @@ public class MapLoader {
 
         for (String moveStr : moveStrs) {
             c = moveStr.toCharArray()[0];
-            if (!MapSignMapping.isValidMoveChar(c)) throw new InvalidMapException("Invalid move character: " + c);
+            if (!MapSignMappingTest.isValidMoveChar(c)) throw new InvalidMapException("Invalid move character: " + c);
 
             switch (c) {
-                case MapSignMapping.UP_C:
+                case MapSignMappingTest.UP_C:
                     moves.add(new Move(0, -1));
-                case MapSignMapping.DOWN_C:
+                case MapSignMappingTest.DOWN_C:
                     moves.add(new Move(0, 1));
-                case MapSignMapping.LEFT_C:
+                case MapSignMappingTest.LEFT_C:
                     moves.add(new Move(-1, 0));
-                case MapSignMapping.RIGHT_C:
+                case MapSignMappingTest.RIGHT_C:
                     moves.add(new Move(1, 0));
             }
         }
@@ -241,7 +257,7 @@ public class MapLoader {
         // 允许空行
         if (line.isEmpty()) return true;
         
-        return line.chars().allMatch(ch -> MapSignMapping.isValidMapChar((char) ch));
+        return line.chars().allMatch(ch -> MapSignMappingTest.isValidMapChar((char) ch));
     }
 
     /**

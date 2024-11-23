@@ -3,6 +3,10 @@ package com.sokoban.polygon.combine;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * 数字显示器功能测试
+ * @author Life_Checkpoint
+ */
 public class SliderObjectTest {
     
     /**

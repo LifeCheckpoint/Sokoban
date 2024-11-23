@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * 测试加解密 Json 文件数据模块功能
+ * @author Claude
+ */
 public class JsonManagerTest {
 
     /**

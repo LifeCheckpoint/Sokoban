@@ -1,9 +1,10 @@
 package com.sokoban;
 
 /**
- * 地图符号字串与整数的映射类
+ * 地图符号字串与整数的映射类测试
+ * 暂时还没启用
  */
-public class MapSignMapping {
+public class MapSignMappingTest {
     // 地图元素字串常量
     public static final char WALL_C = '#';
     public static final char PLAYER_C = 'P';

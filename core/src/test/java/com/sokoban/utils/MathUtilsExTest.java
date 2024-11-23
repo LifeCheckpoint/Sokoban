@@ -7,6 +7,11 @@ import com.sokoban.manager.AccelerationMovingManager.Direction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * 测试数学类是否可以正确计算
+ * @author Life_Checkpoint
+ * @author ChatGPT
+ */
 public class MathUtilsExTest {
 
     @Test
