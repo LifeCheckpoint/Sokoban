@@ -101,7 +101,7 @@ public class Playercore {
                 if (ifmoveUp(player, map)) {
                     Pos position1 = new Pos(position.getX() - 1, position.getY());
                     for (int i = 0; i < things.length; i++) {
-                        if (position1 == things[i].getPosition()) {
+                        if (position1.equals(things[i].getPosition())) {
                             moveUp(things[i]);
                         }
                     }
@@ -123,7 +123,7 @@ public class Playercore {
                 if (ifmoveDown(player, map)) {
                     Pos position1 = new Pos(position.getX() + 1, position.getY());
                     for (int i = 0; i < things.length; i++) {
-                        if (position1 == things[i].getPosition()) {
+                        if (position1.equals(things[i].getPosition())) {
                             moveDown(things[i]);
                         }
                     }
@@ -145,7 +145,7 @@ public class Playercore {
                 if (ifmoveLeft(player, map)) {
                     Pos position1 = new Pos(position.getX(), position.getY() - 1);
                     for (int i = 0; i < things.length; i++) {
-                        if (position1 == things[i].getPosition()) {
+                        if (position1.equals(things[i].getPosition())) {
                             moveLeft(things[i]);
                         }
                     }
@@ -167,7 +167,7 @@ public class Playercore {
                 if (ifmoveRight(player, map)) {
                     Pos position1 = new Pos(position.getX(), position.getY() + 1);
                     for (int i = 0; i < things.length; i++) {
-                        if (position1 == things[i].getPosition()) {
+                        if (position1.equals(things[i].getPosition())) {
                             moveRight(things[i]);
                         }
                     }
@@ -180,7 +180,4 @@ public class Playercore {
             }
         }
     }
-
-    
-
 }
