@@ -16,16 +16,19 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.CORE.GameParams;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.OverlappingManager;
+import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.OverlappingManager.OverlapStatue;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.actioninterface.ClockEndCallback;
+import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -41,7 +44,10 @@ public class MapChooseScene extends SokobanScene {
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
     private OverlappingManager playerOverlapManager;
-    public Map<Actor, TimerClock> timer;
+    private Image racingModeButton;
+    private CheckboxObject racingModeCheckbox;
+    private GameParams gameParams = new GameParams();
+    private Map<Actor, TimerClock> timer;
 
     private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
 
@@ -127,6 +133,7 @@ public class MapChooseScene extends SokobanScene {
         
     }
 
+    // FIXME 快速退出会出现闪动
     /**
      * 返回按钮触发返回上一场景
      */
@@ -172,7 +179,7 @@ public class MapChooseScene extends SokobanScene {
             Actions.delay(0.5f),
             // 进入游戏界面
             // TODO map 选择
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level, gameParams)))
         ));
     }
 
@@ -371,9 +378,25 @@ public class MapChooseScene extends SokobanScene {
         });
 
         originLevel.gridMap.setPosition(SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER);
-        // originLevel.gridMap.getLayer(1).getAllActors().forEach(actor -> actor.setZIndex(3));
-        // originLevel.gridMap.getLayer(0).getAllActors().forEach(actor -> actor.setZIndex(4));
         originLevel.gridMap.addActorsToStage(stage);
+
+        // 添加竞速复选框
+        racingModeButton = new ImageButtonContainer(gameMain).create(ImageAssets.RacingModeButton);
+        racingModeCheckbox = new CheckboxObject(gameMain, racingModeButton, false, true);
+        racingModeCheckbox.setCheckboxType(true);
+        racingModeCheckbox.setPosition(14f, 8f);
+        racingModeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameParams.racing = racingModeCheckbox.getCheckbox().getChecked();
+                // 提示
+                HintMessageBox msgBox = new HintMessageBox(gameMain, "Racing Mode " + (gameParams.racing ? "On" : "Off"));
+                msgBox.setPosition(racingModeButton.getX() + racingModeCheckbox.getWidth() / 2, racingModeCheckbox.getY() - 1f);
+                addCombinedObjectToStage(msgBox);
+            }
+        });
+
+        racingModeCheckbox.addActorsToStage(stage);
 
         for (Actor boxActor : originLevel.gridMap.getAllActors()) {
             if (boxActor instanceof BoxObject) {

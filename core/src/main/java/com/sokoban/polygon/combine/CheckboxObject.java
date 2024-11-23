@@ -16,6 +16,8 @@ import com.sokoban.polygon.container.ImageButtonContainer;
 
 /**
  * 带 Image 文本的复选框类
+ * <br><br>
+ * 由于事件队列的特性，可以保证新加入的复选框读取事件一定会读取到复选框改变过后的取值
  * @author Life_Checkpoint
  */
 public class CheckboxObject extends SokobanCombineObject {

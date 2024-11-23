@@ -27,7 +27,7 @@ public class APManager {
     private static boolean usingMipMap = true;
 
     AssetManager assetManager = new AssetManager();
-    // 资源类型-路径映射表
+    /** 资源类型-路径映射表 */
     private Map<Class<?>, List<String>> assetsMap = new HashMap<>();
 
     /**
@@ -65,8 +65,9 @@ public class APManager {
         Mipmap("img/button/mipmap.png"),
         MSAA("img/button/msaa.png"),
         MusicVolume("img/music_volume.png"),
-        PlayerNormal("img/player_normal.png"),
+        RacingModeButton("img/button/racing_mode.png"),
         RememberPasswordButton("img/button/remember_password.png"),
+        RegisterButton("img/button/register.png"),
         RightArrowButton("img/button/right_arrow.png"),
         RightSquareArrow("img/button/right_square_arrow.png"),
         SaveButton("img/button/save.png"),

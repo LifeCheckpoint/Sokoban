@@ -3,6 +3,7 @@ package com.sokoban.scenes;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.core.Logger;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.WhiteProgressBar;
@@ -74,7 +75,12 @@ public class LoadingScene extends SokobanScene {
     @Override
     public void logic(float delta) {
         // 加载资源，并在所有资源加载完成后，切换到目标界面
-        if (assetsPathManager.update()) gameMain.getScreenManager().setScreenWithoutSaving(targetScreen);
+        try {
+            if (assetsPathManager.update()) gameMain.getScreenManager().setScreenWithoutSaving(targetScreen);
+        } catch (Exception e) {
+            Logger.error("LoadingScene", "Oops... It seems some assets dosen't read correctly: " + e.getMessage());
+            Logger.error("LoadingScene", "Game will continue to load but the crash could happen unpredictablly");
+        }
     }
 
     @Override

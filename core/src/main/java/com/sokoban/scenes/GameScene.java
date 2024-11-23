@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.CORE.GameParams;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
@@ -28,6 +29,7 @@ public class GameScene extends SokobanScene {
     // 状态
     private Levels level;
     private boolean isInEscapeMenu;
+    private GameParams gameParams;
 
     // 功能增强
     private BackgroundGrayParticleManager bgParticle;
@@ -53,9 +55,10 @@ public class GameScene extends SokobanScene {
     private final float ESCAPE_MENU_BUTTON_ALIGN_X = 13f;
     private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 3.5f;
 
-    public GameScene(Main gameMain, Levels levelEnum) {
+    public GameScene(Main gameMain, Levels levelEnum, GameParams gameParams) {
         super(gameMain);
         this.level = levelEnum;
+        this.gameParams = gameParams;
     }
 
     // 初始化游戏屏幕
@@ -84,6 +87,11 @@ public class GameScene extends SokobanScene {
 
         // 初始化退出菜单
         initEscapeMenu();
+
+        // 如果竞速，则开启计时与计步
+        if (gameParams.racing) {
+            // TODO
+        }
 
         gridWorld.addActorsToStage(stage);
         stage.addActor(actorHelper);
