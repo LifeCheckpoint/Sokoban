@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -29,6 +30,7 @@ import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.MusicManager.MusicAudio;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
 import com.sokoban.utils.ActionUtils;
 
@@ -67,7 +69,8 @@ public class GameWelcomeScene extends SokobanScene {
     private CheckboxObject aboutButton;
     private CheckboxObject exitButton;
     private CheckboxObject settingsButton;
-    private CheckboxObject logInOutButton;
+    private CheckboxObject logInButton;
+    private CheckboxObject logOutButton;
 
     // 用户信息
     private UserInfo currentUserInfo;
@@ -103,9 +106,13 @@ public class GameWelcomeScene extends SokobanScene {
         startGameButton.setPosition(1f, 3.2f);
         startGameButton.setCheckboxType(false);
         
-        logInOutButton = buttonContainer.create(gameMain, currentUserInfo.isGuest() ? ImageAssets.LoginButton: ImageAssets.LogOutButton, false, true, 0.1f);
-        logInOutButton.setPosition(1f, 2.2f);
-        logInOutButton.setCheckboxType(false);
+        logInButton = buttonContainer.create(gameMain, ImageAssets.LoginButton, false, true, 0.1f);
+        logInButton.setPosition(1f, 2.2f);
+        logInButton.setCheckboxType(false);
+
+        logOutButton = buttonContainer.create(gameMain, ImageAssets.LogOutButton, false, true, 0.1f);
+        logOutButton.setPosition(1f, 2.2f);
+        logOutButton.setCheckboxType(false);
 
         aboutButton = buttonContainer.create(gameMain, APManager.ImageAssets.AboutButton, false, true, 0.1f);
         aboutButton.setPosition(1f, 1.4f);
@@ -152,11 +159,20 @@ public class GameWelcomeScene extends SokobanScene {
             }
         });
 
-        // 登录 / 登出按钮监听
-        logInOutButton.getCheckboxText().addListener(new ClickListener() {
+        // 登录按钮监听
+        logInButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameMain.getScreenManager().setScreen(new LoginScene(gameMain));
+                gameMain.getScreenManager().setScreen(new LoginScene(gameMain, GameWelcomeScene.this));
+            }
+        });
+
+        // 登出按钮监听
+        logOutButton.getCheckboxText().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // 切换回访客账户
+                setCurrentUser(new UserInfo());
             }
         });
 
@@ -200,10 +216,11 @@ public class GameWelcomeScene extends SokobanScene {
         aboutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         exitButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         settingsButton.getAllActors().forEach(ActionUtils::FadeInEffect);
-        logInOutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
+        logInButton.getAllActors().forEach(ActionUtils::FadeInEffect);
 
-        // 添加 UI
-        addCombinedObjectToStage(startGameButton, aboutButton, exitButton, settingsButton, logInOutButton);
+        // 添加按钮
+        // logIn 与 logOut 将互相切换
+        addCombinedObjectToStage(startGameButton, aboutButton, exitButton, settingsButton, logInButton);
     }
 
     /** 
@@ -247,16 +264,39 @@ public class GameWelcomeScene extends SokobanScene {
         // 缓动，动画管理防止冲突
         SAIManager.executeAction(square1, Actions.moveTo(x2, y2, backgroundMoveDuration, Interpolation.sine));
         SAIManager.executeAction(square2, Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
+    }
 
-        // square1.addAction(Actions.sequence(
-        //     Actions.moveTo(x2, y2, 0.5f, Interpolation.sine),
-        //     Actions.run(() -> {
-        //         // 交换矩形数据位置
-        //         backgroundGrid[row][col] = square2;
-        //         backgroundGrid[row2F][col2F] = square1;
-        //     })
-        // ));
-        // square2.addAction(Actions.moveTo(x1, y1, backgroundMoveDuration, Interpolation.sine));
+    /**
+     * 设置主用户信息
+     * @param userInfo 用户信息
+     */
+    public void setCurrentUser(UserInfo userInfo) {
+        this.currentUserInfo = userInfo;
+        HintMessageBox msgBox;
+        
+        // 空用户
+        if (currentUserInfo == null) {
+            Logger.error("GameWelcomeScene", "Null User Info is not valid!");
+            return;
+        }
+
+        if (currentUserInfo.isGuest()) {
+            // 访客用户
+            Logger.info("GameWelcomeScene", "Switch user: Guest");
+            logOutButton.getAllActors().forEach(Actor::remove);
+            addCombinedObjectToStage(logInButton);
+            msgBox = new HintMessageBox(gameMain, "Log out : )");
+
+        } else {
+            // 普通用户
+            Logger.info("GameWelcomeScene", "Switch user: " + currentUserInfo.getUserID());
+            logInButton.getAllActors().forEach(Actor::remove);
+            addCombinedObjectToStage(logOutButton);
+            msgBox = new HintMessageBox(gameMain, "Welcome, " + userInfo.getUserID() + " !");
+        }
+
+        msgBox.setPosition(8f, 0.2f);
+        addCombinedObjectToStage(msgBox);
     }
 
     // 重绘逻辑

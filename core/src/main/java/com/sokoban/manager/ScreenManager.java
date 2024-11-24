@@ -93,4 +93,8 @@ public class ScreenManager {
             currentScreen.render(SokobanScene.UPDATE_TIME_STEP);
         }
     }
+
+    public Stack<SokobanScene> getScreenStack() {
+        return screenStack;
+    }
 }

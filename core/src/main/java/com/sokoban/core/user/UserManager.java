@@ -31,16 +31,16 @@ public class UserManager {
      * 读取用户信息
      * @param userName 用户名
      * @return 用户信息，不存在返回 null
-     * @throws Exception
      */
-    public UserInfo readUserInfo(String userName) throws Exception {
+    public UserInfo readUserInfo(String userName) {
+        userName = userName.toLowerCase();
         try {
             // 测试根目录存在性，不存在则创建
             if (!testUserInfosPathWithCreate()) return null;
 
         } catch (Exception e) {
             Logger.error("UserManager", e.getMessage());
-            throw e;
+            return null;
         }
 
         try {
@@ -63,9 +63,18 @@ public class UserManager {
      * 创建用户信息，如果重复则返回 false
      * @param userInfo 用户信息
      * @return 创建是否成功
-     * @throws Exception
      */
-    public boolean createUserInfo(UserInfo userInfo) throws Exception {
+    public boolean createUserInfo(UserInfo userInfo) {
+        return createUserInfo(userInfo, false);
+    }
+
+    /**
+     * 创建用户信息
+     * @param userInfo 用户信息
+     * @param force 强制覆盖
+     * @return 创建是否成功
+     */
+    public boolean createUserInfo(UserInfo userInfo, boolean force) {
         try {
             // 测试根目录存在性，不存在则创建
             testUserInfosPathWithCreate();
@@ -90,7 +99,28 @@ public class UserManager {
 
         } catch (Exception e) {
             Logger.error("UserManager", e.getMessage());
-            throw e;
+            return false;
+        }
+    }
+
+    /**
+     * 删除用户目录下的用户
+     * @param userID 用户名
+     * @return 删除成功性，若不存在等返回 false
+     */
+    public boolean deleteUserInfo(String userName) {
+        try {
+            // 测试根目录存在性，不存在则创建
+            testUserInfosPathWithCreate();
+
+            String userInfoPath = Paths.get(userInfosRootPath, userName + ".usr").toString();
+            File userInfoFile = new File(userInfoPath);
+            
+            return userInfoFile.delete();
+            
+        } catch (Exception e) {
+            Logger.error("UserManager", e.getMessage());
+            return false;
         }
     }
 
@@ -173,7 +203,11 @@ public class UserManager {
     public boolean testPassword(UserInfo userInfo, String password) {
         // 空密码
         if (calculatePasswordHash(password).equals(calculatePasswordHash(NULL_PASSWORD_PLACEHOLDER))) return true;
-        else return userInfo.getUserPasswordHash().equals(calculatePasswordHash(password));
+        else {
+            Logger.debug("UserManager", "Password Text's pwd Hash: " + calculatePasswordHash(password));
+            Logger.debug("UserManager", "User Info's pwd Hash: " + userInfo.getUserPasswordHash());
+            return userInfo.getUserPasswordHash().equals(calculatePasswordHash(password));
+        }
     }
 
     public String getUserInfosRootPath() {

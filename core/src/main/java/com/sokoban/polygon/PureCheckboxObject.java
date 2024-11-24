@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.manager.APManager;
+import com.sokoban.polygon.actioninterface.FlipUpdateCallback;
 
 /**
  * 利用 Spine 实现的复选框组件，提供动画效果和状态管理
@@ -14,6 +15,7 @@ public class PureCheckboxObject extends SpineObject {
     private boolean isChecked;
     private boolean isEnabled;
     private boolean responsable = true;
+    private FlipUpdateCallback callback;
     
     private final String TO_UNCHECKED = "unchecked";
     private final String TO_CHECKED = "checked";
@@ -53,6 +55,7 @@ public class PureCheckboxObject extends SpineObject {
         if (this.isChecked != isChecked) {
             this.isChecked = isChecked;
             if (isEnabled) setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
+            if (callback != null) callback.onCheckedUpdate(isChecked);
         }
     }
 
@@ -62,6 +65,7 @@ public class PureCheckboxObject extends SpineObject {
     public void flip() {
         isChecked = !isChecked;
         if (isEnabled) setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
+        if (callback != null) callback.onCheckedUpdate(isChecked);
     }
 
     /**
@@ -74,6 +78,14 @@ public class PureCheckboxObject extends SpineObject {
             if (!isEnabled) setAnimation(0, TO_DISABLED, false);
             if (isEnabled) setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
         }
+    }
+
+    /**
+     * 设置复选框取值改变时的回调事件
+     * @param callback 回调函数
+     */
+    public void setCallback(FlipUpdateCallback callback) {
+        this.callback = callback;
     }
 
     /**

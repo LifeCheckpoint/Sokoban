@@ -21,7 +21,7 @@ public class UserInfo {
     }
 
     public UserInfo(String userID, String userPasswordHash, boolean rememberPassword) {
-        this.userID = userID;
+        this.userID = userID.toLowerCase();
         this.userPasswordHash = userPasswordHash;
         this.rememberPassword = rememberPassword;
         this.guest = false;
@@ -29,10 +29,10 @@ public class UserInfo {
     }
 
     public String getUserID() {
-        return userID;
+        return userID.toLowerCase();
     }
     public void setUserID(String userID) {
-        this.userID = userID;
+        this.userID = userID.toLowerCase();
     }
     public String getUserPasswordHash() {
         return userPasswordHash;

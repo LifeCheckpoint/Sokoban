@@ -11,6 +11,7 @@ import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.InputTextField;
 import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.utils.ActionUtils;
 
@@ -23,6 +24,7 @@ import com.sokoban.utils.ActionUtils;
 public class LoginScene extends SokobanScene {
     private BackgroundGrayParticleManager bgParticle;
     private UserManager userManager;
+    private GameWelcomeScene gameWelcomeScene;
 
     private InputTextField userNameField;
     private InputTextField passwordField;
@@ -31,8 +33,9 @@ public class LoginScene extends SokobanScene {
     private Image loginButton;
     private Image registerButton;
 
-    public LoginScene(Main gameMain) {
+    public LoginScene(Main gameMain, GameWelcomeScene gameWelcomeScene) {
         super(gameMain);
+        this.gameWelcomeScene = gameWelcomeScene;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class LoginScene extends SokobanScene {
         passwordField = new InputTextField(gameMain, 25);
         passwordField.setPosition(8f - passwordField.getWidth() / 2, 4.25f);
 
+        // 用户名输入框更新逻辑
         userNameField.setCallback(text -> {
             UserInfo user;
 
@@ -67,17 +71,22 @@ public class LoginScene extends SokobanScene {
                 addActorsToStage(loginButton);
 
                 // 记住密码相关处理
-                rememberPasswordCheckbox.getCheckbox().setChecked(user.isRememberPassword());
+                // 只有在确认用户配置 rememberPassword 为 true 后才能隐藏
+                // rememberPasswordCheckbox.getCheckbox().setChecked(user.isRememberPassword());
+                rememberPasswordCheckbox.getCheckbox().setEnabled(false);
                 if (user.isRememberPassword()) {
                     passwordField.setText("");
                     passwordField.remove();
+                } else {
+                    addActorsToStage(passwordField);
                 }
 
             } else {
+                rememberPasswordCheckbox.getCheckbox().setEnabled(true);
                 loginButton.remove();
                 addActorsToStage(registerButton);
 
-                // 密码框未显示
+                // 密码框未显示，重新添加
                 if (!stage.getActors().contains(passwordField, true)) {
                     addActorsToStage(passwordField);
                 }
@@ -102,7 +111,115 @@ public class LoginScene extends SokobanScene {
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO 保存逻辑
+                returnToPreviousScreen();
+            }
+        });
+
+        // // 实现上有点复杂
+        // // 记住密码复选框监听
+        // rememberPasswordCheckbox.getCheckbox().setCallback(checked -> {
+        //     if (checked) {
+        //         // 记住密码，不主动更新文件
+        //         passwordField.setText("");
+        //         passwordField.remove();
+        //     } else {
+        //         // 不记住密码，不主动更新文件
+        //         addActorsToStage(passwordField);
+        //     }
+        // });
+
+        // 注册按钮监听
+        registerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                UserInfo newUser = userManager.readUserInfo(userNameField.getText());
+                
+                // 用户已经存在
+                if (newUser != null) {
+                    Logger.error("LoginScene", String.format("User %s is exist or sth goes wrong", newUser.getUserID()));
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "This user is exist or sth goes wromg...");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 创建用户信息，密码计算哈希
+                newUser = new UserInfo(
+                    userNameField.getText(), 
+                    userManager.calculatePasswordHash(passwordField.getText()), 
+                    rememberPasswordCheckbox.getCheckbox().getChecked()
+                );
+                
+                // 密码为空且不记住密码
+                if (passwordField.getText().equals("") && !newUser.isRememberPassword()) {
+                    Logger.warning("LoginScene", "Password can't be null");
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Please input password... ^_^");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 测试用户信息有效性
+                if(!userManager.isValidUserInfo(newUser)) {
+                    Logger.warning("LoginScene", "User info is not valid strings");
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Oops... A strange info, please modify it");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 写入用户文件，检查是否成功
+                if (!userManager.createUserInfo(newUser)) {
+                    Logger.error("LoginScene", "Create user info failed");
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Well, codes always make strange errors...");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 完成写入，返回主界面
+                Logger.info("LoginScene", String.format("User %s created successfully", newUser.getUserID()));
+                gameWelcomeScene.setCurrentUser(newUser);
+                returnToPreviousScreen();
+            }
+        });
+
+        // 登录按钮监听
+        loginButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                UserInfo comparedUser = userManager.readUserInfo(userNameField.getText());
+                
+                // 用户不存在
+                if (comparedUser == null) {
+                    Logger.error("LoginScene", String.format("User %s isn't exist or sth goes wrong", userNameField.getText().toLowerCase()));
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "This user is not exist or sth goes error...");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 密码为空且不记住密码
+                if (passwordField.getText().equals("") && !comparedUser.isRememberPassword()) {
+                    Logger.warning("LoginScene", "Password test failed");
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Please input password... ^_^");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 测试密码正确性
+                if (!userManager.testPassword(comparedUser, passwordField.getText())) {
+                    Logger.warning("LoginScene", "Password test failed");
+                    HintMessageBox msgBox = new HintMessageBox(gameMain, "Password Error? O.o");
+                    msgBox.setPosition(8f, 0.2f);
+                    addCombinedObjectToStage(msgBox);
+                    return;
+                }
+
+                // 完成读取，返回主界面
+                Logger.info("LoginScene", String.format("User %s login successfully", comparedUser.getUserID()));
+                gameWelcomeScene.setCurrentUser(comparedUser);
                 returnToPreviousScreen();
             }
         });
