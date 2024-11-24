@@ -38,6 +38,7 @@ public class ScreenManager {
         }
         currentScreen = screen;
         currentScreen.show();
+        Logger.debug("ScreenManager", "Set screen -> " + currentScreen);
     }
 
     /** 
@@ -51,6 +52,7 @@ public class ScreenManager {
         }
         currentScreen = screen;
         currentScreen.show();
+        Logger.debug("ScreenManager", "Set screen -> " + currentScreen);
     }
 
     /** 
@@ -65,6 +67,7 @@ public class ScreenManager {
         currentScreen.dispose();
         currentScreen = screenStack.pop();
         currentScreen.show();
+        Logger.debug("ScreenManager", "Set screen -> " + currentScreen);
     }
 
     // 获取当前屏幕

@@ -58,6 +58,8 @@ public class MusicManager {
             // 设置播放结束回调
             currentMusic.setOnCompletionListener(music -> onMusicCompleted());
 
+            Logger.info("MusicManager", "Music playing: " + audioName);
+
         } else {
             Logger.error("MusicManager", "Music not found: " + audioName);
         }

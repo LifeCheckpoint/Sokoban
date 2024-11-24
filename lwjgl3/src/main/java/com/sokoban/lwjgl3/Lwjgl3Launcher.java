@@ -28,9 +28,15 @@ public class Lwjgl3Launcher {
 
         // 检查分析器启用
         mainConfig.enableGLProfiler = checkArgFlag(args, "--profile");
+
+        // 检查日志等级
+        if (checkArgFlag(args, "--debug")) Logger.loggerLevel = Logger.LogLevel.DEBUG;
+        if (checkArgFlag(args, "--info")) Logger.loggerLevel = Logger.LogLevel.INFO;
+        if (checkArgFlag(args, "--warning")) Logger.loggerLevel = Logger.LogLevel.WARNING;
+        if (checkArgFlag(args, "--error")) Logger.loggerLevel = Logger.LogLevel.ERROR;
         
         // 尝试设置载入
-        mainConfig.settingManager = new SettingManager("./settings/global.json");
+        mainConfig.settingManager = new SettingManager();
 
         // 启动对应前端
         Logger.debug("Lwjgl3Launcher", "Start mode: " + mainConfig.runMode);

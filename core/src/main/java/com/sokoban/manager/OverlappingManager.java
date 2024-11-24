@@ -146,7 +146,10 @@ public class OverlappingManager {
             }
 
             // 将发生修改的对象及新状态加入 changedActorState
-            if (changed) changedActorState.put(secondaryObject, collisionStatue.get(secondaryObject));
+            if (changed) {
+                changedActorState.put(secondaryObject, collisionStatue.get(secondaryObject));
+                Logger.debug("OverlappingManager", String.format("Colliding statue: %s -> %s", secondaryObject, changedActorState.get(secondaryObject)));
+            }
         }
 
         return changedActorState;
