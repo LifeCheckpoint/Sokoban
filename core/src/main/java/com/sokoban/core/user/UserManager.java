@@ -37,16 +37,22 @@ public class UserManager {
         try {
             // 测试根目录存在性，不存在则创建
             if (!testUserInfosPathWithCreate()) return null;
-         } catch (Exception e) {
+
+        } catch (Exception e) {
             Logger.error("UserManager", e.getMessage());
             throw e;
-         }
+        }
 
-         try {
+        try {
             // 使用用户名作为加密密钥，读取相应目录下用户文件
             String userInfoPath = Paths.get(userInfosRootPath, userName + ".usr").toString();
+            
+            // 用户文件不存在
+            if (!new File(userInfoPath).exists()) return null;
+
             UserInfo currentUserInfo = new JsonManager(userName).loadEncryptedJson(userInfoPath, UserInfo.class);
             return currentUserInfo;
+
         } catch (Exception e) {
             Logger.error("UserManager", e.getMessage());
             return null;
@@ -117,7 +123,7 @@ public class UserManager {
      * @return 合法性
      */
     public boolean isValidUserInfo(UserInfo userInfo) {
-        if (userInfo.getRememberPassword() == null || userInfo.getUserID() == null || 
+        if (userInfo.isRememberPassword() == null || userInfo.getUserID() == null || 
             userInfo.getSaveArchives() == null|| userInfo.getUserPasswordHash() == null) return false;
         if (userInfo.getUserID().length() <= 1 || userInfo.getUserID().length() >= 30) return false;
         if (userInfo.getUserPasswordHash().equals("")) return false;

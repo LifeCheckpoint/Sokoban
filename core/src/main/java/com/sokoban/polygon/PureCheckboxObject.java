@@ -45,6 +45,10 @@ public class PureCheckboxObject extends SpineObject {
         });
     }
     
+    /**
+     * 设置复选框选中状态
+     * @param isChecked 是否选中
+     */
     public void setChecked(boolean isChecked) {
         if (this.isChecked != isChecked) {
             this.isChecked = isChecked;
@@ -52,11 +56,18 @@ public class PureCheckboxObject extends SpineObject {
         }
     }
 
-    public void filp() {
+    /**
+     * 翻转复选框
+     */
+    public void flip() {
         isChecked = !isChecked;
         if (isEnabled) setAnimation(0, isChecked ? TO_CHECKED : TO_UNCHECKED, false);
     }
 
+    /**
+     * 设置复选框启用状态
+     * @param isEnabled 是否启用
+     */
     public void setEnabled(boolean isEnabled) {
         if (this.isEnabled != isEnabled) {
             this.isEnabled = isEnabled;

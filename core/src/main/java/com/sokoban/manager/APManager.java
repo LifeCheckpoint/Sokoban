@@ -61,6 +61,7 @@ public class APManager {
         LeftSquareArrow("img/button/left_square_arrow.png"),
         LoadingAssetsLabel("img/loading_assets.png"),
         LoginButton("img/button/login.png"),
+        LogOutButton("img/button/log_out.png"),
         MasterVolume("img/master_volume.png"),
         Mipmap("img/button/mipmap.png"),
         MSAA("img/button/msaa.png"),

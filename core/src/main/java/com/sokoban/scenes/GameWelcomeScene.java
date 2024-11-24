@@ -19,16 +19,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
 import com.sokoban.core.Logger;
+import com.sokoban.core.user.UserInfo;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.SingleActionInstanceManager;
+import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.MusicManager.MusicAudio;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
-import com.sokoban.utils.ActionUtils;;
+import com.sokoban.utils.ActionUtils;
 
 /**
  * 游戏开始欢迎界面
@@ -57,7 +59,7 @@ public class GameWelcomeScene extends SokobanScene {
     private ShaderProgram blurShader;
     private FrameBuffer[] blurBuffers; 
 
-    // Texture UI
+    // 按钮
     ButtonCheckboxContainers buttonContainer;
     private Texture[] backgroundTextures;
 
@@ -65,6 +67,10 @@ public class GameWelcomeScene extends SokobanScene {
     private CheckboxObject aboutButton;
     private CheckboxObject exitButton;
     private CheckboxObject settingsButton;
+    private CheckboxObject logInOutButton;
+
+    // 用户信息
+    private UserInfo currentUserInfo;
 
     // 动画单一实例管理
     SingleActionInstanceManager SAIManager = new SingleActionInstanceManager(gameMain);
@@ -78,6 +84,7 @@ public class GameWelcomeScene extends SokobanScene {
         super.init();
 
         APManager apManager = gameMain.getAssetsPathManager();
+        currentUserInfo = new UserInfo();
 
         // 背景音乐处理
         MusicManager musicManager = gameMain.getMusicManager();
@@ -93,19 +100,23 @@ public class GameWelcomeScene extends SokobanScene {
         buttonContainer = new ButtonCheckboxContainers();
 
         startGameButton = buttonContainer.create(gameMain, APManager.ImageAssets.StartGameButton, false, true, 0.1f);
-        startGameButton.setPosition(1f, 2.6f);
+        startGameButton.setPosition(1f, 3.2f);
         startGameButton.setCheckboxType(false);
+        
+        logInOutButton = buttonContainer.create(gameMain, currentUserInfo.isGuest() ? ImageAssets.LoginButton: ImageAssets.LogOutButton, false, true, 0.1f);
+        logInOutButton.setPosition(1f, 2.2f);
+        logInOutButton.setCheckboxType(false);
 
         aboutButton = buttonContainer.create(gameMain, APManager.ImageAssets.AboutButton, false, true, 0.1f);
-        aboutButton.setPosition(1f, 1.6f);
+        aboutButton.setPosition(1f, 1.4f);
         aboutButton.setCheckboxType(false);
 
         exitButton = buttonContainer.create(gameMain, APManager.ImageAssets.ExitButton, false, true, 0.1f);
-        exitButton.setPosition(3f, 0.8f);
+        exitButton.setPosition(3f, 0.6f);
         exitButton.setCheckboxType(false);
 
         settingsButton = buttonContainer.create(gameMain, APManager.ImageAssets.SettingsButton, false, true, 0.1f);
-        settingsButton.setPosition(1f, 0.8f);
+        settingsButton.setPosition(1f, 0.6f);
         settingsButton.setCheckboxType(false);
 
         // 开始按钮监听
@@ -138,6 +149,14 @@ public class GameWelcomeScene extends SokobanScene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameMain.getScreenManager().setScreen(new SettingScene(gameMain));
+            }
+        });
+
+        // 登录 / 登出按钮监听
+        logInOutButton.getCheckboxText().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMain.getScreenManager().setScreen(new LoginScene(gameMain));
             }
         });
 
@@ -181,9 +200,10 @@ public class GameWelcomeScene extends SokobanScene {
         aboutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         exitButton.getAllActors().forEach(ActionUtils::FadeInEffect);
         settingsButton.getAllActors().forEach(ActionUtils::FadeInEffect);
+        logInOutButton.getAllActors().forEach(ActionUtils::FadeInEffect);
 
         // 添加 UI
-        addCombinedObjectToStage(startGameButton, aboutButton, exitButton, settingsButton);
+        addCombinedObjectToStage(startGameButton, aboutButton, exitButton, settingsButton, logInOutButton);
     }
 
     /** 

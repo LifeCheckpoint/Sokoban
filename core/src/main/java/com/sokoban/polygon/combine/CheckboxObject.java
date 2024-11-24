@@ -71,7 +71,7 @@ public class CheckboxObject extends SokobanCombineObject {
         checkboxText.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (checkboxType) checkbox.filp();
+                if (checkboxType) checkbox.flip();
             }
 
             @Override
