@@ -13,7 +13,8 @@ public class SettingManager {
     private String settingsFilePath;
     public GameSettings gameSettings;
 
-    public final String DEFAULT_SETTING_FILE_PATH = "./bin/settings/global.json";
+    public final String DEFAULT_SETTING_PATH = "./bin/settings";
+    public final String DEFAULT_SETTING_FILE_NAME = "global.json";
 
     /**
      * 设置管理器构造
@@ -23,7 +24,7 @@ public class SettingManager {
         gameSettings = getDefaultGameSetting();
 
         // 设置文件路径
-        setSettingsFilePath(DEFAULT_SETTING_FILE_PATH);
+        setSettingsFilePath(DEFAULT_SETTING_PATH + "/" + DEFAULT_SETTING_FILE_NAME);
 
         // 尝试读入
         readSettings();
@@ -72,6 +73,17 @@ public class SettingManager {
     public boolean writeSettings() {
         File settingFile = new File(settingsFilePath);
 
+        // 检测目录存在性
+        if (!new File(settingFile.getPath()).exists()) {
+            Logger.warning("SettingManager", "Directory " + settingFile.getPath() + " is Not avaliable. Try to create.");
+            if (new File(settingFile.getPath()).mkdirs()) {
+                Logger.info("SettingManager", "Directory " + settingFile.getPath() + " made successfully");
+            } else {
+                Logger.error("SettingManager", "Directory " + settingFile.getPath() + " made failed");
+                return false;
+            }
+        }
+
         // 检测配置文件存在性
         if (settingFile.exists()) settingFile.delete();
 
@@ -112,9 +124,9 @@ public class SettingManager {
         defaultSetting.graphics.mipmap = true;
         defaultSetting.graphics.msaa = 2;
         defaultSetting.graphics.vsync = true;
-        defaultSetting.sound.effectsVolume = 40;
-        defaultSetting.sound.masterVolume = 50;
-        defaultSetting.sound.musicVolume = 40;
+        defaultSetting.sound.effectsVolume = 0.4f;
+        defaultSetting.sound.masterVolume = 0.5f;
+        defaultSetting.sound.musicVolume = 0.4f;
 
         return defaultSetting;
     }
