@@ -6,67 +6,78 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.sokoban.CoreTest;
 import com.sokoban.Main;
 import com.sokoban.core.Logger;
+import com.sokoban.core.MainConfig;
 import com.sokoban.core.settings.SettingManager;
 
-/** Launches Sokoban. */
+/** 启动 Sokoban Lwjgl3 前端 */
 public class Lwjgl3Launcher {
+    private static MainConfig mainConfig;
+
     /**
-     * 程序启动方式
-     * 0 = 正常 GUI 启动
-     * 1 = 核心测试 CoreTest
-     * 2 = 场景测试 SceneTest
+     * 入口函数
+     * @param args 参数
      */
-    static int runMode = 0;
-    static SettingManager settingManagerCore;
-
     public static void main(String[] args) {
+        // 初始化主游戏类配置
+        mainConfig = new MainConfig();
         
-        // 检查启动参数
-        for (String arg : args) {
-            if (arg.equals("--test")) {
-                runMode = 1;
-                break;
-            }
+        // 检查启动模式
+        mainConfig.runMode = MainConfig.RunModes.Normal;
+        if (checkArgFlag(args, "--test")) mainConfig.runMode = MainConfig.RunModes.CoreTest;
+        if (checkArgFlag(args, "--guitest")) mainConfig.runMode = MainConfig.RunModes.GuiTest;
 
-            if (arg.equals("--guitest")) {
-                runMode = 2;
-                break;
-            }
-        }
+        // 检查分析器启用
+        mainConfig.enableGLProfiler = checkArgFlag(args, "--profile");
         
-        // 尝试载入设置
-        settingManagerCore = new SettingManager("./settings/global.json");
+        // 尝试设置载入
+        mainConfig.settingManager = new SettingManager("./settings/global.json");
 
         // 启动对应前端
-        if (runMode == 0 || runMode == 2) {
-            // GUI 测试 / 正常启动
-            Logger.debug("Lwjgl3Launcher", "Start mode: " + (runMode == 0 ? "Normal" : "GUI Test"));
+        Logger.debug("Lwjgl3Launcher", "Start mode: " + mainConfig.runMode);
 
+        if (mainConfig.runMode == MainConfig.RunModes.Normal || mainConfig.runMode == MainConfig.RunModes.GuiTest) {
+            // GUI 测试 / 正常启动
             if (StartupHelper.startNewJvmIfRequired()) return;
-            createApplication(new Main(runMode, settingManagerCore));
+            createApplication(new Main(mainConfig));
             
-        } else if (runMode == 1) {
+        } else if (mainConfig.runMode == MainConfig.RunModes.CoreTest) {
             // 核心测试
-            Logger.debug("Main Thread", "Core Test");
             CoreTest.main();
         }
     }
 
+    /**
+     * 应用程序创建
+     * @param entry 入口点
+     * @return Lwjgl3 应用程序对象
+     */
     private static Lwjgl3Application createApplication(ApplicationListener entry) {
         return new Lwjgl3Application(entry, getDefaultConfiguration());
     }
 
+    /**
+     * 配置 Lwjgl3 应用信息
+     * @return Lwjgl3 应用信息
+     */
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 
         // 初始化前端 GUI
         configuration.setTitle("Sokoban");
-        configuration.useVsync(settingManagerCore.gameSettings.graphics.vsync);
+        configuration.useVsync(mainConfig.settingManager.gameSettings.graphics.vsync);
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
         configuration.setWindowedMode(1920, 1080);
         configuration.setResizable(false);
         configuration.setWindowIcon("sokoban_icon64.png");
-        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, settingManagerCore.gameSettings.graphics.msaa);
+        configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, mainConfig.settingManager.gameSettings.graphics.msaa);
         return configuration;
+    }
+
+    /** 检查参数存在性 */
+    private static boolean checkArgFlag(String[] args, String arg) {
+        for (String toCheckArg : args) {
+            if (toCheckArg.equals(arg)) return true;
+        }
+        return false;
     }
 }

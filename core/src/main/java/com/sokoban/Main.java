@@ -8,6 +8,7 @@ import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
 import com.sokoban.scenes.TestScene;
 import com.sokoban.core.Logger;
+import com.sokoban.core.MainConfig;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.MusicManager;
@@ -19,7 +20,7 @@ import com.sokoban.manager.ScreenManager;
  * <b>游戏中心类，负责全局句柄分发与初始资源加载</b>
  */
 public class Main extends ApplicationAdapter {
-    private int runMode;
+    private MainConfig.RunModes runMode;
     private APManager apManager;
     private SettingManager setManager;
     private ScreenManager screenManager;
@@ -27,9 +28,9 @@ public class Main extends ApplicationAdapter {
     
     private Color backGroundColorRGBA = new Color(0x101010ff);
 
-    public Main(int runMode, SettingManager settingManagerCore) {
-        this.runMode = runMode;
-        this.setManager = settingManagerCore;
+    public Main(MainConfig mainConfig) {
+        this.runMode = mainConfig.runMode;
+        this.setManager = mainConfig.settingManager;
     }
 
     /**
@@ -75,8 +76,8 @@ public class Main extends ApplicationAdapter {
         musicManager = new MusicManager(this);
         screenManager = new ScreenManager();
 
-        if (runMode == 0) screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
-        if (runMode == 2) screenManager.setScreen(new LoadingScene(this, new TestScene(this), apManager));
+        if (runMode == MainConfig.RunModes.Normal) screenManager.setScreen(new LoadingScene(this, new GameWelcomeScene(this), apManager));
+        if (runMode == MainConfig.RunModes.GuiTest) screenManager.setScreen(new LoadingScene(this, new TestScene(this), apManager));
     }
 
     // 重绘逻辑
