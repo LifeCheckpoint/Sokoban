@@ -68,7 +68,7 @@ public class Lwjgl3Launcher {
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
         configuration.setWindowedMode(1920, 1080);
         configuration.setResizable(false);
-        configuration.setWindowIcon("sokoban_icon64.png");
+        configuration.setWindowIcon("img/sokoban_icon.png");
         configuration.setBackBufferConfig(8, 8, 8, 8, 16, 0, mainConfig.settingManager.gameSettings.graphics.msaa);
         return configuration;
     }
