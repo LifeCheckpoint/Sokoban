@@ -24,7 +24,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |动画效果|▶️进行中|
 |设置配置|▶️进行中|
 
-当前版本 `0.2.2`
+当前版本 `0.3.0`
 
 ## Feature 项目特色
 
@@ -32,8 +32,8 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 2. 允许素材异步加载，支持启用 `Mipmap` `MSAA` 等显示优化
 3. 原创美术素材，附加素材源文件，实现大量自定义的 GUI 动画组件，界面美观整洁
 4. GUI 代码采用 `服务定位器` 与 `单例模式` 的结合设计 ，通过 `gameMain` 分发全局控制句柄，简化开发，重用率高
-5. 核心功能基于 `TestNG` 进行了充分单元 / 覆盖率测试
-5. 充分利用 AI 加快项目学习编写工作，可使工作流在高度抽象的逻辑中进行
+5. 核心功能基于 `TestNG` 进行了充分单元 + 覆盖率测试
+6. 充分利用 AI 加快项目学习编写工作，可使工作流在高度抽象的逻辑中进行
 
 ~~（只是因为要答辩所以写这些）~~
 
@@ -49,10 +49,10 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 ### Task 2: Multi-user Login (15 points) 
 
-1. ▶️ Implement a login selection interface for both guests and registered users.
+1. ✔️ Implement a login selection interface for both guests and registered users.
 2. ▶️ Guests can play without registration but do not have the functionality to save game progress. 
-3. ▶️ The user login interface includes a registration page and allows login after entering account credentials.
-4. ▶️ After the program exits and is run again, previously registered users can still log in.
+3. ✔️ The user login interface includes a registration page and allows login after entering account credentials.
+4. ✔️ After the program exits and is run again, previously registered users can still log in.
 
 ### Task 3: Save and Load Games (15 points) 
 
@@ -64,7 +64,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 ### Task 4: Gameplay (30 points) 
 
-1. ❌ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
+1. ▶️ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
 2. ❌ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
 3. ✔️ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
 4. ❌ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
@@ -82,18 +82,24 @@ graphical framework.
 
 Any additional features beyond the basic requirements described above will earn points in this advanced category, including but not limited to:
 
-1. ▶️ Enhanced graphics and aesthetics
+1. ✔️ Enhanced graphics and aesthetics
 2. ▶️ More game modes design
 3. ▶️ level selection interface 
 4. ❌ Implementation of AI to achieve high scores
-5. ▶️ Adding some animated effects
+5. ✔️ Adding some animated effects
 6. ❌ Adding game time display, save time in the archive, introducing a time-limited mode
 7. ▶️ Adding props in the game 
 8. ▶️ Adding maps of your own design
 
 ## Log 更新日志
 
-#### 0.2.3 update
+### 0.3.0 update
+
+1. 新增用户注册与登录功能
+2. 优化日志显示
+3. 优化了一部分素材表现
+
+### 0.2.3 update
 
 1. 新增体积阻挡机制
 2. 新增主游戏界面
@@ -102,7 +108,7 @@ Any additional features beyond the basic requirements described above will earn 
 5. 修复地图进入崩溃的问题
 6. 修复玩家移动异常的问题
 
-#### 0.2.2 update
+### 0.2.2 update
 
 1. 新增箱子素材
 2. 优化一部分视觉效果
@@ -111,7 +117,7 @@ Any additional features beyond the basic requirements described above will earn 
 5. 修复键盘位移控制异常的问题
 6. 修复玩家行动位移边界
 
-#### 0.2.1 update
+### 0.2.1 update
 
 1. 新增网格小世界组件
 2. 新增箱子素材
@@ -119,7 +125,7 @@ Any additional features beyond the basic requirements described above will earn 
 4. 优化键盘操作逻辑
 5. 修复主界面箱子移动后会重叠的问题
 
-#### 0.2.0 update
+### 0.2.0 update
 
 1. 新增了关卡选择场景，以及选择动效
 2. 新增了地图选择场景，支持自由移动
@@ -128,7 +134,7 @@ Any additional features beyond the basic requirements described above will earn 
 5. 优化计数器效果
 6. 修复初始音量与设置读取不一致的问题
 
-#### 0.1.4 update
+### 0.1.4 update
 
 1. 新增对位图字体切分读取功能
 2. 新增字符串图像与提示条组件
@@ -137,25 +143,25 @@ Any additional features beyond the basic requirements described above will earn 
 5. 优化素材加载方式
 6. 修复复选框无法选中的 bug
 
-#### 0.1.3 update
+### 0.1.3 update
 
 1. 新增垂直同步、音量设置
 2. 新增滑块条、计数器组件
 3. 优化一些组件的渐变加载
 
-#### 0.1.2 update
+### 0.1.2 update
 
 1. 新增 `Json` 解析与测试
 2. 新增设置界面框架
 3. 重构素材加载机制，统一管理素材加载
 
-#### 0.1.1 update
+### 0.1.1 update
 
 1. 新增对 `Spine` 组件的支持，这也是游戏的核心图形效果实现引擎之一
 2. 新增地图加载器的框架
 3. 新增复选框组件及其动画
 
-#### 0.1.0 Update
+### 0.1.0 Update
 
 `Sokoban` 项目的第一个初始界面搭建完成，包括背景音乐，粒子效果，鼠标跟踪，基础素材等等
 
@@ -163,316 +169,4 @@ Any additional features beyond the basic requirements described above will earn 
 
 ## Structure 项目结构
 
-**关键项目文件如下**
-
 有机会再解释
-
-```
-D:.
-│  build.gradle
-│  gradle.properties
-│  README.md
-│
-├─assets
-│  │  assets.txt
-│  │  README.md
-│  │
-│  ├─audio
-│  │      Light.mp3
-│  │      Rain.mp3
-│  │
-│  ├─img
-│  │  │  about_info.png
-│  │  │  about_info2.png
-│  │  │  box.png
-│  │  │  box_active.png
-│  │  │  loading_assets.png
-│  │  │  particle1.png
-│  │  │  player_normal.png
-│  │  │  target.png
-│  │  │  white_pixel.png
-│  │  │
-│  │  ├─button
-│  │  │      about.png
-│  │  │      exit.png
-│  │  │      left_arrow.png
-│  │  │      mipmap.png
-│  │  │      settings.png
-│  │  │      start_game.png
-│  │  │
-│  │  ├─checkbox
-│  │  │      checkbox.atlas
-│  │  │      checkbox.json
-│  │  │      checkbox.png
-│  │  │
-│  │  └─test_player1
-│  │          player1_sp.atlas
-│  │          player1_sp.json
-│  │          player1_sp.png
-│  │
-│  ├─shaders
-│  │      blurFragment.glsl
-│  │      blurVertex.glsl
-│  │
-│  └─sound
-├─assets-backup
-│  │  assets.txt
-│  │
-│  ├─audio
-│  │      Light.mp3
-│  │      Rain.mp3
-│  │
-│  ├─img
-│  │      about.png
-│  │      about_info.png
-│  │      about_info2.png
-│  │      box.png
-│  │      box_active.png
-│  │      exit.png
-│  │      left_arrow.png
-│  │      loading_assets.png
-│  │      particle1.png
-│  │      player_normal.png
-│  │      settings.png
-│  │      start_game.png
-│  │      target.png
-│  │      white_pixel.png
-│  │
-│  ├─shaders
-│  │      blurFragment.glsl
-│  │      blurVertex.glsl
-│  │
-│  └─sound
-├─core
-│  │  build.gradle
-│  │
-│  ├─src
-│  │  ├─main
-│  │  │  └─java
-│  │  │      └─com
-│  │  │          └─sokoban
-│  │  │              │  CoreTest.java
-│  │  │              │  Main.java
-│  │  │              │  MathUtilsEx.java
-│  │  │              │
-│  │  │              ├─core
-│  │  │              │  │  JsonManager.java
-│  │  │              │  │  README.md
-│  │  │              │  │
-│  │  │              │  └─settings
-│  │  │              │          GameSettings.java
-│  │  │              │          GraphicsSettings.java
-│  │  │              │          SettingManager.java
-│  │  │              │          SoundSettings.java
-│  │  │              │
-│  │  │              ├─enums
-│  │  │              │      AudioEnums.java
-│  │  │              │      ParticleEnums.java
-│  │  │              │
-│  │  │              ├─manager
-│  │  │              │      APManager.java
-│  │  │              │      BackgroundGrayParticleManager.java
-│  │  │              │      MouseMovingTraceManager.java
-│  │  │              │      MusicManager.java
-│  │  │              │      ScreenManager.java
-│  │  │              │
-│  │  │              ├─polygon
-│  │  │              │  │  BackgroundParticle.java
-│  │  │              │  │  CheckboxObject.java
-│  │  │              │  │  InputTextField.java
-│  │  │              │  │  PureCheckboxObject.java
-│  │  │              │  │  README.md
-│  │  │              │  │  SpineObject.java
-│  │  │              │  │  TextureSquare.java
-│  │  │              │  │  WhiteProgressBar.java
-│  │  │              │  │
-│  │  │              │  └─container
-│  │  │              │          ButtonCheckboxContainers.java
-│  │  │              │          ImageButtonContainer.java
-│  │  │              │          ImageContainer.java
-│  │  │              │          ImageLabelContainer.java
-│  │  │              │
-│  │  │              └─scenes
-│  │  │                      AboutScene.java
-│  │  │                      GameWelcomeScene.java
-│  │  │                      LoadingScene.java
-│  │  │                      SettingScene.java
-│  │  │                      SokoyoScene.java
-│  │  │
-│  │  └─test
-│  │      └─java
-│  │          └─com
-│  │              └─sokoban
-│  │                  │  MapLoader.java
-│  │                  │  MapSignMapping.java
-│  │                  │  MathUtilsExTest.java
-│  │                  │
-│  │                  └─manager
-│  │                          JsonManagerTest.java
-│  │
-│  └─test-files
-│          README.md
-│          test-encrypted-long.json
-│          test-encrypted.json
-│          test-purejson.json
-│
-├─data
-├─develop-resources
-│  ├─img
-│  │  │  about.png
-│  │  │  about_info.png
-│  │  │  about_info2.png
-│  │  │  box.png
-│  │  │  box_active.png
-│  │  │  exit.png
-│  │  │  left_arrow.png
-│  │  │  loading_assets.png
-│  │  │  mipmap.png
-│  │  │  particle1.png
-│  │  │  player_normal.png
-│  │  │  settings.png
-│  │  │  start_game.png
-│  │  │  target.png
-│  │  │  white_pixel.png
-│  │  │
-│  │  ├─checkbox
-│  │  │      checkbox.atlas
-│  │  │      checkbox.json
-│  │  │      checkbox.png
-│  │  │
-│  │  └─test_player1
-│  │          player1_sp.atlas
-│  │          player1_sp.json
-│  │          player1_sp.png
-│  │
-│  └─raw
-│      │  about.ai
-│      │  about_info.ai
-│      │  about_info2.ai
-│      │  box.ai
-│      │  box_active.ai
-│      │  checkbox.json
-│      │  checkbox.psd
-│      │  checkbox.spine
-│      │  exit.ai
-│      │  left_arrow.ai
-│      │  loading_assets.ai
-│      │  mipmap.ai
-│      │  particle1.psd
-│      │  player1_sp.json
-│      │  player1_sp.psd
-│      │  player_1.spine
-│      │  player_1_block.ai
-│      │  player_1_left.ai
-│      │  player_1_normal.ai
-│      │  player_block.ai
-│      │  player_left.ai
-│      │  player_normal.ai
-│      │  player_right.ai
-│      │  settings.ai
-│      │  start_game.ai
-│      │  start_game.psd
-│      │  target.ai
-│      │  wall.ai
-│      │  white_pixel.psd
-│      │
-│      ├─checkbox
-│      │      bound.png
-│      │      fill.png
-│      │
-│      └─player1_sp
-│              body.png
-│              down.png
-│              le.png
-│              re.png
-│
-├─develop-tool
-│  ├─img-crop
-│  │  │  crop.py
-│  │  │  Readme.md
-│  │  │
-│  │  └─output
-│  │          about.png
-│  │          about_info.png
-│  │          about_info2.png
-│  │          box.png
-│  │          box_active.png
-│  │          exit.png
-│  │          left_arrow.png
-│  │          loading_assets.png
-│  │          particle1.png
-│  │          player_normal.png
-│  │          settings.png
-│  │          start_game.png
-│  │          target.png
-│  │          white_pixel.png
-│  │
-│  └─Layer2PNG
-│          PlayersToPNG.jsx
-│
-├─lwjgl3
-│  │  build.gradle
-│  │  nativeimage.gradle
-│  │
-│  ├─bin
-│  ├─build
-│  │  ├─resources
-│  │  │  └─main
-│  │  │      │  assets.txt
-│  │  │      │  README.md
-│  │  │      │  sokoban_icon64.png
-│  │  │      │
-│  │  │      ├─audio
-│  │  │      │      Light.mp3
-│  │  │      │      Rain.mp3
-│  │  │      │
-│  │  │      ├─img
-│  │  │      │  │  about_info.png
-│  │  │      │  │  about_info2.png
-│  │  │      │  │  box.png
-│  │  │      │  │  box_active.png
-│  │  │      │  │  loading_assets.png
-│  │  │      │  │  particle1.png
-│  │  │      │  │  player_normal.png
-│  │  │      │  │  target.png
-│  │  │      │  │  white_pixel.png
-│  │  │      │  │
-│  │  │      │  ├─button
-│  │  │      │  │      about.png
-│  │  │      │  │      exit.png
-│  │  │      │  │      left_arrow.png
-│  │  │      │  │      mipmap.png
-│  │  │      │  │      settings.png
-│  │  │      │  │      start_game.png
-│  │  │      │  │
-│  │  │      │  ├─checkbox
-│  │  │      │  │      checkbox.atlas
-│  │  │      │  │      checkbox.json
-│  │  │      │  │      checkbox.png
-│  │  │      │  │
-│  │  │      │  └─test_player1
-│  │  │      │          player1_sp.atlas
-│  │  │      │          player1_sp.json
-│  │  │      │          player1_sp.png
-│  │  │      │
-│  │  │      ├─shaders
-│  │  │      │      blurFragment.glsl
-│  │  │      │      blurVertex.glsl
-│  │  │      │
-│  │  │      └─sound
-│  │
-│  └─src
-│      └─main
-│          ├─java
-│          │  └─com
-│          │      └─sokoban
-│          │          └─lwjgl3
-│          │                  Lwjgl3Launcher.java
-│          │                  StartupHelper.java
-│          │
-│          └─resources
-│                  sokoban_icon64.png
-│
-└─settings
-        global.json
-```
