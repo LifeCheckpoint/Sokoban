@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.core.JsonManager;
+import com.sokoban.core.Logger;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
@@ -55,10 +57,14 @@ public class GameScene extends SokobanScene {
     private final float ESCAPE_MENU_BUTTON_ALIGN_X = 13f;
     private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 3.5f;
 
+    // TODO 地图选择
     public GameScene(Main gameMain, Levels levelEnum, GameParams gameParams) {
         super(gameMain);
         this.level = levelEnum;
         this.gameParams = gameParams;
+
+        Logger.info("GameScene", String.format("Enter game: level = %s, map = %s", levelEnum, "null"));
+        Logger.debug("GameScene", "Game Params = " + new JsonManager().getJsonString(gameParams));
     }
 
     // 初始化游戏屏幕
@@ -240,6 +246,7 @@ public class GameScene extends SokobanScene {
      * 返回地图选择场景
      */
     public void returnToMapChooseScene() {
+        // TODO 离开教程逻辑
         stage.addAction(Actions.sequence(
             // 离开前处理
             Actions.run(() -> {}),

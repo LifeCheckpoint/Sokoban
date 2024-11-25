@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.core.Logger;
+import com.sokoban.core.game.GameParams;
 import com.sokoban.Main;
 import com.sokoban.core.user.UserInfo;
 import com.sokoban.core.user.UserManager;
@@ -13,6 +14,7 @@ import com.sokoban.polygon.InputTextField;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 
 /**
@@ -177,10 +179,10 @@ public class LoginScene extends SokobanScene {
                     return;
                 }
 
-                // 完成写入，返回主界面
+                // 完成写入，进入教程
                 Logger.info("LoginScene", String.format("User %s created successfully", newUser.getUserID()));
                 gameWelcomeScene.setCurrentUser(newUser);
-                returnToPreviousScreen();
+                gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, Levels.Origin, new GameParams()));
             }
         });
 

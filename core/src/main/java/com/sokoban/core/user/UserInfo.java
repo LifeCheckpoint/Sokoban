@@ -2,17 +2,20 @@ package com.sokoban.core.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 用户信息类
  * @author Life_Checkpoint
  * @author ChatGPT
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
     private String userID;
     private String userPasswordHash;
     private Boolean rememberPassword;
     private Boolean guest;
+    private Boolean tutorial;
     private List<SaveArchiveInfo> saveArchives;
 
     public UserInfo() {
@@ -25,6 +28,7 @@ public class UserInfo {
         this.userPasswordHash = userPasswordHash;
         this.rememberPassword = rememberPassword;
         this.guest = false;
+        this.tutorial = false;
         this.saveArchives = new ArrayList<>();
     }
 
@@ -58,6 +62,12 @@ public class UserInfo {
     public void setGuest(Boolean guest) {
         this.guest = guest;
     }
+    public Boolean isTutorial() {
+        return tutorial;
+    }
+    public void setTutorial(Boolean tutorial) {
+        this.tutorial = tutorial;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -67,6 +77,8 @@ public class UserInfo {
             if (!userPasswordHash.equals(otherUserInfo.getUserPasswordHash())) return false;
             if (!rememberPassword.equals(otherUserInfo.rememberPassword)) return false;
             if (!saveArchives.equals(otherUserInfo.getSaveArchives())) return false;
+            if (!tutorial.equals(otherUserInfo.isTutorial())) return false;
+            if (!guest.equals(otherUserInfo.isGuest())) return false;
 
             return true;
         } else return false;
