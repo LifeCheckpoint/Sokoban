@@ -4,9 +4,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.sokoban.core.CORE.Playercore;
-import com.sokoban.core.CORE.Pos;
-import com.sokoban.core.CORE.Things;
+import com.sokoban.core.game.Playercore;
+import com.sokoban.core.game.Pos;
+import com.sokoban.core.game.Things;
 
 /**
  * 测试玩家简单移动是否正确

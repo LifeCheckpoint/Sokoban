@@ -1,4 +1,4 @@
-package com.sokoban.core.CORE;
+package com.sokoban.core.game;
 
 /**
  * 游戏参数类，传递一些游戏参数

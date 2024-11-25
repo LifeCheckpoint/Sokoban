@@ -1,4 +1,4 @@
-package com.sokoban.core.CORE;
+package com.sokoban.core.game;
 
 public class MapMapper {
     public static ObjectType MapNumToType(int num) {

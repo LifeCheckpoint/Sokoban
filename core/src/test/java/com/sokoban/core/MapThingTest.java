@@ -3,10 +3,10 @@ package com.sokoban.core;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.sokoban.core.CORE.MapMapper;
-import com.sokoban.core.CORE.Pos;
-import com.sokoban.core.CORE.Things;
-import com.sokoban.core.CORE.ObjectType;
+import com.sokoban.core.game.MapMapper;
+import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.game.Pos;
+import com.sokoban.core.game.Things;
 
 /**
  * 测试地图映射是否正常

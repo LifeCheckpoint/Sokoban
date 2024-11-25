@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
-import com.sokoban.core.CORE.GameParams;
+import com.sokoban.core.game.GameParams;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
