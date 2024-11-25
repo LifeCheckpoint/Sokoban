@@ -12,6 +12,7 @@ import com.sokoban.statics.MainConfig;
 import com.sokoban.assets.AssetsPathManager;
 import com.sokoban.core.Logger;
 import com.sokoban.core.settings.SettingManager;
+import com.sokoban.core.user.SaveArchiveInfo;
 import com.sokoban.core.user.UserInfo;
 import com.sokoban.polygon.manager.MusicManager;
 
@@ -28,6 +29,7 @@ public class Main extends ApplicationAdapter {
     private MusicManager musicManager;
 
     private UserInfo loginUser;
+    private SaveArchiveInfo saveArchive;
     
     private Color backGroundColorRGBA = new Color(0x101010ff);
 
@@ -82,6 +84,22 @@ public class Main extends ApplicationAdapter {
      */
     public void setLoginUser(UserInfo loginUser) {
         this.loginUser = loginUser;
+    }
+    
+    /**
+     * 获得当前游戏档案
+     * @return 当前游戏档案
+     */
+    public SaveArchiveInfo getSaveArchive() {
+        return saveArchive;
+    }
+
+    /**
+     * 设置当前游戏档案
+     * @param saveArchive 游戏档案
+     */
+    public void setSaveArchive(SaveArchiveInfo saveArchive) {
+        this.saveArchive = saveArchive;
     }
 
     // 主游戏创建

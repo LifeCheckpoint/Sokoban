@@ -34,4 +34,16 @@ public class SaveArchiveInfo {
         this.records = records;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SaveArchiveInfo) {
+            SaveArchiveInfo anothorSaveArchive = (SaveArchiveInfo) obj;
+            if (!mapsStatue.equals(anothorSaveArchive.getMapsStatue())) return false;
+            if (!records.equals(anothorSaveArchive.getRecords())) return false;
+
+            return true;
+
+        } else return false;
+    }
+
 }

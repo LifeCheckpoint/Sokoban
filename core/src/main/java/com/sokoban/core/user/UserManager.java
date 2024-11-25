@@ -41,11 +41,11 @@ public class UserManager {
         try {
             // 使用用户名作为加密密钥，读取相应目录下用户文件
             String userInfoPath = FilePathUtils.combine(userInfosRootPath, userName + ".usr");
-
             // 用户文件不存在
             if (!FilePathUtils.exists(userInfoPath)) return null;
 
             UserInfo currentUserInfo = new JsonManager(userName).loadJsonfromFile(userInfoPath, UserInfo.class);
+            Logger.debug("UserManager", "User data : " + new JsonManager().getJsonString(currentUserInfo));
             return currentUserInfo;
 
         } catch (Exception e) {

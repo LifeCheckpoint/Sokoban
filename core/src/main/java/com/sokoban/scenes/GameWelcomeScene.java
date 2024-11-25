@@ -24,6 +24,8 @@ import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.MusicAssets;
 import com.sokoban.assets.ShaderAssets;
 import com.sokoban.core.Logger;
+import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.user.SaveArchiveInfo;
 import com.sokoban.core.user.UserInfo;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -73,6 +75,7 @@ public class GameWelcomeScene extends SokobanScene {
     private CheckboxObject settingsButton;
     private CheckboxObject logInButton;
     private CheckboxObject logOutButton;
+    private CheckboxObject selectArchiveButton;
 
     // 动画单一实例管理
     SingleActionInstanceManager SAIManager = new SingleActionInstanceManager(gameMain);
@@ -102,15 +105,15 @@ public class GameWelcomeScene extends SokobanScene {
         buttonContainer = new ButtonCheckboxContainers();
 
         startGameButton = buttonContainer.create(gameMain, ImageAssets.StartGameButton, false, true, 0.1f);
-        startGameButton.setPosition(1f, 3.2f);
+        startGameButton.setPosition(1f, 4f);
         startGameButton.setCheckboxType(false);
         
         logInButton = buttonContainer.create(gameMain, ImageAssets.LoginButton, false, true, 0.1f);
-        logInButton.setPosition(1f, 2.2f);
+        logInButton.setPosition(1f, 3f);
         logInButton.setCheckboxType(false);
 
         logOutButton = buttonContainer.create(gameMain, ImageAssets.LogOutButton, false, true, 0.1f);
-        logOutButton.setPosition(1f, 2.2f);
+        logOutButton.setPosition(1f, 3f);
         logOutButton.setCheckboxType(false);
 
         aboutButton = buttonContainer.create(gameMain, ImageAssets.AboutButton, false, true, 0.1f);
@@ -124,6 +127,10 @@ public class GameWelcomeScene extends SokobanScene {
         settingsButton = buttonContainer.create(gameMain, ImageAssets.SettingsButton, false, true, 0.1f);
         settingsButton.setPosition(1f, 0.6f);
         settingsButton.setCheckboxType(false);
+
+        selectArchiveButton = buttonContainer.create(gameMain, ImageAssets.SelectArchiveButton, false, true, 0.1f);
+        selectArchiveButton.setPosition(1f, 2.2f);
+        selectArchiveButton.setCheckboxType(false);
 
         // 开始按钮监听
         startGameButton.getCheckboxText().addListener(new ClickListener() {
@@ -162,6 +169,7 @@ public class GameWelcomeScene extends SokobanScene {
         logInButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // 选择用户
                 gameMain.getScreenManager().setScreen(new LoginScene(gameMain, GameWelcomeScene.this));
             }
         });
@@ -172,6 +180,15 @@ public class GameWelcomeScene extends SokobanScene {
             public void clicked(InputEvent event, float x, float y) {
                 // 切换回访客账户
                 setCurrentUser(new UserInfo());
+            }
+        });
+
+        // 选择存档按钮监听
+        selectArchiveButton.getCheckboxText().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // 选择存档
+                if (!gameMain.getLoginUser().isGuest()) gameMain.getScreenManager().setScreen(new SelectArchiveScene(gameMain, GameWelcomeScene.this));
             }
         });
 
@@ -266,6 +283,29 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     /**
+     * 设置当前档案信息的回调，用于主界面 UI 切换
+     * @param archiveInfo 档案信息
+     * @param archiveIndex 档案编号, 1, 2, 3...
+     */
+    public void setCurrentArchive(SaveArchiveInfo archiveInfo, int archiveIndex) {
+        HintMessageBox msgBox;
+
+        // 空档案
+        if (archiveInfo == null) {
+            Logger.error("GameWelcomeScene", "Null save archive is not valid!");
+            return;
+        }
+
+        Logger.info("GameWelcomeScene", "Current archive has switched to " + archiveIndex);
+        Logger.debug("GameWelcomeScene", "Archive content: " + new JsonManager().getJsonString(archiveInfo));
+        msgBox = new HintMessageBox(gameMain, "Select Archive: #" + archiveIndex);
+        msgBox.setPosition(8f, 0.2f);
+        addCombinedObjectToStage(msgBox);
+
+        gameMain.setSaveArchive(archiveInfo);
+    }
+
+    /**
      * 设置主用户信息的回调，用于主界面 UI 切换
      * @param userInfo 用户信息
      */
@@ -285,18 +325,26 @@ public class GameWelcomeScene extends SokobanScene {
             addCombinedObjectToStage(logInButton);
             msgBox = new HintMessageBox(gameMain, "Log out : )");
 
+            // 设置选择档案按钮不可见
+            selectArchiveButton.getAllActors().forEach(actor -> actor.addAction(Actions.sequence(
+                Actions.fadeOut(0.5f),
+                Actions.run(() -> actor.remove())
+            )));
         } else {
             // 普通用户
             Logger.info("GameWelcomeScene", "Switch user: " + userInfo.getUserID());
             logInButton.getAllActors().forEach(Actor::remove);
             addCombinedObjectToStage(logOutButton);
             msgBox = new HintMessageBox(gameMain, "Welcome, " + userInfo.getUserID() + " !");
+
+            // 设置档案按钮可见
+            selectArchiveButton.getAllActors().forEach(actor -> actor.getColor().a = 1f);
+            addCombinedObjectToStage(selectArchiveButton);
         }
-
-        gameMain.setLoginUser(userInfo);
-
         msgBox.setPosition(8f, 0.2f);
         addCombinedObjectToStage(msgBox);
+        
+        gameMain.setLoginUser(userInfo);
     }
 
     // 重绘逻辑

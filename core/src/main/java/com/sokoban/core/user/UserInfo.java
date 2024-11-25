@@ -19,7 +19,10 @@ public class UserInfo {
     private List<SaveArchiveInfo> saveArchives;
 
     public UserInfo() {
-        saveArchives = new ArrayList<>();
+        this.saveArchives = new ArrayList<>();
+        this.saveArchives.add(new SaveArchiveInfo());
+        this.saveArchives.add(new SaveArchiveInfo());
+        this.saveArchives.add(new SaveArchiveInfo());
         this.guest = true;
     }
 
@@ -30,6 +33,9 @@ public class UserInfo {
         this.guest = false;
         this.tutorial = false;
         this.saveArchives = new ArrayList<>();
+        this.saveArchives.add(new SaveArchiveInfo());
+        this.saveArchives.add(new SaveArchiveInfo());
+        this.saveArchives.add(new SaveArchiveInfo());
     }
 
     public String getUserID() {
