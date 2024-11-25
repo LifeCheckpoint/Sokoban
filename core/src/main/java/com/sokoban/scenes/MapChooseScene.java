@@ -145,6 +145,7 @@ public class MapChooseScene extends SokobanScene {
 
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+                racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                     // 清除计时器字典所有部件
@@ -169,6 +170,7 @@ public class MapChooseScene extends SokobanScene {
 
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+                racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                     // 清除计时器字典所有部件

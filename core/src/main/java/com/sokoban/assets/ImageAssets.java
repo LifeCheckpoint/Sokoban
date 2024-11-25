@@ -26,6 +26,7 @@ public enum ImageAssets {
     Mipmap("img/button/mipmap.png"),
     MSAA("img/button/msaa.png"),
     MusicVolume("img/music_volume.png"),
+    PlayAgainButton("img/button/play_again.png"),
     RacingModeButton("img/button/racing_mode.png"),
     RegisterButton("img/button/register.png"),
     RememberPasswordButton("img/button/remember_password.png"),

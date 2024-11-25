@@ -43,6 +43,7 @@ public class GameScene extends SokobanScene {
     private ButtonCheckboxContainers buttonContainer;
     private GameEscapeFrame escapeFrame;
     private CheckboxObject continueGameButton;
+    private CheckboxObject replayButton;
     private CheckboxObject settingsButton;
     private CheckboxObject exitGameButton;
 
@@ -55,7 +56,7 @@ public class GameScene extends SokobanScene {
     private final float ESCAPE_MENU_ANIMATION_DURATION = 0.2f;
     private final float ESCAPE_MENU_BUTTON_SCALING = 0.011f;
     private final float ESCAPE_MENU_BUTTON_ALIGN_X = 13f;
-    private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 3.5f;
+    private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 2f;
 
     // TODO 地图选择
     public GameScene(Main gameMain, Levels levelEnum, GameParams gameParams) {
@@ -113,8 +114,12 @@ public class GameScene extends SokobanScene {
         buttonContainer = new ButtonCheckboxContainers();
 
         continueGameButton = buttonContainer.create(gameMain, ImageAssets.ContinueGame, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
-        continueGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 3f);
+        continueGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 4.5f);
         continueGameButton.setCheckboxType(false);
+
+        replayButton = buttonContainer.create(gameMain, ImageAssets.PlayAgainButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
+        replayButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 3f);
+        replayButton.setCheckboxType(false);
 
         settingsButton = buttonContainer.create(gameMain, ImageAssets.SettingsButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
         settingsButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 1.5f);
@@ -129,6 +134,14 @@ public class GameScene extends SokobanScene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 closeEscapeMenu();
+            }
+        });
+
+        // 重玩按钮监听
+        replayButton.getCheckboxText().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // TODO Play again...
             }
         });
 
@@ -166,13 +179,14 @@ public class GameScene extends SokobanScene {
             SAIManager.executeAction(actorHelper, Actions.sequence(
                 Actions.run(() -> {
                     addCombinedObjectToStage(escapeFrame);
-                    addCombinedObjectToStage(continueGameButton, settingsButton, exitGameButton);
+                    addCombinedObjectToStage(continueGameButton, settingsButton, exitGameButton, replayButton);
                 }),
                 Actions.parallel(
                     new ViewportRescaleAction(viewport, VIEWPORT_RESCALE_RATIO, ESCAPE_MENU_ANIMATION_DURATION),
                     Actions.run(() -> {
                         escapeFrame.getAllActors().forEach(actor -> actor.addAction(Actions.fadeIn(ESCAPE_MENU_ANIMATION_DURATION)));
                         continueGameButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeIn(ESCAPE_MENU_ANIMATION_DURATION)));
+                        replayButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeIn(ESCAPE_MENU_ANIMATION_DURATION)));
                         settingsButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeIn(ESCAPE_MENU_ANIMATION_DURATION)));
                         exitGameButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeIn(ESCAPE_MENU_ANIMATION_DURATION)));
                     })
@@ -192,6 +206,7 @@ public class GameScene extends SokobanScene {
                 Actions.run(() -> {
                     escapeFrame.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(ESCAPE_MENU_ANIMATION_DURATION)));
                     continueGameButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(ESCAPE_MENU_ANIMATION_DURATION)));
+                    replayButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(ESCAPE_MENU_ANIMATION_DURATION)));
                     settingsButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(ESCAPE_MENU_ANIMATION_DURATION)));
                     exitGameButton.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(ESCAPE_MENU_ANIMATION_DURATION)));
                 })
@@ -199,6 +214,7 @@ public class GameScene extends SokobanScene {
             Actions.run(() -> {
                 escapeFrame.getAllActors().forEach(Actor::remove);
                 continueGameButton.getAllActors().forEach(Actor::remove);
+                replayButton.getAllActors().forEach(Actor::remove);
                 settingsButton.getAllActors().forEach(Actor::remove);
                 exitGameButton.getAllActors().forEach(Actor::remove);
             })
