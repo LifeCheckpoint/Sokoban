@@ -1,4 +1,4 @@
-package com.sokoban.utils;
+package com.sokoban.statics;
 
 import java.io.File;
 

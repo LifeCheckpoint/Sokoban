@@ -1,4 +1,4 @@
-package com.sokoban.manager;
+package com.sokoban.scenes.manager;
 
 import java.util.Stack;
 

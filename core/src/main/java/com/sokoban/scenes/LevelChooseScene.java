@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.BackgroundGrayParticleManager;
-import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.WindowImageSelector;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
+import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 

@@ -1,4 +1,4 @@
-package com.sokoban.core;
+package com.sokoban.core.game;
 
 /**
  * 地图信息类

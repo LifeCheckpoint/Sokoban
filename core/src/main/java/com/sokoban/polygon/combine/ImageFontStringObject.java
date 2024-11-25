@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.FontManager;
+import com.sokoban.polygon.manager.FontManager;
 
 /**
  * 字符串显示类，由 Image 组合而成

@@ -1,8 +1,8 @@
 package com.sokoban.core.user;
 
 import com.sokoban.utils.FilePathUtils;
-import com.sokoban.core.JsonManager;
 import com.sokoban.core.Logger;
+import com.sokoban.core.manager.JsonManager;
 
 /**
  * 用户管理类，提供用户管理功能

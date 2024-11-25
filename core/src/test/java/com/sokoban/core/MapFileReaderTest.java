@@ -3,6 +3,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.sokoban.core.game.MapInfo;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;

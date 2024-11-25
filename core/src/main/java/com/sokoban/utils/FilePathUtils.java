@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sokoban.core.Logger;
+import com.sokoban.statics.FileInfo;
 
 /**
  * 文件路径增效工具

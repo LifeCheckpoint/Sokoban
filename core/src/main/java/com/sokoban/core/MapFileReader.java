@@ -1,6 +1,7 @@
 package com.sokoban.core;
 
-import com.sokoban.utils.FileInfo;
+import com.sokoban.core.game.MapInfo;
+import com.sokoban.statics.FileInfo;
 import com.sokoban.utils.FilePathUtils;
 
 import java.io.IOException;

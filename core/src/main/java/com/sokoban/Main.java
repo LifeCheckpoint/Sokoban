@@ -7,13 +7,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
 import com.sokoban.scenes.TestScene;
+import com.sokoban.scenes.manager.ScreenManager;
+import com.sokoban.statics.MainConfig;
 import com.sokoban.assets.AssetsPathManager;
 import com.sokoban.core.Logger;
-import com.sokoban.core.MainConfig;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.core.user.UserInfo;
-import com.sokoban.manager.MusicManager;
-import com.sokoban.manager.ScreenManager;
+import com.sokoban.polygon.manager.MusicManager;
 
 /** 
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.

@@ -1,4 +1,4 @@
-package com.sokoban.manager;
+package com.sokoban.polygon.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package com.sokoban.utils;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sokoban.manager.AccelerationMovingManager.Direction;
+import com.sokoban.polygon.manager.AccelerationMovingManager.Direction;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -9,11 +9,11 @@ import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.user.UserInfo;
 import com.sokoban.core.user.UserManager;
-import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.InputTextField;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 

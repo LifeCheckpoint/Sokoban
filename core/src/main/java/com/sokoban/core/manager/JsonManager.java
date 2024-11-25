@@ -1,6 +1,7 @@
-package com.sokoban.core;
+package com.sokoban.core.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sokoban.core.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

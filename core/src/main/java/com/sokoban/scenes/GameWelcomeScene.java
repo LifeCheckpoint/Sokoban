@@ -25,15 +25,15 @@ import com.sokoban.assets.MusicAssets;
 import com.sokoban.assets.ShaderAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.core.user.UserInfo;
-import com.sokoban.manager.BackgroundGrayParticleManager;
-import com.sokoban.manager.MouseMovingTraceManager;
-import com.sokoban.manager.MusicManager;
-import com.sokoban.manager.SingleActionInstanceManager;
-import com.sokoban.manager.MusicManager.MusicAudio;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
+import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
+import com.sokoban.polygon.manager.MouseMovingTraceManager;
+import com.sokoban.polygon.manager.MusicManager;
+import com.sokoban.polygon.manager.SingleActionInstanceManager;
+import com.sokoban.polygon.manager.MusicManager.MusicAudio;
 import com.sokoban.utils.ActionUtils;
 
 /**

@@ -11,13 +11,13 @@ import com.sokoban.core.Logger;
 import com.sokoban.core.settings.GameSettings;
 import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
-import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.CombinedNumberDisplayObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.SliderObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.utils.ActionUtils;
 
 /**
