@@ -33,7 +33,8 @@ public class Logger {
         if (!screenLevel(level)) return;
         String shortTime = getShortTime();
         String color = getColorForLevel(level);
-        System.out.println(color + String.format("[%s] [%s] [%s] %s", level, moduleName, shortTime, message) + RESET);
+        if (level != LogLevel.ERROR) System.out.println(color + String.format("[%s] [%s] [%s] %s", level, moduleName, shortTime, message) + RESET);
+        else System.err.println(color + String.format("[%s] [%s] [%s] %s", level, moduleName, shortTime, message) + RESET);
     }
 
     /** 
@@ -45,7 +46,8 @@ public class Logger {
         if (!screenLevel(level)) return;
         String shortTime = getShortTime();
         String color = getColorForLevel(level);
-        System.out.println(color + String.format("[%s] [%s] %s", level, shortTime, message) + RESET);
+        if (level != LogLevel.ERROR) System.out.println(color + String.format("[%s] [%s] %s", level, shortTime, message) + RESET);
+        else System.err.println(color + String.format("[%s] [%s] %s", level, shortTime, message) + RESET);
     }
 
     /**

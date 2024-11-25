@@ -18,6 +18,8 @@ package com.sokoban.lwjgl3;
 
 import org.lwjgl.system.macosx.LibC;
 
+import com.sokoban.core.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -93,7 +95,7 @@ public class StartupHelper {
         // check whether the JVM was previously restarted
         // avoids looping, but most certainly leads to a crash
         if ("true".equals(System.getProperty(JVM_RESTARTED_ARG))) {
-            System.err.println(
+            Logger.error(
                     "There was a problem evaluating whether the JVM was started with the -XstartOnFirstThread argument.");
             return false;
         }
@@ -107,7 +109,7 @@ public class StartupHelper {
         //String javaExecPath = ProcessHandle.current().info().command().orElseThrow();
 
         if (!(new File(javaExecPath)).exists()) {
-            System.err.println(
+            Logger.error(
                     "A Java installation could not be found. If you are distributing this app with a bundled JRE, be sure to set the -XstartOnFirstThread argument manually!");
             return false;
         }
@@ -124,7 +126,7 @@ public class StartupHelper {
             if (trace.length > 0) {
                 mainClass = trace[trace.length - 1].getClassName();
             } else {
-                System.err.println("The main class could not be determined.");
+                Logger.error("The main class could not be determined.");
                 return false;
             }
         }
@@ -148,7 +150,7 @@ public class StartupHelper {
                 process.waitFor();
             }
         } catch (Exception e) {
-            System.err.println("There was a problem restarting the JVM");
+            Logger.error("There was a problem restarting the JVM");
             e.printStackTrace();
         }
 

@@ -18,6 +18,8 @@ public class Lwjgl3Launcher {
      * @param args 参数
      */
     public static void main(String[] args) {
+        Logger.debug("Lwjgl3Launcher", "Launch args: " + String.join(" ", args));
+        
         // 初始化主游戏类配置
         mainConfig = new MainConfig();
         
@@ -39,7 +41,7 @@ public class Lwjgl3Launcher {
         mainConfig.settingManager = new SettingManager();
 
         // 启动对应前端
-        Logger.debug("Lwjgl3Launcher", "Start mode: " + mainConfig.runMode);
+        Logger.info("Lwjgl3Launcher", "Start mode: " + mainConfig.runMode);
 
         if (mainConfig.runMode == MainConfig.RunModes.Normal || mainConfig.runMode == MainConfig.RunModes.GuiTest) {
             // GUI 测试 / 正常启动

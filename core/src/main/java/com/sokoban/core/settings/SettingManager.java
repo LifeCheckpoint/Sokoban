@@ -55,7 +55,7 @@ public class SettingManager {
 
         // 检查读取成功
         if (gameSettings != null) {
-            Logger.info("SettingManager", "Read setting file " + settingsFilePath + "successfully");
+            Logger.info("SettingManager", "Read setting file " + settingsFilePath + " successfully");
             return;
         }
         
@@ -74,6 +74,7 @@ public class SettingManager {
      */
     public boolean writeSettings() {
         File settingFile = new File(settingsFilePath);
+        Logger.debug("SettingManager", "Written settings: " + new JsonManager().getJsonString(gameSettings));
 
         // 检测目录存在性
         if (!new File(settingFile.getPath()).exists()) {
