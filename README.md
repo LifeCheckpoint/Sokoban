@@ -43,7 +43,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 ### Task 1: Game Initialization (10 points) 
 
-1. ❌ After the user logs in or chooses the guest mode, the game will directly enter a level (a level selection interface is an advanced requirement) and correctly display the map. The game should also display the level number and the number of character movement. 
+1. ▶️ After the user logs in or chooses the guest mode, the game will directly enter a level (a level selection interface is an advanced requirement) and correctly display the map. The game should also display the level number and the number of character movement. 
 2. ▶️ The game should allow players to restart a new game at any time during gameplay. (Not exiting the program and run it again.)
 3. ▶️ When restarting a new game, the game data needs to be consistent with the new game.
 
@@ -56,8 +56,8 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 ### Task 3: Save and Load Games (15 points) 
 
-1. ❌ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
-2. ❌ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
+1. ▶️ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
+2. ▶️ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
 3. ▶️ Each user's save data is unique.
 4. ❌ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
 5. ▶️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
@@ -75,7 +75,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 1. ✔️ Implement a graphical interface for the game using JavaFX, Swing, or any other Java 
 graphical framework.
 2. ⭕ You will earn points for this section by completing the code based on the demo provided in the course.
-3. ▶️ Independently creating a GUI will count as Advanced points.
+3. ✔️ Independently creating a GUI will count as Advanced points.
 4. ⭕ If your program need to input into command line，you can not get full points of this task.
 
 ### Task 6: Advanced Features (20 points) 
@@ -87,7 +87,7 @@ Any additional features beyond the basic requirements described above will earn 
 3. ▶️ level selection interface 
 4. ❌ Implementation of AI to achieve high scores
 5. ✔️ Adding some animated effects
-6. ❌ Adding game time display, save time in the archive, introducing a time-limited mode
+6. ▶️ Adding game time display, save time in the archive, introducing a time-limited mode
 7. ▶️ Adding props in the game 
 8. ▶️ Adding maps of your own design
 

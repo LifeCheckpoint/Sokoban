@@ -104,6 +104,7 @@ public class SelectArchiveScene extends SokobanScene {
     }
 
     private void readArchives(int archiveIndex) {
+        // TODO 显示存档信息，将确定逻辑放到对应按钮
         Logger.info("SelectArchiveScene", "Switch to archive #" + (archiveIndex + 1));
         gameWelcomeScene.setCurrentArchive(gameMain.getLoginUser().getSaveArchives().get(archiveIndex), archiveIndex + 1);
         gameMain.getScreenManager().returnPreviousScreen();
