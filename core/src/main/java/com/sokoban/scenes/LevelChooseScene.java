@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.combine.HintMessageBox;
@@ -36,22 +36,22 @@ public class LevelChooseScene extends SokobanScene {
         moveTrace = new MouseMovingTraceManager(viewport);
         
         // 选择器
-        levelSelector = new WindowImageSelector(gameMain, Arrays.asList(APManager.ImageAssets.ShowLevel1, APManager.ImageAssets.ShowLevel2, APManager.ImageAssets.ShowLevel3));
+        levelSelector = new WindowImageSelector(gameMain, Arrays.asList(ImageAssets.ShowLevel1, ImageAssets.ShowLevel2, ImageAssets.ShowLevel3));
 
         // 返回 进入按钮
         ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
-        returnButton = controlButtonContainer.create(APManager.ImageAssets.LeftArrowButton);
+        returnButton = controlButtonContainer.create(ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 
-        startButton = controlButtonContainer.create(APManager.ImageAssets.RightArrowButton);
+        startButton = controlButtonContainer.create(ImageAssets.RightArrowButton);
         startButton.setPosition(13.6f, 0.6f);
 
         // 左右选择按钮
         ImageButtonContainer selectorButtonContainer = new ImageButtonContainer(gameMain);
-        leftSelectButton = selectorButtonContainer.create(APManager.ImageAssets.LeftSquareArrow);
+        leftSelectButton = selectorButtonContainer.create(ImageAssets.LeftSquareArrow);
         leftSelectButton.setSize(0.8f, 0.8f);
         leftSelectButton.setPosition(1f, 0.5f);
-        rightSelectButton = selectorButtonContainer.create(APManager.ImageAssets.RightSquareArrow);
+        rightSelectButton = selectorButtonContainer.create(ImageAssets.RightSquareArrow);
         rightSelectButton.setSize(0.8f, 0.8f);
         rightSelectButton.setPosition(2f, 0.5f);
 

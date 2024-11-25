@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.polygon.BackgroundParticle;
 import com.sokoban.scenes.SokobanScene;
 
@@ -42,7 +43,7 @@ public class BackgroundGrayParticleManager {
         this.stage = thisScene.getStage();
 
         // 初始化背景粒子
-        particleTexture = gameMain.getAssetsPathManager().get(APManager.ImageAssets.GrayPixel);
+        particleTexture = gameMain.getAssetsPathManager().get(ImageAssets.GrayPixel);
         backgroundParticle = new ArrayList<>();
         setStage(stage);
 

@@ -2,7 +2,7 @@ package com.sokoban.polygon.container;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.polygon.combine.CheckboxObject;
 
 /**
@@ -18,7 +18,7 @@ public class ButtonCheckboxContainers {
      * @param isEnabled 是否启用
      * @return CheckboxTextObject对象
      */
-    public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled) {
+    public CheckboxObject create(Main gameMain, ImageAssets resourceEnum, boolean isChecked, boolean isEnabled) {
         Image button = new ImageButtonContainer(gameMain).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled);
     }
@@ -32,7 +32,7 @@ public class ButtonCheckboxContainers {
      * @param buff 左右间距
      * @return CheckboxTextObject对象
      */
-    public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff) {
+    public CheckboxObject create(Main gameMain, ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff) {
         Image button = new ImageButtonContainer(gameMain).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
     }
@@ -47,7 +47,7 @@ public class ButtonCheckboxContainers {
      * @param scaling 缩放大小
      * @return CheckboxTextObject对象
      */
-    public CheckboxObject create(Main gameMain, APManager.ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff, float scaling) {
+    public CheckboxObject create(Main gameMain, ImageAssets resourceEnum, boolean isChecked, boolean isEnabled, float buff, float scaling) {
         Image button = new ImageButtonContainer(gameMain, scaling).create(resourceEnum);
         return new CheckboxObject(gameMain, button, isChecked, isEnabled, buff);
     }

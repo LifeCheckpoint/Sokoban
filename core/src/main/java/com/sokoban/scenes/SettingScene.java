@@ -6,11 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.core.settings.GameSettings;
 import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -57,10 +57,10 @@ public class SettingScene extends SokobanScene {
         buttonContainer2 = new ImageButtonContainer(gameMain, 0.004f);
 
         // 返回 保存
-        returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
+        returnButton = buttonContainer.create(ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.3f, 8.3f);
         
-        saveButton = buttonContainer.create(APManager.ImageAssets.SaveButton);
+        saveButton = buttonContainer.create(ImageAssets.SaveButton);
         saveButton.setPosition(-20f, -20f); // 暂时不可见
         saveButton.addListener(new ClickListener() {
             @Override
@@ -79,17 +79,17 @@ public class SettingScene extends SokobanScene {
         currentSettings = gameMain.getSettingManager().gameSettings;
 
         // Mipmap 设置
-        mipmapCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Mipmap, currentSettings.graphics.mipmap, true, 0.16f);
+        mipmapCheckbox = new CheckboxObject(gameMain, ImageAssets.Mipmap, currentSettings.graphics.mipmap, true, 0.16f);
         mipmapCheckbox.setPosition(2f, 7f);
         mipmapCheckbox.setCheckboxType(true);
 
         // 垂直同步设置
-        vsyncCheckbox = new CheckboxObject(gameMain, APManager.ImageAssets.Vsync, currentSettings.graphics.vsync, true, 0.16f);
+        vsyncCheckbox = new CheckboxObject(gameMain, ImageAssets.Vsync, currentSettings.graphics.vsync, true, 0.16f);
         vsyncCheckbox.setPosition(2f, 6.2f);
         vsyncCheckbox.setCheckboxType(true);
 
         // MSAA 设置
-        msaaButton = buttonContainer2.create(APManager.ImageAssets.MSAA);
+        msaaButton = buttonContainer2.create(ImageAssets.MSAA);
         msaaButton.setPosition(2f, 5.4f);
         msaaValueDisplayer = new CombinedNumberDisplayObject(gameMain, 2, 0, currentSettings.graphics.msaa);
         msaaValueDisplayer.setPosition(msaaButton.getX() + msaaButton.getWidth() + 0.2f, 5.4f);
@@ -125,14 +125,14 @@ public class SettingScene extends SokobanScene {
         });
 
         // 音量设置
-        masterVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MasterVolume, 
+        masterVolumeSlider = new SliderObject(gameMain, ImageAssets.MasterVolume, 
                                 0f, 100f, currentSettings.sound.masterVolume * 100, 3, 0);
 
                                 masterVolumeSlider.setPosition(9f, 7f);
-        musicVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.MusicVolume, 
+        musicVolumeSlider = new SliderObject(gameMain, ImageAssets.MusicVolume, 
                                 0f, 100f, currentSettings.sound.musicVolume * 100, 3, 0);
         musicVolumeSlider.setPosition(9f, 6.2f);
-        effectsVolumeSlider = new SliderObject(gameMain, APManager.ImageAssets.EffectsVolume, 
+        effectsVolumeSlider = new SliderObject(gameMain, ImageAssets.EffectsVolume, 
                                 0f, 100f, currentSettings.sound.effectsVolume * 100, 3, 0);
         effectsVolumeSlider.setPosition(9f, 5.4f);
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.actioninterface.Observer;
 import com.sokoban.utils.ActionUtils;
@@ -64,7 +64,7 @@ public class HintMessageBox extends SokobanCombineObject implements Observer {
 
         this.hintText = hintTextImage;
         this.durationTime = durationTime;
-        frame = new SpineObject(gameMain, APManager.SpineAssets.Rectangle);
+        frame = new SpineObject(gameMain, SpineAssets.Rectangle);
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setPosition(0f, 0f);
 

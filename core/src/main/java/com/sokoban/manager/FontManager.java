@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class FontManager {
      * @param pageFileEnums 字体页位图资源枚举
      * @param fntFileData fnt 字体数据文件内容
      */
-    public FontManager(Main gameMain, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
+    public FontManager(Main gameMain, ImageAssets[] pageFileEnums, String fntFileData) {
         this.gameMain = gameMain;
         
         // 初始化字体页数组和字符映射

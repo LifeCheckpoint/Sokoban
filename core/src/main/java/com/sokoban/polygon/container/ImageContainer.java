@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.AssetsPathManager;
+import com.sokoban.assets.ImageAssets;
 
 /**
  * 图像容器超类，支持对图像缩放的良好控制
@@ -15,7 +16,7 @@ import com.sokoban.manager.APManager;
  */
 public class ImageContainer {
     protected float scaling = 0.0065f; // 适用于 64 高度图像缩放到一般高度
-    protected APManager apManager;
+    protected AssetsPathManager apManager;
 
     public ImageContainer(Main gameMain, float scaling) {
         this.apManager = gameMain.getAssetsPathManager();
@@ -29,7 +30,7 @@ public class ImageContainer {
     public ImageContainer() {}
 
     // 从文件读取图片
-    protected Drawable readDrawableFromFile(APManager.ImageAssets resourceEnum) {
+    protected Drawable readDrawableFromFile(ImageAssets resourceEnum) {
         Texture texture = apManager.get(resourceEnum);
         TextureRegion region = new TextureRegion(texture);
         region.setRegion(0, 0, texture.getWidth(), texture.getHeight());
@@ -42,7 +43,7 @@ public class ImageContainer {
      * @param torchable 指定是否允许交互
      * @return Image 组件
      */
-    protected Image create(APManager.ImageAssets resourceEnum, boolean torchable) {
+    protected Image create(ImageAssets resourceEnum, boolean torchable) {
         return create(readDrawableFromFile(resourceEnum), torchable);
     }
 

@@ -1,7 +1,7 @@
 package com.sokoban.polygon;
 
 import com.sokoban.Main;
-import com.sokoban.manager.APManager.SpineAssets;
+import com.sokoban.assets.SpineAssets;
 
 /**
  * 盒子类，专用于盒子对象的显示

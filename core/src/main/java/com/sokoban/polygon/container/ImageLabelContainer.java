@@ -3,7 +3,7 @@ package com.sokoban.polygon.container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.ImageAssets;
 
 /**
  * 图像标签类<br><br>
@@ -20,10 +20,10 @@ public class ImageLabelContainer extends ImageContainer {
         super(gameMain);
     }
 
-    public Image create(APManager.ImageAssets resourceEnum) {
+    public Image create(ImageAssets resourceEnum) {
         return create(readDrawableFromFile(resourceEnum));
     }
-    public Image create(APManager.ImageAssets resourceEnum, float scaling) {
+    public Image create(ImageAssets resourceEnum, float scaling) {
         return create(readDrawableFromFile(resourceEnum), scaling);
     }
     public Image create(Drawable drawable) {

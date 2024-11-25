@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.polygon.NumberDisplayObject;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
@@ -60,7 +60,7 @@ public class CombinedNumberDisplayObject extends SokobanCombineObject {
 
         // 添加小数点
         ImageLabelContainer TextContainer = new ImageLabelContainer(gameMain, DEFAULT_POINT_SCALE);
-        decimalPoint = TextContainer.create(APManager.ImageAssets.WhitePixel);
+        decimalPoint = TextContainer.create(ImageAssets.WhitePixel);
 
         // 设置初始位置
         setPosition(0f, 0f);

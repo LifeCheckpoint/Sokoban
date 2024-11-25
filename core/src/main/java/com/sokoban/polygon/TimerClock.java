@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager.SpineAssets;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.polygon.actioninterface.ClockEndCallback;
 
 /**

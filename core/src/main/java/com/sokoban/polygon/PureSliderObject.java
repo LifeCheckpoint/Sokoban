@@ -3,7 +3,7 @@ package com.sokoban.polygon;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 
 /**
@@ -23,7 +23,7 @@ public class PureSliderObject extends SpineObject {
      * @param gameMain 全局句柄
      */
     public PureSliderObject(Main gameMain) {
-        super(gameMain, APManager.SpineAssets.Slider);
+        super(gameMain, SpineAssets.Slider);
         init(gameMain, 0f);
     }
 
@@ -33,7 +33,7 @@ public class PureSliderObject extends SpineObject {
      * @param initialValue 滑块条初始取值，介于 0~1
      */
     public PureSliderObject(Main gameMain, float initialValue) {
-        super(gameMain, APManager.SpineAssets.Slider);
+        super(gameMain, SpineAssets.Slider);
         init(gameMain, initialValue);
     }
 

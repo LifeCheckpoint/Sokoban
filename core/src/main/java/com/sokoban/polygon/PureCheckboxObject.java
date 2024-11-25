@@ -3,7 +3,7 @@ package com.sokoban.polygon;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.polygon.actioninterface.FlipUpdateCallback;
 
 /**
@@ -22,7 +22,7 @@ public class PureCheckboxObject extends SpineObject {
     private final String TO_DISABLED = "disabled";
 
     public PureCheckboxObject(Main gameMain) {
-        super(gameMain, APManager.SpineAssets.Checkbox);
+        super(gameMain, SpineAssets.Checkbox);
         
         this.isChecked = false;
         this.isEnabled = true;

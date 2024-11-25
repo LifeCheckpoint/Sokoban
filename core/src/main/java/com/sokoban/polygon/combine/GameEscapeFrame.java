@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager.ImageAssets;
+import com.sokoban.assets.ImageAssets;
 
 /**
  * 游戏主界面 Frame 黑框

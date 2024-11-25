@@ -16,12 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.GameParams;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.AccelerationMovingManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.OverlappingManager;
-import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.OverlappingManager.OverlapStatue;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
@@ -82,7 +82,7 @@ public class MapChooseScene extends SokobanScene {
         
         // 返回按钮
         ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
-        returnButton = controlButtonContainer.create(APManager.ImageAssets.LeftArrowButton);
+        returnButton = controlButtonContainer.create(ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 
         returnButton.addListener(new ClickListener() {
@@ -97,7 +97,7 @@ public class MapChooseScene extends SokobanScene {
         msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
 
         // 玩家
-        playerSpine = new SpineObject(gameMain, APManager.SpineAssets.Player1);
+        playerSpine = new SpineObject(gameMain, SpineAssets.Player1);
         playerSpine.stayAnimationAtFirst("down");
         playerSpine.setSize(1f, 1f);
         playerSpine.setPosition(SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);

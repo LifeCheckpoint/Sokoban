@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.polygon.PureCheckboxObject;
 import com.sokoban.polygon.container.ImageButtonContainer;
 
@@ -33,7 +33,7 @@ public class CheckboxObject extends SokobanCombineObject {
      */
     private boolean checkboxType;
 
-    public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxImageResourceEnum, boolean isChecked, boolean isEnabled) {
+    public CheckboxObject(Main gameMain, ImageAssets checkboxImageResourceEnum, boolean isChecked, boolean isEnabled) {
         super(gameMain);
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxImageResourceEnum);
@@ -45,7 +45,7 @@ public class CheckboxObject extends SokobanCombineObject {
         init(checkboxText, isChecked, isEnabled, DEFAULT_BUFF);
     }
 
-    public CheckboxObject(Main gameMain, APManager.ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled, float buff) {
+    public CheckboxObject(Main gameMain, ImageAssets checkboxResourceEnum, boolean isChecked, boolean isEnabled, float buff) {
         super(gameMain);
         ImageButtonContainer CheckboxImageContainer = new ImageButtonContainer(gameMain, DEFAULT_TEXT_SCALE);
         Image CheckboxImage = CheckboxImageContainer.create(checkboxResourceEnum);

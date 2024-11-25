@@ -2,6 +2,8 @@ package com.sokoban.manager;
 
 import com.badlogic.gdx.audio.Music;
 import com.sokoban.Main;
+import com.sokoban.assets.AssetsPathManager;
+import com.sokoban.assets.MusicAssets;
 import com.sokoban.core.Logger;
 
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.Random;
  * @author Life_Checkpoint
  */
 public class MusicManager {
-    private APManager apManager;
+    private AssetsPathManager apManager;
     private MusicAudio currentMusicName;
     private boolean isPlaying = false;
     private float volume = 1.0f;
@@ -31,7 +33,7 @@ public class MusicManager {
         setVolume(gameMain.getSettingManager().gameSettings.sound.masterVolume * gameMain.getSettingManager().gameSettings.sound.musicVolume);
     }
 
-    public void loadMusic(MusicAudio audioAlias, APManager.MusicAssets audioAssets) {
+    public void loadMusic(MusicAudio audioAlias, MusicAssets audioAssets) {
         if (musicMap.containsKey(audioAlias)) {
             Logger.warning("MusicManager", "Music already loaded: " + audioAlias.toString());
             return;

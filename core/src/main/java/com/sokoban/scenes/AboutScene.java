@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.combine.HintMessageBox;
@@ -48,12 +48,12 @@ public class AboutScene extends SokobanScene {
         buttonContainer = new ImageButtonContainer(gameMain);
         labelContainer = new ImageLabelContainer(gameMain, 0.008f);
 
-        returnButton = buttonContainer.create(APManager.ImageAssets.LeftArrowButton);
+        returnButton = buttonContainer.create(ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.5f, 8f);
 
         // 信息 label
-        infoLabel = labelContainer.create(APManager.ImageAssets.AboutInfo);
-        infoLabelEgg = labelContainer.create(APManager.ImageAssets.AboutInfoEGG);
+        infoLabel = labelContainer.create(ImageAssets.AboutInfo);
+        infoLabelEgg = labelContainer.create(ImageAssets.AboutInfoEGG);
         infoLabel.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
         infoLabelEgg.setPosition(6f, 4.5f - infoLabel.getHeight() / 2);
 

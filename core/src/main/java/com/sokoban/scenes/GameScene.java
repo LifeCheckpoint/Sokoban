@@ -7,10 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.JsonManager;
 import com.sokoban.core.Logger;
 import com.sokoban.core.game.GameParams;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.SingleActionInstanceManager;
@@ -112,15 +112,15 @@ public class GameScene extends SokobanScene {
         
         buttonContainer = new ButtonCheckboxContainers();
 
-        continueGameButton = buttonContainer.create(gameMain, APManager.ImageAssets.ContinueGame, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
+        continueGameButton = buttonContainer.create(gameMain, ImageAssets.ContinueGame, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
         continueGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 3f);
         continueGameButton.setCheckboxType(false);
 
-        settingsButton = buttonContainer.create(gameMain, APManager.ImageAssets.SettingsButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
+        settingsButton = buttonContainer.create(gameMain, ImageAssets.SettingsButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
         settingsButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 1.5f);
         settingsButton.setCheckboxType(false);
 
-        exitGameButton = buttonContainer.create(gameMain, APManager.ImageAssets.ExitButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
+        exitGameButton = buttonContainer.create(gameMain, ImageAssets.ExitButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
         exitGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 0f);
         exitGameButton.setCheckboxType(false);
 

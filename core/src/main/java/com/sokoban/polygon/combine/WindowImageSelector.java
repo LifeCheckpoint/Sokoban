@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.polygon.container.ImageLabelContainer;
 
 public class WindowImageSelector extends SokobanCombineObject {
@@ -25,24 +25,24 @@ public class WindowImageSelector extends SokobanCombineObject {
     private float DEFAULT_SCREEN_CENTRE_X = 8f, DEFAULT_SCREEN_CENTRE_Y = 4.5f;
     private float DEFAULT_BUFF = 0.5f;
 
-    public WindowImageSelector(Main gameMain, List<APManager.ImageAssets> WindowImageEnums) {
+    public WindowImageSelector(Main gameMain, List<ImageAssets> WindowImageEnums) {
         super(gameMain);
         init(gameMain, WindowImageEnums, DEFAULT_CENTRAL_WIDTH, DEFAULT_CENTRAL_HEIGHT, DEFAULT_SIDE_WIDTH, DEFAULT_SIDE_HEIGHT, DEFAULT_BUFF);
     }
 
-    public WindowImageSelector(Main gameMain, List<APManager.ImageAssets> WindowImageEnums, 
+    public WindowImageSelector(Main gameMain, List<ImageAssets> WindowImageEnums, 
                                 float centralWidth, float centralHeight, float sideWidth, float sideHeight) {
         super(gameMain);
         init(gameMain, WindowImageEnums, centralWidth, centralHeight, sideWidth, sideHeight, DEFAULT_BUFF);
     }
 
-    public WindowImageSelector(Main gameMain, List<APManager.ImageAssets> WindowImageEnums, 
+    public WindowImageSelector(Main gameMain, List<ImageAssets> WindowImageEnums, 
                                 float centralWidth, float centralHeight, float sideWidth, float sideHeight, float buff) {
         super(gameMain);
         init(gameMain, WindowImageEnums, centralWidth, centralHeight, sideWidth, sideHeight, buff);
     }
 
-    public void init(Main gameMain, List<APManager.ImageAssets> WindowImageEnums, 
+    public void init(Main gameMain, List<ImageAssets> WindowImageEnums, 
                         float centralWidth, float centralHeight, float sideWidth, float sideHeight, float buff) {
         this.buff = buff;
         this.centralWidth = centralWidth;
@@ -52,7 +52,7 @@ public class WindowImageSelector extends SokobanCombineObject {
         this.windows = new ArrayList<>();
 
         ImageLabelContainer windowContainer = new ImageLabelContainer(gameMain, 0.0005f);
-        for (APManager.ImageAssets windowImageEnum : WindowImageEnums) windows.add(windowContainer.create(windowImageEnum));
+        for (ImageAssets windowImageEnum : WindowImageEnums) windows.add(windowContainer.create(windowImageEnum));
         
         currentWindowIndex = 0;
         

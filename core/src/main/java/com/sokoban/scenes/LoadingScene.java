@@ -3,8 +3,9 @@ package com.sokoban.scenes;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.assets.AssetsPathManager;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.WhiteProgressBar;
 import com.sokoban.polygon.container.ImageLabelContainer;
@@ -22,9 +23,9 @@ public class LoadingScene extends SokobanScene {
     private SpriteBatch batch;
     private SokobanScene targetScreen;
     private float progress;
-    private APManager assetsPathManager;
+    private AssetsPathManager assetsPathManager;
 
-    public LoadingScene(Main gameMain, SokobanScene targetScreen, APManager assetsPathManager) {
+    public LoadingScene(Main gameMain, SokobanScene targetScreen, AssetsPathManager assetsPathManager) {
         super(gameMain);
         this.targetScreen = targetScreen;
         this.assetsPathManager = assetsPathManager;
@@ -46,7 +47,7 @@ public class LoadingScene extends SokobanScene {
         progressBar.setPosition((stage.getWidth() - progressBar.getWidth()) / 2, 0.2f * viewport.getWorldHeight());
 
         // 加载文本标签设置
-        label = new ImageLabelContainer(gameMain, 0.007f).create(APManager.ImageAssets.LoadingAssetsLabel);
+        label = new ImageLabelContainer(gameMain, 0.007f).create(ImageAssets.LoadingAssetsLabel);
         label.setPosition((stage.getWidth() - label.getWidth()) / 2, 0.3f * viewport.getWorldHeight());
 
         ActionUtils.FadeInEffect(progressBar);

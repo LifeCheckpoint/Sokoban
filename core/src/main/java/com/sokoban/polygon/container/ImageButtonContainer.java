@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager;
+import com.sokoban.assets.ImageAssets;
 import com.badlogic.gdx.math.Interpolation;
 
 /**
@@ -28,7 +28,7 @@ public class ImageButtonContainer extends ImageContainer {
     }
 
     // 创建按钮
-    public Image create(APManager.ImageAssets resourceEnum) {
+    public Image create(ImageAssets resourceEnum) {
         return create(readDrawableFromFile(resourceEnum));
     }
 

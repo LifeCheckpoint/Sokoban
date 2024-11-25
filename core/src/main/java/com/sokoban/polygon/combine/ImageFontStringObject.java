@@ -7,10 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.FontManager;
-import com.sokoban.manager.APManager.ImageAssets;
 
 /**
  * 字符串显示类，由 Image 组合而成
@@ -24,14 +23,14 @@ public class ImageFontStringObject extends SokobanCombineObject {
     List<Image> charImageObject;
 
     private final float DEFAULT_BUFF = 0f;
-    private final APManager.ImageAssets[] DEFAULT_PAGE_FILE = new APManager.ImageAssets[1];
+    private final ImageAssets[] DEFAULT_PAGE_FILE = new ImageAssets[1];
     private final String DEFAULT_FNT_FILE_DATA;
     /** 改进空格显示，由 1 个拓展到 SPACE_REPEAT 个 */
     private final int SPACE_REPEAT = 6;
 
     public ImageFontStringObject(Main gameMain, String stringContent) {
         super(gameMain);
-        DEFAULT_PAGE_FILE[0] = APManager.ImageAssets.FontpageMetaNormal;
+        DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
         init(stringContent, DEFAULT_BUFF, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
@@ -39,20 +38,20 @@ public class ImageFontStringObject extends SokobanCombineObject {
 
     public ImageFontStringObject(Main gameMain, String stringContent, float buff) {
         super(gameMain);
-        DEFAULT_PAGE_FILE[0] = APManager.ImageAssets.FontpageMetaNormal;
+        DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
         init(stringContent, buff, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
     }
 
-    public ImageFontStringObject(Main gameMain, String stringContent, float buff, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
+    public ImageFontStringObject(Main gameMain, String stringContent, float buff, ImageAssets[] pageFileEnums, String fntFileData) {
         super(gameMain);
         DEFAULT_FNT_FILE_DATA = "";
 
         init(stringContent, buff, pageFileEnums, fntFileData);
     }
 
-    private void init(String stringContent, float buff, APManager.ImageAssets[] pageFileEnums, String fntFileData) {
+    private void init(String stringContent, float buff, ImageAssets[] pageFileEnums, String fntFileData) {
         // 空格显示改进
         String improvedString = stringContent.replace(" ", new String(" ").repeat(SPACE_REPEAT));
         this.stringContent = stringContent;

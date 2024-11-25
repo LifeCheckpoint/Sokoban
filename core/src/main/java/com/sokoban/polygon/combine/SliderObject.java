@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.sokoban.Main;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 import com.sokoban.polygon.PureSliderObject;
 import com.sokoban.polygon.actioninterface.ValueUpdateCallback;
 import com.sokoban.polygon.container.ImageLabelContainer;
@@ -32,18 +32,18 @@ public class SliderObject extends SokobanCombineObject{
     private final float DEFAULT_BUFF = 0.16f;
     private final float MIN_VALUE = 0f, MAX_VALUE = 1f;
 
-    public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum) {
+    public SliderObject(Main gameMain, ImageAssets SliderHintResourceEnum) {
         super(gameMain);
         init(SliderHintResourceEnum, 0f, 1f, 0, 0, 2, DEFAULT_BUFF);
     }
 
-    public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum, 
+    public SliderObject(Main gameMain, ImageAssets SliderHintResourceEnum, 
                         float toMapMinValue, float toMapMaxValue, float initialValue, int integerDigits, int decimalDigits) {
         super(gameMain);
         init(SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, DEFAULT_BUFF);
     }
 
-    public SliderObject(Main gameMain, APManager.ImageAssets SliderHintResourceEnum, 
+    public SliderObject(Main gameMain, ImageAssets SliderHintResourceEnum, 
                         float toMapMinValue, float toMapMaxValue, float initialValue, int integerDigits, int decimalDigits, float buff) {
         super(gameMain);
         init(SliderHintResourceEnum, toMapMinValue, toMapMaxValue, initialValue, integerDigits, decimalDigits, buff);
@@ -59,7 +59,7 @@ public class SliderObject extends SokobanCombineObject{
      * @param decimalDigits 小数显示位数
      * @param buff 间距
      */
-    private void init(APManager.ImageAssets SliderHintResourceEnum, float originalMapMinValue, float originalMapMaxValue, 
+    private void init(ImageAssets SliderHintResourceEnum, float originalMapMinValue, float originalMapMaxValue, 
                         float initialValue, int integerDigits, int decimalDigits, float buff) {
         
         // 异常值处理

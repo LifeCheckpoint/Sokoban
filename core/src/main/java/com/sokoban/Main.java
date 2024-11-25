@@ -7,11 +7,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.sokoban.scenes.GameWelcomeScene;
 import com.sokoban.scenes.LoadingScene;
 import com.sokoban.scenes.TestScene;
+import com.sokoban.assets.AssetsPathManager;
 import com.sokoban.core.Logger;
 import com.sokoban.core.MainConfig;
 import com.sokoban.core.settings.SettingManager;
 import com.sokoban.core.user.UserInfo;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.ScreenManager;
 
@@ -22,7 +22,7 @@ import com.sokoban.manager.ScreenManager;
  */
 public class Main extends ApplicationAdapter {
     private MainConfig.RunModes runMode;
-    private APManager apManager;
+    private AssetsPathManager apManager;
     private SettingManager setManager;
     private ScreenManager screenManager;
     private MusicManager musicManager;
@@ -40,7 +40,7 @@ public class Main extends ApplicationAdapter {
      * 获得资源管理句柄
      * @return 资源管理句柄
      */
-    public APManager getAssetsPathManager() {
+    public AssetsPathManager getAssetsPathManager() {
         return apManager;
     }
 
@@ -89,7 +89,7 @@ public class Main extends ApplicationAdapter {
     public void create() {
         Logger.info("Main Thread", "Game start");
 
-        apManager = new APManager(this);
+        apManager = new AssetsPathManager(this);
         apManager.preloadAllAssets();
 
         musicManager = new MusicManager(this);

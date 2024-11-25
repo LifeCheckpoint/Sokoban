@@ -1,4 +1,4 @@
-package com.sokoban.manager;
+package com.sokoban.assets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import com.sokoban.core.Logger;
  * 统一资源管理器 AssetsPathManager
  * @author Life_Checkpoint
  */
-public class APManager {
+public class AssetsPathManager {
     private static boolean usingMipMap = true;
 
     AssetManager assetManager = new AssetManager();
@@ -34,117 +34,9 @@ public class APManager {
      * 资源管理器构造
      * @param gameMain 游戏全局句柄
      */
-    public APManager(Main gameMain) {
+    public AssetsPathManager(Main gameMain) {
         usingMipMap = gameMain.getSettingManager().gameSettings.graphics.mipmap;
     }
-
-    /*  以下为资源枚举 */
-
-    /**
-     * 图像资源枚举
-     */
-    public enum ImageAssets {
-        AboutButton("img/button/about.png"),
-        AboutInfo("img/about_info.png"),
-        AboutInfoEGG("img/about_info2.png"),
-        BlackPixel("img/pixel/black_pixel.png"),
-        Box("img/box.png"),
-        BoxActive("img/box_active.png"),
-        BoxTarget("img/target.png"),
-        CancelButton("img/button/cancel.png"),
-        ContinueGame("img/button/continue_game.png"),
-        EffectsVolume("img/effects_volume.png"),
-        ExitButton("img/button/exit.png"),
-        GrayPixel("img/pixel/gray_pixel.png"),
-        GuestModeButton("img/button/guest_mode.png"),
-        LeftArrowButton("img/button/left_arrow.png"),
-        LeftSquareArrow("img/button/left_square_arrow.png"),
-        LoadingAssetsLabel("img/loading_assets.png"),
-        LoginButton("img/button/login.png"),
-        LogOutButton("img/button/log_out.png"),
-        MasterVolume("img/master_volume.png"),
-        Mipmap("img/button/mipmap.png"),
-        MSAA("img/button/msaa.png"),
-        MusicVolume("img/music_volume.png"),
-        RacingModeButton("img/button/racing_mode.png"),
-        RegisterButton("img/button/register.png"),
-        RememberPasswordButton("img/button/remember_password.png"),
-        RightArrowButton("img/button/right_arrow.png"),
-        RightSquareArrow("img/button/right_square_arrow.png"),
-        SaveButton("img/button/save.png"),
-        SettingsButton("img/button/settings.png"),
-        ShowLevel1("img/show_level_1.png"),
-        ShowLevel2("img/show_level_2.png"),
-        ShowLevel3("img/show_level_3.png"),
-        StartGameButton("img/button/start_game.png"),
-        Vsync("img/button/vsync.png"),
-        WhitePixel("img/pixel/white_pixel.png"),
-
-        FontpageMetaNormal("font/meta-normal.png");
-
-        private final String alias;
-        ImageAssets(String alias) {this.alias = alias;}
-        public String getAlias() {return alias;}
-    }
-
-    /**
-     * 音乐资源枚举
-     */
-    public enum MusicAssets {
-        Light("audio/Light.mp3"),
-        Rain("audio/Rain.mp3");
-
-        private final String alias;
-        MusicAssets(String alias) {this.alias = alias;}
-        public String getAlias() {return alias;}
-    }
-
-    /**
-     * Spine Atlas 资源枚举
-     * <br><br>
-     * 只有 atlas 会被统一读取，Json <b>不会</b>被统一读取
-     */
-    public enum SpineAssets {
-        Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
-        Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
-        Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json"),
-        Rectangle("spine/rec/rec.atlas|spine/rec/rec.json"),
-        Player1("spine/player_1/player_1.atlas|spine/player_1/player_1.json"),
-        Timer("spine/timer/timer.atlas|spine/timer/timer.json"),
-        
-        BoxBlueBox("spine/boxes/blue_box/blue_box.atlas|spine/boxes/blue_box/blue_box.json"),
-        BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json"),
-        BoxDarkBlueBack("spine/boxes/darkblue_pixel/darkblue_pixel.atlas|spine/boxes/darkblue_pixel/darkblue_pixel.json"),
-        BoxDarkGrayBack("spine/boxes/darkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkgray_pixel/darkgray_pixel.json"),
-        BoxGreenBox("spine/boxes/green_box/green_box.atlas|spine/boxes/green_box/green_box.json"),
-        BoxBoxTarget("spine/boxes/box_target/box_target.atlas|spine/boxes/box_target/box_target.json"),
-        BoxGreenBoxLight("spine/boxes/green_box_light/green_box_light.atlas|spine/boxes/green_box_light/green_box_light.json"),
-        BoxPlayerTarget("spine/boxes/player_target/player_target.atlas|spine/boxes/player_target/player_target.json");
-
-        private final String alias;
-        SpineAssets(String alias) {this.alias = alias;}
-        public String getAlias() {return alias;}
-        public String getAliasAtlas() {return alias.split("\\|")[0];}
-        public String getAliasJson() {return alias.split("\\|")[1];}
-    }
-
-    /**
-     * Shader 资源枚举
-     * <br><br>
-     * 顶点和面的 shader 文件之间使用 | 分割
-     * 该类型资源不会被统一读取
-     */
-    public enum ShaderAssets {
-        Blur("shaders/blurVertex.glsl|shaders/blurFragment.glsl");
-
-        private final String alias;
-        ShaderAssets(String alias) {this.alias = alias;}
-        public String getAlias() {return alias;}
-        public String getAliasVertex() {return alias.split("\\|")[0];}
-        public String getAliasFragment() {return alias.split("\\|")[1];}
-    }
-
-    /*  以上为资源枚举 */
 
     /**
      * 通过以上定义的资源枚举<b>将所有 Image Music 和 Spine 资源加入映射表</b>

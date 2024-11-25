@@ -1,8 +1,8 @@
 package com.sokoban.polygon;
 
 import com.sokoban.Main;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.Logger;
-import com.sokoban.manager.APManager;
 
 /**
  * 动画显示数字类
@@ -12,7 +12,7 @@ public class NumberDisplayObject extends SpineObject {
     private int value;
 
     public NumberDisplayObject(Main gameMain, int initialValue) {
-        super(gameMain, APManager.SpineAssets.Numbers);
+        super(gameMain, SpineAssets.Numbers);
         setSize(0.2f, 3.6f);
         setValue(initialValue);
     }

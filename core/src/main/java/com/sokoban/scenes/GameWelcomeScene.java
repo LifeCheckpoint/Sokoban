@@ -19,14 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.sokoban.Main;
+import com.sokoban.assets.AssetsPathManager;
+import com.sokoban.assets.ImageAssets;
+import com.sokoban.assets.MusicAssets;
+import com.sokoban.assets.ShaderAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.core.user.UserInfo;
-import com.sokoban.manager.APManager;
 import com.sokoban.manager.BackgroundGrayParticleManager;
 import com.sokoban.manager.MouseMovingTraceManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.SingleActionInstanceManager;
-import com.sokoban.manager.APManager.ImageAssets;
 import com.sokoban.manager.MusicManager.MusicAudio;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -83,13 +85,13 @@ public class GameWelcomeScene extends SokobanScene {
     public void init() {
         super.init();
 
-        APManager apManager = gameMain.getAssetsPathManager();
+        AssetsPathManager apManager = gameMain.getAssetsPathManager();
         gameMain.setLoginUser(new UserInfo());
 
         // 背景音乐处理
         MusicManager musicManager = gameMain.getMusicManager();
-        musicManager.loadMusic(MusicAudio.Background1, APManager.MusicAssets.Light);
-        musicManager.loadMusic(MusicAudio.Background2, APManager.MusicAssets.Rain);
+        musicManager.loadMusic(MusicAudio.Background1, MusicAssets.Light);
+        musicManager.loadMusic(MusicAudio.Background2, MusicAssets.Rain);
         musicManager.play(musicManager.getRandomAudioEnum(), false);
 
         // 鼠标跟踪
@@ -99,7 +101,7 @@ public class GameWelcomeScene extends SokobanScene {
         // 初始化按钮
         buttonContainer = new ButtonCheckboxContainers();
 
-        startGameButton = buttonContainer.create(gameMain, APManager.ImageAssets.StartGameButton, false, true, 0.1f);
+        startGameButton = buttonContainer.create(gameMain, ImageAssets.StartGameButton, false, true, 0.1f);
         startGameButton.setPosition(1f, 3.2f);
         startGameButton.setCheckboxType(false);
         
@@ -111,15 +113,15 @@ public class GameWelcomeScene extends SokobanScene {
         logOutButton.setPosition(1f, 2.2f);
         logOutButton.setCheckboxType(false);
 
-        aboutButton = buttonContainer.create(gameMain, APManager.ImageAssets.AboutButton, false, true, 0.1f);
+        aboutButton = buttonContainer.create(gameMain, ImageAssets.AboutButton, false, true, 0.1f);
         aboutButton.setPosition(1f, 1.4f);
         aboutButton.setCheckboxType(false);
 
-        exitButton = buttonContainer.create(gameMain, APManager.ImageAssets.ExitButton, false, true, 0.1f);
+        exitButton = buttonContainer.create(gameMain, ImageAssets.ExitButton, false, true, 0.1f);
         exitButton.setPosition(3f, 0.6f);
         exitButton.setCheckboxType(false);
 
-        settingsButton = buttonContainer.create(gameMain, APManager.ImageAssets.SettingsButton, false, true, 0.1f);
+        settingsButton = buttonContainer.create(gameMain, ImageAssets.SettingsButton, false, true, 0.1f);
         settingsButton.setPosition(1f, 0.6f);
         settingsButton.setCheckboxType(false);
 
@@ -175,9 +177,9 @@ public class GameWelcomeScene extends SokobanScene {
 
         // 背景纹理组
         backgroundTextures = new Texture[]{
-            apManager.get(APManager.ImageAssets.Box),
-            apManager.get(APManager.ImageAssets.BoxActive),
-            apManager.get(APManager.ImageAssets.BoxTarget)
+            apManager.get(ImageAssets.Box),
+            apManager.get(ImageAssets.BoxActive),
+            apManager.get(ImageAssets.BoxTarget)
         };
 
         // 背景初始化
@@ -320,7 +322,7 @@ public class GameWelcomeScene extends SokobanScene {
         
         // 编译着色器
         ShaderProgram.pedantic = false;
-        blurShader = gameMain.getAssetsPathManager().get(APManager.ShaderAssets.Blur);
+        blurShader = gameMain.getAssetsPathManager().get(ShaderAssets.Blur);
         if (!blurShader.isCompiled()) {
             Logger.error("Shader", "Compilation failed:\n" + blurShader.getLog());
             return;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.sokoban.Main;
-import com.sokoban.manager.APManager.ImageAssets;
+import com.sokoban.assets.ImageAssets;
 import com.sokoban.polygon.actioninterface.ContentUpdateCallback;
 import com.sokoban.polygon.combine.ImageFontStringObject;
 
