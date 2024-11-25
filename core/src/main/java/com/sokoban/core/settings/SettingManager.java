@@ -51,14 +51,16 @@ public class SettingManager {
      * 如果设置文件不存在则尝试创建默认设置文件
      */
     public void readSettings() {
-        try {
-            gameSettings = new JsonManager().loadEncryptedJson(settingsFilePath, GameSettings.class);
+        gameSettings = new JsonManager().loadJsonfromFile(settingsFilePath, GameSettings.class);
+
+        // 检查读取成功
+        if (gameSettings != null) {
             Logger.info("SettingManager", "Read setting file " + settingsFilePath + "successfully");
             return;
-        } catch (Exception e) {
-            Logger.warning("SettingManager", "Can't load / create setting files because: " + e.getMessage());
-            Logger.warning("SettingManager", "A default setting file will be created");
         }
+        
+        Logger.warning("SettingManager", "Can't load / create setting files");
+        Logger.warning("SettingManager", "A default setting file will be created");
 
         // 未读取成功，获取默认设置
         this.gameSettings = getDefaultGameSetting();
@@ -87,14 +89,13 @@ public class SettingManager {
         // 检测配置文件存在性
         if (settingFile.exists()) settingFile.delete();
 
-        try {
-            new JsonManager().saveEncryptedJson(settingsFilePath, gameSettings);
+        if (new JsonManager().saveJsonToFile(settingsFilePath, gameSettings)) {
+            Logger.info("SettingManager", "Create setting files successfully");
             return true;
-        } catch (Exception e) {
-            Logger.error("SettingManager", "can't create setting files. " + e);
+        } else {
+            Logger.error("SettingManager", "Can't create setting files");
             return false;
         }
-    
     }
 
     public String getSettingsFilePath() {
@@ -108,7 +109,7 @@ public class SettingManager {
     public void setSettingsFilePath(String settingsFilePath) {
         this.settingsFilePath = settingsFilePath;
         if (!new File(settingsFilePath).exists()) {
-            Logger.warning("SettingManager", "Setting file " + settingsFilePath + "is not exists");
+            Logger.warning("SettingManager", "Setting file " + settingsFilePath + " is not exists");
             Logger.warning("SettingManager", "A setting file will be created");
             writeSettings();
         }

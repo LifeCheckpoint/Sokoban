@@ -12,6 +12,8 @@ import java.util.Random;
 
 /**
  * 测试加解密 Json 文件数据模块功能
+ * <br><br>
+ * 较老的测试，请在测试前删除相关 Json 结果防止错误
  * @author Claude
  */
 public class JsonManagerTest {
@@ -36,11 +38,11 @@ public class JsonManagerTest {
 
         try {
             // 将数据加密并保存到文件
-            jsonManager.saveEncryptedJson(filePath, data);
+            jsonManager.saveJsonToFile(filePath, data);
 
             // Step 3: 验证未被篡改的文件
             @SuppressWarnings("all")
-            Map<String, String> decryptedData = jsonManager.loadEncryptedJson(filePath, Map.class);
+            Map<String, String> decryptedData = jsonManager.loadJsonfromFile(filePath, Map.class);
             Assert.assertEquals(decryptedData, data, "Decrypted data does not match original data");
 
             // Step 4: 篡改文件内容并验证
@@ -58,20 +60,14 @@ public class JsonManagerTest {
             Files.write(file.toPath(), tamperedContent.getBytes());
 
             // 尝试加载被篡改的文件并验证抛出异常
-            try {
-                jsonManager.loadEncryptedJson(filePath, Map.class);
-                Assert.fail("Expected exception due to file tampering");
-            } catch (Exception e) {}
+            Assert.assertNull(jsonManager.loadJsonfromFile(filePath, Map.class), "Expected null due to file tampering"); 
 
             // Step 5: 删除篡改的文件内容并恢复
             Files.write(file.toPath(), originalContent.getBytes());
 
             // Step 6: 验证文件不存在的情况
             File nonExistentFile = new File("non-existent-file.json");
-            try {
-                jsonManager.loadEncryptedJson(nonExistentFile.getAbsolutePath(), Map.class);
-                Assert.fail("Expected exception due to file not found");
-            } catch (Exception e) {}
+            Assert.assertNull(jsonManager.loadJsonfromFile(nonExistentFile.getAbsolutePath(), Map.class), "Expected null due to file not found");
 
             // Step 7: 处理测试文件
             if (file.exists()) {
@@ -110,11 +106,11 @@ public class JsonManagerTest {
 
         try {
             // 将数据加密并保存到文件
-            jsonManager.saveEncryptedJson(filePath, data);
+            jsonManager.saveJsonToFile(filePath, data);
 
             // Step 3: 验证未被篡改的文件
             @SuppressWarnings("all")
-            Map<String, String> decryptedData = jsonManager.loadEncryptedJson(filePath, Map.class);
+            Map<String, String> decryptedData = jsonManager.loadJsonfromFile(filePath, Map.class);
             Assert.assertEquals(decryptedData, data, "Decrypted data does not match original data");
 
             // Step 4: 篡改文件内容并验证
@@ -132,10 +128,7 @@ public class JsonManagerTest {
             Files.write(file.toPath(), tamperedContent.getBytes());
 
             // 尝试加载被篡改的文件并验证抛出异常
-            try {
-                jsonManager.loadEncryptedJson(filePath, Map.class);
-                Assert.fail("Expected exception due to file tampering");
-            } catch (Exception e) {}
+            Assert.assertNull(jsonManager.loadJsonfromFile(filePath, Map.class), "Expected exception due to file tampering");
 
             // Step 5: 删除篡改的文件内容并恢复
             Files.write(file.toPath(), originalContent.getBytes());
@@ -175,21 +168,18 @@ public class JsonManagerTest {
 
         try {
             // 将数据加密并保存到文件
-            jsonManager.saveEncryptedJson(filePath, data);
+            jsonManager.saveJsonToFile(filePath, data);
 
             // 验证未被篡改的文件
             @SuppressWarnings("all")
-            Map<String, String> decryptedData = jsonManager.loadEncryptedJson(filePath, Map.class);
+            Map<String, String> decryptedData = jsonManager.loadJsonfromFile(filePath, Map.class);
             Assert.assertEquals(decryptedData, data, "Decrypted data does not match original data");
 
             File file = new File(filePath);
 
             // 验证文件不存在情况
             File nonExistentFile = new File("non-existent-file.json");
-            try {
-                jsonManager.loadEncryptedJson(nonExistentFile.getAbsolutePath(), Map.class);
-                Assert.fail("Expected exception due to file not found");
-            } catch (Exception e) {}
+            Assert.assertNull(jsonManager.loadJsonfromFile(nonExistentFile.getAbsolutePath(), Map.class), "Expected exception due to file not found");
 
             // Step 7: 处理测试文件
             if (file.exists()) {
