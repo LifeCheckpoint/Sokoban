@@ -1,7 +1,6 @@
 package com.sokoban.core.user;
 
-import java.io.File;
-import java.nio.file.Paths;
+import com.sokoban.utils.FilePathUtils;
 import com.sokoban.core.JsonManager;
 import com.sokoban.core.Logger;
 
@@ -41,10 +40,10 @@ public class UserManager {
 
         try {
             // 使用用户名作为加密密钥，读取相应目录下用户文件
-            String userInfoPath = Paths.get(userInfosRootPath, userName + ".usr").toString();
-            
+            String userInfoPath = FilePathUtils.combine(userInfosRootPath, userName + ".usr");
+
             // 用户文件不存在
-            if (!new File(userInfoPath).exists()) return null;
+            if (!FilePathUtils.exists(userInfoPath)) return null;
 
             UserInfo currentUserInfo = new JsonManager(userName).loadJsonfromFile(userInfoPath, UserInfo.class);
             return currentUserInfo;
@@ -80,10 +79,10 @@ public class UserManager {
         }
 
         // 使用用户名作为加密密钥，创建相应目录下用户文件
-        String userInfoPath = Paths.get(userInfosRootPath, userInfo.getUserID() + ".usr").toString();
+        String userInfoPath = FilePathUtils.combine(userInfosRootPath, userInfo.getUserID() + ".usr");
 
         // 若重复创建，返回假
-        if (new File(userInfoPath).exists()) {
+        if (FilePathUtils.exists(userInfoPath)) {
             Logger.warning("UserManager", String.format("User %s has be created, ignore current creating", userInfo.getUserID()));
             return false;
         }
@@ -101,10 +100,8 @@ public class UserManager {
         // 测试根目录存在性，不存在则创建
         testUserInfosPathWithCreate();
 
-        String userInfoPath = Paths.get(userInfosRootPath, userName + ".usr").toString();
-        File userInfoFile = new File(userInfoPath);
-        
-        return userInfoFile.delete();
+        String userInfoPath = FilePathUtils.combine(userInfosRootPath, userName + ".usr");
+        return FilePathUtils.delete(userInfoPath);
     }
 
     /**
@@ -113,17 +110,14 @@ public class UserManager {
      */
     public synchronized boolean testUserInfosPathWithCreate() {
         try {
-            File userInfoPathObj = new File(userInfosRootPath);
-
             // 不存在则创建目录
-            if (!userInfoPathObj.exists()) {
+            if (!FilePathUtils.exists(userInfosRootPath)) {
                 Logger.warning("UserManager", String.format("User infos directory %s is not exists. It will be created.", userInfosRootPath));
-                userInfoPathObj.mkdirs();
+                FilePathUtils.createDirectories(userInfosRootPath);
                 return false;
             }
-
             return true;
-            
+
         } catch (Exception e) {
             Logger.error("UserManager", String.format("Cannot create user infos directory %s because %s", userInfosRootPath, e.getMessage()));
             return false;
@@ -144,7 +138,7 @@ public class UserManager {
         ) return false;
         if (userInfo.getUserID().length() <= 1 || userInfo.getUserID().length() >= 30) return false;
         if (userInfo.getUserPasswordHash().equals("")) return false;
-        
+
         return true;
     }
 
@@ -191,5 +185,4 @@ public class UserManager {
     public void setUserInfosRootPath(String userInfosPath) {
         this.userInfosRootPath = userInfosPath;
     }
-    
 }

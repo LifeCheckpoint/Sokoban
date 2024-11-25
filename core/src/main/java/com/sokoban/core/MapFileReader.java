@@ -1,6 +1,8 @@
 package com.sokoban.core;
 
-import java.io.File;
+import com.sokoban.utils.FileInfo;
+import com.sokoban.utils.FilePathUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +20,7 @@ import java.util.List;
 public class MapFileReader {
     private String mapsDirectory;
 
-    private final String DEFAULT_MAPS_DIRECTORY = "./test-files/bin/maps";
+    private final String DEFAULT_MAPS_DIRECTORY = "./bin/maps";
     private final String MAP_FILE_EXTENSION = ".map";
 
     /**
@@ -42,28 +44,13 @@ public class MapFileReader {
      */
     public List<MapInfo> listAllMaps() {
         List<MapInfo> mapList = new ArrayList<>();
-        try {
-            File mapsDir = new File(mapsDirectory);
+        List<FileInfo> fileInfos = FilePathUtils.walk(mapsDirectory, true);
 
-            // 地图目录不存在
-            if (!mapsDir.exists() || !mapsDir.isDirectory()) {
-                System.out.println("MapManager Maps directory does not exist or is not a directory: " + mapsDirectory);
-                return mapList;
+        for (FileInfo fileInfo : fileInfos) {
+            if (fileInfo.fileName.endsWith(MAP_FILE_EXTENSION)) {
+                String mapName = fileInfo.fileName.replace(MAP_FILE_EXTENSION, "");
+                mapList.add(new MapInfo(fileInfo.file.getAbsolutePath(), fileInfo.relativePath, mapName));
             }
-
-            // 搜索文件
-            Files.walk(mapsDir.toPath())
-                    .filter(Files::isRegularFile)
-                    .filter(path -> path.toString().endsWith(MAP_FILE_EXTENSION))
-                    .forEach(path -> {
-                        File file = path.toFile();
-                        String relativePath = mapsDir.toPath().relativize(path.getParent()).toString();
-                        String mapName = file.getName().replace(MAP_FILE_EXTENSION, "");
-                        mapList.add(new MapInfo(path.toString(), relativePath, mapName));
-                    });
-
-        } catch (IOException e) {
-            System.out.println("MapManager Error listing map files: " + e.getMessage());
         }
         return mapList;
     }
@@ -75,8 +62,8 @@ public class MapFileReader {
      * @return 地图内容
      */
     public String readMapByLevelAndName(String levelName, String mapName) {
-        Path mapPath = Path.of(mapsDirectory, levelName, mapName + MAP_FILE_EXTENSION);
-        return readMapByPath(mapPath.toString());
+        String mapPath = FilePathUtils.combine(mapsDirectory, levelName, mapName + MAP_FILE_EXTENSION);
+        return readMapByPath(mapPath);
     }
 
     /**
@@ -85,10 +72,15 @@ public class MapFileReader {
      * @return 地图内容，失败返回 null
      */
     public String readMapByPath(String path) {
+        if (!FilePathUtils.exists(path)) {
+            Logger.error("MapFileReader", "File does not exist: " + path);
+            return null;
+        }
+
         try {
             return Files.readString(Path.of(path));
         } catch (IOException e) {
-            System.out.println("MapManager Error reading map file: " + path + " - " + e.getMessage());
+            Logger.error("MapFileReader", "Error reading map file: " + path + " - " + e.getMessage());
             return null;
         }
     }
@@ -109,17 +101,18 @@ public class MapFileReader {
      * @return 是否创建成功
      */
     public boolean createMapWithContent(String path, String content) {
+        if (FilePathUtils.exists(path)) {
+            Logger.error("MapFileReader", "File already exists: " + path);
+            return false;
+        }
+
         try {
-            File file = new File(path);
-            if (file.exists()) {
-                System.out.println("MapManager File already exists: " + path);
-                return false;
-            }
-            Files.createDirectories(file.getParentFile().toPath());
-            Files.writeString(file.toPath(), content, StandardOpenOption.CREATE_NEW);
+            String parentDirectory = Path.of(path).getParent().toString();
+            FilePathUtils.createDirectories(parentDirectory);
+            Files.writeString(Path.of(path), content, StandardOpenOption.CREATE_NEW);
             return true;
         } catch (IOException e) {
-            System.out.println("MapManager Error creating map file with content: " + path + " - " + e.getMessage());
+            Logger.error("MapFileReader", "Error creating map file with content: " + path + " - " + e.getMessage());
             return false;
         }
     }
