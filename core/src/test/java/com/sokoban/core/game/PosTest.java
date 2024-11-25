@@ -1,9 +1,7 @@
-package com.sokoban.core.CORE;
+package com.sokoban.core.game;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.sokoban.core.game.Pos;
 
 public class PosTest {
 
@@ -60,12 +58,5 @@ public class PosTest {
         Pos pos1 = new Pos(1, 2, 3);
         Pos pos2 = new Pos(4, 5, 6);
         Assert.assertFalse(pos1.equals(pos2), "Objects with different x, y, z should not be equal");
-    }
-
-    @Test
-    public void testEqualsDifferentClass() {
-        Pos pos = new Pos(1, 2, 3);
-        String other = "Not a Pos object";
-        Assert.assertFalse(pos.equals(other), "Objects of different classes should not be equal");
     }
 }

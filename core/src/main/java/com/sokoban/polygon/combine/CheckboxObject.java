@@ -154,4 +154,8 @@ public class CheckboxObject extends SokobanCombineObject {
             return null;
         }
     }
+
+    public boolean getChecked() {
+        return checkbox.getChecked();
+    }
 }

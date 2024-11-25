@@ -147,7 +147,7 @@ public class LoginScene extends SokobanScene {
                 newUser = new UserInfo(
                     userNameField.getText(), 
                     userManager.calculatePasswordHash(passwordField.getText()), 
-                    rememberPasswordCheckbox.getCheckbox().getChecked()
+                    rememberPasswordCheckbox.getChecked()
                 );
                 
                 // 密码为空且不记住密码

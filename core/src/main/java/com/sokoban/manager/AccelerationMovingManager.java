@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.utils.MathUtilsEx;
 
-// TODO 自定义边界框功能
-
 /**
  * 加速度管理器，用于位移的滑行效果
  * @author Life_Checkpoint

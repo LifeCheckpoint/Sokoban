@@ -389,7 +389,7 @@ public class MapChooseScene extends SokobanScene {
         racingModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameParams.racing = racingModeCheckbox.getCheckbox().getChecked();
+                gameParams.racing = racingModeCheckbox.getChecked();
                 // 提示
                 HintMessageBox msgBox = new HintMessageBox(gameMain, "Racing Mode " + (gameParams.racing ? "On" : "Off"));
                 msgBox.setPosition(racingModeButton.getX() + racingModeCheckbox.getWidth() / 2, racingModeCheckbox.getY() - 1f);

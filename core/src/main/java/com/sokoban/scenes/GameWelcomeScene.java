@@ -72,9 +72,6 @@ public class GameWelcomeScene extends SokobanScene {
     private CheckboxObject logInButton;
     private CheckboxObject logOutButton;
 
-    // 用户信息
-    private UserInfo currentUserInfo;
-
     // 动画单一实例管理
     SingleActionInstanceManager SAIManager = new SingleActionInstanceManager(gameMain);
 
@@ -87,7 +84,7 @@ public class GameWelcomeScene extends SokobanScene {
         super.init();
 
         APManager apManager = gameMain.getAssetsPathManager();
-        currentUserInfo = new UserInfo();
+        gameMain.setLoginUser(new UserInfo());
 
         // 背景音乐处理
         MusicManager musicManager = gameMain.getMusicManager();
@@ -267,20 +264,19 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     /**
-     * 设置主用户信息
+     * 设置主用户信息的回调，用于主界面 UI 切换
      * @param userInfo 用户信息
      */
     public void setCurrentUser(UserInfo userInfo) {
-        this.currentUserInfo = userInfo;
         HintMessageBox msgBox;
         
         // 空用户
-        if (currentUserInfo == null) {
+        if (userInfo == null) {
             Logger.error("GameWelcomeScene", "Null User Info is not valid!");
             return;
         }
 
-        if (currentUserInfo.isGuest()) {
+        if (userInfo.isGuest()) {
             // 访客用户
             Logger.info("GameWelcomeScene", "Switch user: Guest");
             logOutButton.getAllActors().forEach(Actor::remove);
@@ -289,11 +285,13 @@ public class GameWelcomeScene extends SokobanScene {
 
         } else {
             // 普通用户
-            Logger.info("GameWelcomeScene", "Switch user: " + currentUserInfo.getUserID());
+            Logger.info("GameWelcomeScene", "Switch user: " + userInfo.getUserID());
             logInButton.getAllActors().forEach(Actor::remove);
             addCombinedObjectToStage(logOutButton);
             msgBox = new HintMessageBox(gameMain, "Welcome, " + userInfo.getUserID() + " !");
         }
+
+        gameMain.setLoginUser(userInfo);
 
         msgBox.setPosition(8f, 0.2f);
         addCombinedObjectToStage(msgBox);

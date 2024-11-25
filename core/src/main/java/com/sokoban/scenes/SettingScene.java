@@ -207,8 +207,8 @@ public class SettingScene extends SokobanScene {
         GraphicsSettings graphicsSet = currentSettings.graphics;
         SoundSettings soundSet = currentSettings.sound;
 
-        graphicsSet.mipmap = mipmapCheckbox.getCheckbox().getChecked();
-        graphicsSet.vsync = vsyncCheckbox.getCheckbox().getChecked();
+        graphicsSet.mipmap = mipmapCheckbox.getChecked();
+        graphicsSet.vsync = vsyncCheckbox.getChecked();
         graphicsSet.msaa = msaaValueDisplayer.getShowingValueInt();
 
         soundSet.masterVolume = masterVolumeSlider.getSlider().getValue();

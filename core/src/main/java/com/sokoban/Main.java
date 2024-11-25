@@ -10,6 +10,7 @@ import com.sokoban.scenes.TestScene;
 import com.sokoban.core.Logger;
 import com.sokoban.core.MainConfig;
 import com.sokoban.core.settings.SettingManager;
+import com.sokoban.core.user.UserInfo;
 import com.sokoban.manager.APManager;
 import com.sokoban.manager.MusicManager;
 import com.sokoban.manager.ScreenManager;
@@ -25,6 +26,8 @@ public class Main extends ApplicationAdapter {
     private SettingManager setManager;
     private ScreenManager screenManager;
     private MusicManager musicManager;
+
+    private UserInfo loginUser;
     
     private Color backGroundColorRGBA = new Color(0x101010ff);
 
@@ -63,6 +66,22 @@ public class Main extends ApplicationAdapter {
      */
     public MusicManager getMusicManager() {
         return musicManager;
+    }
+
+    /**
+     * 获得当前用户
+     * @return 当前用户
+     */
+    public UserInfo getLoginUser() {
+        return loginUser;
+    }
+
+    /**
+     * 设置当前用户
+     * @param loginUser 当前用户
+     */
+    public void setLoginUser(UserInfo loginUser) {
+        this.loginUser = loginUser;
     }
 
     // 主游戏创建
