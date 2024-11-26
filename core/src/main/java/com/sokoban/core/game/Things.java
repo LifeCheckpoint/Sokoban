@@ -26,5 +26,6 @@ public class Things {
     public void setPosition(Pos position) {
         this.position = position;
     }
+
 }
 
