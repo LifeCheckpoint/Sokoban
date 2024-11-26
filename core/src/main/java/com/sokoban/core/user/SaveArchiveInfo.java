@@ -38,6 +38,8 @@ public class SaveArchiveInfo {
     public boolean equals(Object obj) {
         if (obj instanceof SaveArchiveInfo) {
             SaveArchiveInfo anothorSaveArchive = (SaveArchiveInfo) obj;
+            if (mapsStatue == null && anothorSaveArchive.getMapsStatue() == null) return true;
+            if (records == null && anothorSaveArchive.getRecords() == null) return true;
             if (!mapsStatue.equals(anothorSaveArchive.getMapsStatue())) return false;
             if (!records.equals(anothorSaveArchive.getRecords())) return false;
 
