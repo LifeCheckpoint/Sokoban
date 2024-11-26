@@ -13,6 +13,8 @@ public enum ImageAssets {
     BoxTarget("img/target.png"),
     CancelButton("img/button/cancel.png"),
     ContinueGame("img/button/continue_game.png"),
+    DwonSquareButton("img/button/down_square_arrow.png"),
+    EditorButton("img/button/editor.png"),
     EffectsVolume("img/effects_volume.png"),
     ExitButton("img/button/exit.png"),
     GrayPixel("img/pixel/gray_pixel.png"),
@@ -42,6 +44,7 @@ public enum ImageAssets {
     ShowLevel2("img/show_level_2.png"),
     ShowLevel3("img/show_level_3.png"),
     StartGameButton("img/button/start_game.png"),
+    UpSquareButton("img/button/up_square_arrow.png"),
     Vsync("img/button/vsync.png"),
     WhitePixel("img/pixel/white_pixel.png"),
 

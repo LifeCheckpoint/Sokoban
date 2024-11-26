@@ -22,6 +22,7 @@ public class LevelChooseScene extends SokobanScene {
     private BackgroundGrayParticleManager bgParticle;
     private Image leftSelectButton, rightSelectButton;
     private Image returnButton, startButton;
+    private Image editorButton;
     private MouseMovingTraceManager moveTrace;
     private WindowImageSelector levelSelector;
 
@@ -45,6 +46,11 @@ public class LevelChooseScene extends SokobanScene {
 
         startButton = controlButtonContainer.create(ImageAssets.RightArrowButton);
         startButton.setPosition(13.6f, 0.6f);
+
+        // 编辑器按钮
+        controlButtonContainer.setScaling(0.005f);
+        editorButton = controlButtonContainer.create(ImageAssets.EditorButton);
+        editorButton.setPosition(13.6f, 8f);
 
         // 左右选择按钮
         ImageButtonContainer selectorButtonContainer = new ImageButtonContainer(gameMain);
@@ -84,8 +90,15 @@ public class LevelChooseScene extends SokobanScene {
             }
         });
 
+        editorButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMain.getScreenManager().setScreen(new MapEditScene(gameMain));
+            }
+        });
+
         addCombinedObjectToStage(levelSelector);
-        addActorsToStage(returnButton, startButton, leftSelectButton, rightSelectButton);
+        addActorsToStage(returnButton, startButton, leftSelectButton, rightSelectButton, editorButton);
 
         // 淡入效果
         levelSelector.getAllActors().forEach(ActionUtils::FadeInEffect);
@@ -93,6 +106,7 @@ public class LevelChooseScene extends SokobanScene {
         ActionUtils.FadeInEffect(startButton);
         ActionUtils.FadeInEffect(leftSelectButton);
         ActionUtils.FadeInEffect(rightSelectButton);
+        ActionUtils.FadeInEffect(editorButton);
 
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
