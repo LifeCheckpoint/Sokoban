@@ -3,11 +3,15 @@ package com.sokoban.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFileWriter implements FileUtil {
+public class MapFileWriter {
     int[][] map;
     public int[][] getMap() {
         return map;
     }
+    MapFileReader reader = new MapFileReader();
+
+
+
     public void convertToMap(List<String> readlines) {
         this.map = new int[readlines.size()][];
 
@@ -34,23 +38,6 @@ public class MapFileWriter implements FileUtil {
         return lines;
     }
 
-    @Override
-    public List<String> readFileToList(String filePath) {
-        return List.of();
-    }
-
-    @Override
-    public void writeFileFromList(String filePath, List<String> lines) {
-
-    }
-
-    public void printMap(){
-        for (int i = 0; i < this.map.length; i++) {
-            for (int j = 0; j < this.map[i].length; j++) {
-                System.out.print(this.map[i][j] + "\t");
-            }
-        }
-    }
 }
 
 
