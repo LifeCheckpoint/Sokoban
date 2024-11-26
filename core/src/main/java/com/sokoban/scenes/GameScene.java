@@ -1,5 +1,9 @@
 package com.sokoban.scenes;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,6 +14,7 @@ import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.core.game.GameParams;
+import com.sokoban.core.game.GameStateFrame;
 import com.sokoban.core.manager.JsonManager;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.action.ViewportRescaleAction;
@@ -20,6 +25,7 @@ import com.sokoban.polygon.container.ButtonCheckboxContainers;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
+import com.sokoban.polygon.manager.AccelerationMovingManager.Direction;
 import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 
@@ -50,6 +56,9 @@ public class GameScene extends SokobanScene {
     // 游戏主内容
     // TODO 多层堆叠
     Stack2DGirdWorld gridWorld;
+
+    // TODO 历史记录
+    List<GameStateFrame> historyStates;
 
     private final float DEFAULT_CELL_SIZE = 1f;
     private final float VIEWPORT_RESCALE_RATIO = 1.6f;
@@ -141,7 +150,7 @@ public class GameScene extends SokobanScene {
         replayButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO Play again...
+                replay();
             }
         });
 
@@ -161,6 +170,19 @@ public class GameScene extends SokobanScene {
                 gameMain.getScreenManager().setScreen(new SettingScene(gameMain));
             }
         });
+
+        historyStates = new ArrayList<>();
+        initHistoryState();
+    }
+
+    public void initHistoryState() {
+        // TODO 初始历史记录 MapInfo
+        GameStateFrame initState = new GameStateFrame();
+        initState.mapInfo = null;
+        initState.action = Direction.None;
+        initState.stepCount = 0;
+        initState.frameTime = LocalDateTime.now();
+        historyStates.add(initState);
     }
 
     public void draw(float delta) {
@@ -222,27 +244,64 @@ public class GameScene extends SokobanScene {
         
     }
 
+    /** 再玩一次 */
+    public void replay() {
+        // 清空历史记录，重新开始
+        historyStates.clear();
+        initHistoryState();
+
+        // TODO 处理画面
+    }
+
     @Override
     public void logic(float delta) {}
 
     @Override
     public void input() {
-        // 不在退出菜单，检测方向操控行为
+        Direction moveDirection = Direction.None;
+
+        // 不在退出菜单，检测操控行为
+        // TODO 游戏操控
         if (!isInEscapeMenu) {
             if (Gdx.input.isKeyJustPressed(Keys.UP) || Gdx.input.isKeyJustPressed(Keys.W)) {
-
+                moveDirection = Direction.Up;
             }
     
             if (Gdx.input.isKeyJustPressed(Keys.DOWN) || Gdx.input.isKeyJustPressed(Keys.A)) {
-                
+                moveDirection = Direction.Down;
             }
     
             if (Gdx.input.isKeyJustPressed(Keys.LEFT) || Gdx.input.isKeyJustPressed(Keys.S)) {
-                
+                moveDirection = Direction.Left;
             }
     
             if (Gdx.input.isKeyJustPressed(Keys.RIGHT) || Gdx.input.isKeyJustPressed(Keys.D)) {
-                
+                moveDirection = Direction.Right;
+            }
+
+            if (moveDirection != Direction.None) {
+                // TODO MapInfo
+                GameStateFrame stateFrame = new GameStateFrame();
+                stateFrame.action = moveDirection;
+                stateFrame.stepCount = historyStates.getLast().stepCount + 1;
+                stateFrame.frameTime = LocalDateTime.now();
+                historyStates.add(stateFrame);
+            }
+
+            // 撤销
+            if (Gdx.input.isKeyJustPressed(Keys.Z)) {
+                // 如果不是初始状态
+                if (historyStates.size() != 1) {
+                    // 允许撤销，但是步数和时间都会继续增长
+                    historyStates.removeLast();
+                    historyStates.getLast().frameTime = LocalDateTime.now();
+                    historyStates.getLast().stepCount += 2; // 在后一步基础上增加撤销一步
+                }
+            }
+
+            // 重置
+            if (Gdx.input.isKeyJustPressed(Keys.R)) {
+                replay();
             }
         }
 
