@@ -8,9 +8,5 @@ package com.sokoban;
 public class CoreTest {
     public static void main() {
         System.out.println("Backend Test Started");
-        // backend test
-
-        
-        
     }
 }
