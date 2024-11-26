@@ -1,43 +1,24 @@
 package com.sokoban.core;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MapFileWriter {
-    int[][] map;
-    public int[][] getMap() {
-        return map;
-    }
-    MapFileReader reader = new MapFileReader();
+    int[][] map = null;
+    public static void main (String[] args) {
+        MapFileReader reader = new MapFileReader();
+        String mapContent = reader.readMapByLevelAndName("tutorial", "map1");
+        String[] lines = mapContent.split("\n");
 
+        String addtionInfo = lines[0];
 
-
-    public void convertToMap(List<String> readlines) {
-        this.map = new int[readlines.size()][];
-
-        for (int i = 0; i < readlines.size(); i++) {
-            String[] pieces = readlines.get(i).split(",");
-            this.map[i] = new int[pieces.length];
-            for (int j = 0; j < pieces.length; j++) {
-                this.map[i][j] = Integer.parseInt(pieces[j]);
+        int subMapNum = Integer.parseInt(lines[1]);
+        String[] setMap = lines[2].split(" ");
+        int[][] map = new int[Integer.parseInt(setMap[0])][Integer.parseInt(setMap[1])];
+        for(int i = 3; i < map.length; i++) {
+            String[] line = lines[i].split(" ");
+            for(int j = 0; j < map[i].length; j++) {
+                map[i][j] = Integer.parseInt(line[j]);
             }
         }
     }
-
-    public List<String> convertToList() {
-        List<String> lines = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int[] ints : this.map) {
-            sb.setLength(0);
-            for (int anInt : ints) {
-                sb.append(anInt).append(",");
-            }
-            sb.setLength(sb.length() - 1);
-            lines.add(sb.toString());
-        }
-        return lines;
-    }
-
 }
 
 
