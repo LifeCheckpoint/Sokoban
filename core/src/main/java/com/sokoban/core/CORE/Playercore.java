@@ -1,7 +1,5 @@
 package com.sokoban.core.CORE;
 
-import com.sokoban.core.CORE.TestMap;
-
 public class Playercore {
 
     public void moveUp(Things player) {
