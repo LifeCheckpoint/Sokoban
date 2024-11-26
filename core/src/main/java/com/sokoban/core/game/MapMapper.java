@@ -23,4 +23,31 @@ public class MapMapper {
         } else
             return ObjectType.Unknown;
     }
+
+    /**
+     * 映射字符到地图元素，这是为了与传统地图格式兼容
+     * @param character 字符
+     * @return 地图元素
+     */
+    public static ObjectType MapCharToType(char character) {
+        switch (character) {
+            case '_':
+            case '-':
+                return ObjectType.AIR;
+            case '#':
+                return ObjectType.WALL;
+            case '.':
+                return ObjectType.PosOfBox;
+            case '$':
+                return ObjectType.BOX;
+            case '@':
+                return ObjectType.PLAYER;
+            case '*':
+                return ObjectType.PosOfBox; // 应该是已经放好的箱子
+            case '+':
+                return ObjectType.PlayerGetBoxpos;
+            default:
+                return ObjectType.Unknown;
+        }
+    }
 }
