@@ -36,6 +36,12 @@ public class Lwjgl3Launcher {
         if (checkArgFlag(args, "--info")) Logger.loggerLevel = Logger.LogLevel.INFO;
         if (checkArgFlag(args, "--warning")) Logger.loggerLevel = Logger.LogLevel.WARNING;
         if (checkArgFlag(args, "--error")) Logger.loggerLevel = Logger.LogLevel.ERROR;
+
+        // 设置 jni 调试输出
+        if (checkArgFlag(args, "--debug")) {
+            System.setProperty("jna.debug_load", "true");
+            System.setProperty("jna.debug_load.jna", "true");
+        }
         
         // 尝试设置载入
         mainConfig.settingManager = new SettingManager();

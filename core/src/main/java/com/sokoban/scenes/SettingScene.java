@@ -60,7 +60,7 @@ public class SettingScene extends SokobanScene {
         returnButton = buttonContainer.create(ImageAssets.LeftArrowButton);
         returnButton.setPosition(0.3f, 8.3f);
         
-        saveButton = buttonContainer.create(ImageAssets.SaveButton);
+        saveButton = buttonContainer.create(ImageAssets.SaveIconButton);
         saveButton.setPosition(-20f, -20f); // 暂时不可见
         saveButton.addListener(new ClickListener() {
             @Override

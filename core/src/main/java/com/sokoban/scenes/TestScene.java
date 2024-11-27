@@ -11,6 +11,7 @@ import com.sokoban.polygon.combine.GirdWorld;
 // import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
+import com.sokoban.polygon.combine.TopMenu;
 
 public class TestScene extends SokobanScene {
     public TestScene(Main gameMain) {
@@ -58,6 +59,11 @@ public class TestScene extends SokobanScene {
         // 文本框测试
         InputTextField textField = new InputTextField(gameMain, 30);
         textField.setPosition(3f, 6f);
+
+        // 菜单栏测试
+        TopMenu topMenu = new TopMenu(gameMain, 0.2f);
+        topMenu.setPosition(8f, 3f);
+        addCombinedObjectToStage(topMenu);
 
         addActorsToStage(textField);
     }

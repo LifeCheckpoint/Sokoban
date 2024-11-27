@@ -12,6 +12,9 @@ dependencies {
   api 'com.fasterxml.jackson.core:jackson-core:2.13.5'
   api 'com.fasterxml.jackson.core:jackson-annotations:2.13.5'
   api 'com.esotericsoftware.spine:spine-libgdx:3.8.+'
+  api 'net.java.dev.jna:jna:5.13.0'
+  api 'net.java.dev.jna:jna-platform:5.13.0'
+
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
