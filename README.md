@@ -24,7 +24,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |动画效果|▶️进行中|
 |设置配置|▶️进行中|
 
-当前版本 `0.3.0`
+当前版本 `0.3.1`
 
 ## Feature 项目特色
 
@@ -34,6 +34,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 4. GUI 代码采用 `服务定位器` 与 `单例模式` 的结合设计 ，通过 `gameMain` 分发全局控制句柄，简化开发，重用率高
 5. 核心功能基于 `TestNG` 进行了充分单元 + 覆盖率测试
 6. 充分利用 AI 加快项目学习编写工作，可使工作流在高度抽象的逻辑中进行
+7. 通过 `JNI` 高效进行跨语言协作，并且保证游戏对特定平台 api 的兼容
 
 ~~（只是因为要答辩所以写这些）~~
 
@@ -92,6 +93,16 @@ Any additional features beyond the basic requirements described above will earn 
 8. ▶️ Adding maps of your own design
 
 ## Log 更新日志
+
+### 0.3.1 update
+
+1. 新增了关卡编辑器功能，下拉菜单等动效组件
+2. 新增玩家存档选择功能
+3. 新增重玩按钮
+4. 新增了教程关
+5. 优化了日志输出
+6. 修复设置初始化无法创建目录的问题
+7. 修复初始设置错误的问题
 
 ### 0.3.0 update
 
@@ -163,9 +174,8 @@ Any additional features beyond the basic requirements described above will earn 
 
 ### 0.1.0 Update
 
-`Sokoban` 项目的第一个初始界面搭建完成，包括背景音乐，粒子效果，鼠标跟踪，基础素材等等
-
-这是发布到 `main` 分支的第一个版本
+1. `Sokoban` 项目的第一个初始界面搭建完成，包括背景音乐，粒子效果，鼠标跟踪，基础素材等等
+2. 这是发布到 `main` 分支的第一个版本
 
 ## Structure 项目结构
 
