@@ -10,10 +10,18 @@ extern "C" {
 /*
  * Class:     com_sokoban_utils_WindowsFileChooser
  * Method:    openFileChooser
- * Signature: ([Ljava/lang/String;)Ljava/lang/String;
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL
-Java_com_sokoban_utils_WindowsFileChooser_openFileChooser(JNIEnv *, jclass, jobjectArray);
+JNIEXPORT jstring JNICALL Java_com_sokoban_utils_WindowsFileChooser_openFileChooser
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     com_sokoban_utils_WindowsFileChooser
+ * Method:    saveFileChooser
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_sokoban_utils_WindowsFileChooser_saveFileChooser
+  (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }

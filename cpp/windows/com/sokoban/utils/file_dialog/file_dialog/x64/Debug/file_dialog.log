@@ -1,7 +1,16 @@
 ﻿  pch.cpp
   dllmain.cpp
 D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(29,17): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
+D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(28,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  (编译源文件“/dllmain.cpp”)
+  
+D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(54,17): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
+  (编译源文件“/dllmain.cpp”)
+  
+D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(79,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  (编译源文件“/dllmain.cpp”)
+  
+D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\dllmain.cpp(104,66): warning C4267: “参数”: 从“size_t”转换到“jsize”，可能丢失数据
   (编译源文件“/dllmain.cpp”)
   
     正在创建库 D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\x64\Debug\file_dialog.lib 和对象 D:\wroot\Sokoban\cpp\windows\com\sokoban\utils\file_dialog\x64\Debug\file_dialog.exp
