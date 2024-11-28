@@ -24,14 +24,15 @@ import com.sokoban.utils.WindowsFileChooser;
  * 地图编辑界面
  * @author Life_Checkpoint
  */
-public class MapEditScene extends SokobanScene {
+public class MapEditScene extends SokobanFitScene {
     // 辅助功能
     private BackgroundGrayParticleManager bgParticle;
     private SingleActionInstanceManager SAIManager;
 
     // 状态控制
-    private boolean pullDownTopMenu = false;
-    private String currentFilePath = null;
+    private boolean pullDownTopMenu = false; // 下拉菜单是否被拉下
+    private String currentFilePath = null; // 当前文件路径
+    private float currentWorldScaling = 1.0f; // 当前世界缩放大小
 
     // 按钮 菜单
     private Image layerUpButton, layerDownButton;
@@ -65,7 +66,22 @@ public class MapEditScene extends SokobanScene {
         // 初始化地图
         map3DGirdWorld = new Stack3DGirdWorld(gameMain, 16, 9, 1f);
 
-        
+        // 地图滚轮、鼠标响应缩放
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                // 滚轮滚动，amountY 发生变动，更新非固定视口大小与相机
+                currentWorldScaling += amountY * 0.02f;
+                if (currentWorldScaling < 0.2f) currentWorldScaling = 0.2f;
+                if (currentWorldScaling > 2f) currentWorldScaling = 2f;
+
+                // Logger.debug("MapEditScene", String.format("Scroll amountY = %.2f, world scaling = %.2f", amountY, currentWorldScaling));
+
+                viewport.setWorldSize(16f * currentWorldScaling, 9f * currentWorldScaling);
+                viewport.apply();
+                return true;
+            }
+        });
 
         // 返回
         topMenu.getExitButton().addListener(new ClickListener() {
@@ -95,16 +111,12 @@ public class MapEditScene extends SokobanScene {
         topMenu.getSaveButton().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                HintMessageBox msgBox;
-
                 if (saveFile(false)) {
+                    HintMessageBox msgBox;
                     msgBox = new HintMessageBox(gameMain, "Save OK ;D");
-                } else {
-                    msgBox = new HintMessageBox(gameMain, "Fail or cancel to save map");
+                    msgBox.setPosition(8f, 0.5f);
+                    msgBox.addActorsToStage(stage);
                 }
-
-                msgBox.setPosition(8f, 0.5f);
-                msgBox.addActorsToStage(stage);
             }
         });
 
@@ -153,9 +165,13 @@ public class MapEditScene extends SokobanScene {
         ActionUtils.FadeInEffect(layerDownButton);
         topMenu.getAllActors().forEach(ActionUtils::FadeInEffect);
 
-        // 添加 UI
+        // 添加 UI 到固定 Stage
+        topMenu.getAllActors().forEach(actor -> UIStage.addActor(actor));
+        Logger.debug(String.format("%.2f", UIStage.getWidth()));
+        
+        // 添加 Actor 到非固定 Stage
         addActorsToStage(layerDownButton, layerUpButton);
-        addCombinedObjectToStage(topMenu);
+
     }
 
     /**
@@ -261,7 +277,8 @@ public class MapEditScene extends SokobanScene {
 
     @Override
     public void draw(float delta) {
-        
+        // 固定 Stage 与可变 Stage 绘制
+        UIStage.draw();
         stage.draw();
     }
 
@@ -271,9 +288,4 @@ public class MapEditScene extends SokobanScene {
     @Override
     public void hide() {}
 
-    // 资源释放
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
 }

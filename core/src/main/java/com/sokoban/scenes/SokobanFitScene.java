@@ -1,8 +1,7 @@
 package com.sokoban.scenes;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -10,20 +9,22 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sokoban.Main;
 import com.sokoban.polygon.combine.SokobanCombineObject;
 
-/** 
- * Scene 的统一父类
+/**
+ * 拥有固定 Stage 与可变 Stage 的 Scene 超类
  * <br><br>
- * 拥有控制输入处理器和初始化权
+ * 基于每个 Stage 控制输入处理权和初始化权
  * @author Life_Checkpoint
  */
-public abstract class SokobanScene extends ApplicationAdapter implements Screen {
+public abstract class SokobanFitScene extends SokobanScene {
     /** Scene 初始化标志 */
     protected boolean initFlag = false;
 
     /** 舞台 */
-    protected Stage stage;
+    protected Stage stage, UIStage;
     /** FitViewport 视口，比例为 16: 9 */
-    protected Viewport viewport;
+    protected Viewport viewport, UIViewport;
+    /** 输入处理器 */
+    protected InputMultiplexer inputMultiplexer;
     /** 游戏全局句柄 */
     protected Main gameMain;
 
@@ -38,7 +39,8 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
      * 基类初始化，需要传入 gameMain
      * @param gameMain 全局句柄
      */
-    public SokobanScene(Main gameMain) {
+    public SokobanFitScene(Main gameMain) {
+        super(gameMain);
         this.gameMain = gameMain;
     }
 
@@ -51,7 +53,9 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
     }
 
     /**
-     * 屏幕切换到显示状态
+     * 重写显示方法，设置多输入处理器
+     * <br><br>
+     * {@inheritDoc}
      */
     @Override
     public void show() {
@@ -59,7 +63,12 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
             init();
             initFlag = true;  // 初始化执行一次
         }
-        Gdx.input.setInputProcessor(stage); // 设置输入处理器
+
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(UIStage);
+        inputMultiplexer.addProcessor(stage);
+
+        Gdx.input.setInputProcessor(inputMultiplexer); // 设置多输入处理器
     }
 
     /**
@@ -74,8 +83,12 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
      * 注意，<b>调用 super.init() 确保超类初始化</b>
      */
     protected void init() {
-        viewport = new FitViewport(16, 9); // 初始化视口
-        stage = new Stage(viewport);       // 初始化舞台
+        // 设置可变 UI Stage
+        viewport = new FitViewport(16, 9);
+        stage = new Stage(viewport);
+        // 设置固定 UI Stage
+        UIViewport = new FitViewport(16, 9);
+        UIStage = new Stage(UIViewport);
     }
 
     /**
@@ -100,9 +113,9 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
     public abstract void logic(float delta);
 
     /**
-     * 屏幕渲染主方法，如果进行同步帧率步更新则必须重写
+     * 渲染固定舞台，对渲染方法进行重写
      * <br><br>
-     * 注意，<b>方法执行顺序为 input -> logic -> draw </b>，并且 input 与 logic 方法仅会执行<b>一次</b>
+     * {@inheritDoc}
      */
     @Override
     public void render(float delta) {
@@ -131,6 +144,7 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
 
         // stage 应该与真实时间同步进行
         stage.act(delta);
+        UIStage.act(delta);
         draw(UPDATE_TIME_STEP);
     };
 
@@ -139,7 +153,8 @@ public abstract class SokobanScene extends ApplicationAdapter implements Screen 
      */
     @Override
     public void dispose() {
-        if (stage != null) stage.dispose();
+        super.dispose();
+        if (UIStage != null) UIStage.dispose();
     }
 
     /**
