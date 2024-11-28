@@ -25,7 +25,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      * <br><br>
      * 遍历方式为层（下到上）、行、列 (L -> H -> W)
      */
-    List<GirdWorld> stackGridWorld;
+    List<GirdWorld> stack2DGridWorld;
 
     public Stack2DGirdWorld(Main gameMain, int gridWidth, int gridHeight, float cellSize) {
         super(gameMain);
@@ -37,7 +37,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
         this.gridHeight = gridHeight;
         this.cellSize = cellSize;
 
-        stackGridWorld = new ArrayList<>();
+        stack2DGridWorld = new ArrayList<>();
         setPosition(8f, 4.5f);
     }
 
@@ -54,7 +54,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
         this.x = x - width / 2;
         this.y = y - height / 2;
 
-        for (GirdWorld gridLayer : stackGridWorld) gridLayer.setPosition(x, y);
+        for (GirdWorld gridLayer : stack2DGridWorld) gridLayer.setPosition(x, y);
     }
 
     /**
@@ -75,10 +75,9 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
 
     /**
      * 添加新层
-     * @param girdWorldLayer 网格小世界
      */
     public void addLayer() {
-        stackGridWorld.add(new GirdWorld(gameMain, gridWidth, gridHeight, cellSize));
+        stack2DGridWorld.add(new GirdWorld(gameMain, gridWidth, gridHeight, cellSize));
         getTopLayer().setPosition(x, y);
     }
 
@@ -87,7 +86,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      * @param girdWorldLayer 网格小世界
      */
     public void addLayer(GirdWorld girdWorldLayer) {
-        stackGridWorld.add(girdWorldLayer);
+        stack2DGridWorld.add(girdWorldLayer);
         getTopLayer().setPosition(x, y);
     }
 
@@ -97,12 +96,12 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      * @return GridWorld 对象
      */
     public GirdWorld getLayer(int layer) {
-        if (layer < 0 || layer >= stackGridWorld.size()) {
-            Logger.error("Stack2DGridWorld", String.format("%d is not a valid layer, Expect (0, %d)", layer, stackGridWorld.size()));
-            return new GirdWorld(gameMain, gridWidth, gridHeight, cellSize);
+        if (layer < 0 || layer >= stack2DGridWorld.size()) {
+            Logger.error("Stack2DGridWorld", String.format("%d is not a valid layer, Expect (0, %d)", layer, stack2DGridWorld.size()));
+            return null;
         }
 
-        return stackGridWorld.get(layer);
+        return stack2DGridWorld.get(layer);
     }
 
     /**
@@ -110,7 +109,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      * @return 顶层 GridWorld
      */
     public GirdWorld getTopLayer() {
-        return getLayer(stackGridWorld.size() - 1);
+        return getLayer(stack2DGridWorld.size() - 1);
     }
 
     /**
@@ -121,7 +120,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
         List<Actor> actors = new ArrayList<>();
 
         // 按照堆叠顺序
-        for (GirdWorld gridLayer : stackGridWorld) actors.addAll(gridLayer.getAllActors());
+        for (GirdWorld gridLayer : stack2DGridWorld) actors.addAll(gridLayer.getAllActors());
         return actors;
     }
 
@@ -133,12 +132,12 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
         getAllActors().forEach(stage::addActor);
     }
 
-    public List<GirdWorld> getStackGridWorld() {
-        return stackGridWorld;
+    public List<GirdWorld> getStack2DGridWorld() {
+        return stack2DGridWorld;
     }
 
-    public void setStackGridWorld(List<GirdWorld> stackGridWorld) {
-        this.stackGridWorld = stackGridWorld;
+    public void setStack2DGridWorld(List<GirdWorld> stack2DGridWorld) {
+        this.stack2DGridWorld = stack2DGridWorld;
     }
 
 }

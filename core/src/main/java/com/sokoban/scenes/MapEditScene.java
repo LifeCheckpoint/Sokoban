@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -11,6 +12,7 @@ import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.polygon.combine.HintMessageBox;
+import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.combine.TopMenu;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
@@ -31,11 +33,12 @@ public class MapEditScene extends SokobanScene {
     private boolean pullDownTopMenu = false;
     private String currentFilePath = null;
 
-    // 按钮
+    // 按钮 菜单
     private Image layerUpButton, layerDownButton;
-
-    // 菜单
     private TopMenu topMenu;
+
+    // 地图
+    private Stack3DGirdWorld map3DGirdWorld;
 
     public MapEditScene(Main gameMain) {
         super(gameMain);
@@ -55,8 +58,14 @@ public class MapEditScene extends SokobanScene {
         layerDownButton.setSize(0.6f, 0.6f);
         layerDownButton.setPosition(0.8f, 3f);
 
+        // 顶部下拉菜单
         topMenu = new TopMenu(gameMain, 0.2f);
-        topMenu.setPosition(8f, 8.7f); // 将下拉菜单放在顶部，留出下拉按钮
+        topMenu.setPosition(8f, 8.7f);
+        
+        // 初始化地图
+        map3DGirdWorld = new Stack3DGirdWorld(gameMain, 16, 9, 1f);
+
+        
 
         // 返回
         topMenu.getExitButton().addListener(new ClickListener() {
