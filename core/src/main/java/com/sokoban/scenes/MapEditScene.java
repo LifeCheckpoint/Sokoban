@@ -1,8 +1,10 @@
 package com.sokoban.scenes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -15,6 +17,7 @@ import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.combine.TopMenu;
 import com.sokoban.polygon.container.ImageButtonContainer;
+import com.sokoban.polygon.container.ImageLabelContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
 import com.sokoban.utils.ActionUtils;
@@ -33,6 +36,9 @@ public class MapEditScene extends SokobanFitScene {
     private boolean pullDownTopMenu = false; // 下拉菜单是否被拉下
     private String currentFilePath = null; // 当前文件路径
     private float currentWorldScaling = 1.0f; // 当前世界缩放大小
+    private boolean isDragging = false; // 是否正在拖动可变视口
+    private Vector2 lastMousePosition = new Vector2(); // 鼠标拖动起始点
+    private float lastMouseOriginalX, lastMouseOriginalY; // 鼠标拖动原始坐标
 
     // 按钮 菜单
     private Image layerUpButton, layerDownButton;
@@ -40,6 +46,11 @@ public class MapEditScene extends SokobanFitScene {
 
     // 地图
     private Stack3DGirdWorld map3DGirdWorld;
+    private Image[][] cornerDecoration; // 角落的方格标记
+
+    private final int INITIAL_MAP_WIDTH = 48;
+    private final int INITIAL_MAP_HEIGHT = 27;
+    private final float MAX_MOVING_PACE = 0.06f; // 地图移动最快巡航速度
 
     public MapEditScene(Main gameMain) {
         super(gameMain);
@@ -64,7 +75,23 @@ public class MapEditScene extends SokobanFitScene {
         topMenu.setPosition(8f, 8.7f);
         
         // 初始化地图
-        map3DGirdWorld = new Stack3DGirdWorld(gameMain, 16, 9, 1f);
+        map3DGirdWorld = new Stack3DGirdWorld(gameMain, INITIAL_MAP_WIDTH, INITIAL_MAP_HEIGHT, 1f);
+        map3DGirdWorld.setPosition(8f, 4.5f);
+        map3DGirdWorld.addStack2DLayer(); // 新建一层 2D 层
+
+        cornerDecoration = new Image[INITIAL_MAP_WIDTH][INITIAL_MAP_HEIGHT];
+        ImageLabelContainer cornerContainer = new ImageLabelContainer(gameMain, 0.001f);
+        Vector2 corner_position;
+        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
+            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
+                corner_position = map3DGirdWorld.getTopLayer().getCellPosition(j, i);
+                // 将角落标记装饰加入
+                cornerDecoration[i][j] = cornerContainer.create(ImageAssets.LightSquare);
+                cornerDecoration[i][j].getColor().a = 0.25f;
+                cornerDecoration[i][j].setPosition(corner_position.x - cornerDecoration[i][j].getWidth() / 2, corner_position.y - cornerDecoration[i][j].getHeight() / 2);
+                // Logger.info(String.format("%.2f, %.2f", corner_position.x, corner_position.y));
+            }
+        }
 
         // 地图滚轮、鼠标响应缩放
         stage.addListener(new InputListener() {
@@ -166,12 +193,19 @@ public class MapEditScene extends SokobanFitScene {
         topMenu.getAllActors().forEach(ActionUtils::FadeInEffect);
 
         // 添加 UI 到固定 Stage
-        topMenu.getAllActors().forEach(actor -> UIStage.addActor(actor));
-        Logger.debug(String.format("%.2f", UIStage.getWidth()));
+        addCombinedObjectToUIStage(topMenu);
+        addActorsToUIStage(layerDownButton, layerUpButton);
         
         // 添加 Actor 到非固定 Stage
-        addActorsToStage(layerDownButton, layerUpButton);
 
+        // 角落标记
+        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
+            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
+                // FIXME: Exception in thread "main" java.lang.NullPointerException: "this.stage" is null
+                // addActorsToStage(cornerDecoration[i][j]);
+                stage.addActor(cornerDecoration[i][j]);
+            }
+        }
     }
 
     /**
@@ -273,6 +307,47 @@ public class MapEditScene extends SokobanFitScene {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             exitEditScene();
         }
+
+        // 处理鼠标右键拖动，变换可变视口
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            // 如果是第一次按下右键
+            if (!isDragging) {
+
+                // 相对于未改变的视口，鼠标初始位置的世界坐标
+                lastMouseOriginalX = Gdx.input.getX();
+                lastMouseOriginalY = Gdx.input.getY();
+                lastMousePosition.set(viewport.unproject(new Vector2(lastMouseOriginalX, lastMouseOriginalY)));
+                // 设置拖动标志
+                isDragging = true;
+
+            // 正在拖动
+            } else {
+
+                // 获取当前鼠标位置以及相对位移，这里用原始视口进行坐标变换
+                Vector2 currentMousePosition = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+                // 相对于变化的视口，鼠标初始位置的世界坐标要更新
+                lastMousePosition.set(viewport.unproject(new Vector2(lastMouseOriginalX, lastMouseOriginalY)));
+
+                // 相对位移
+                Vector2 deltaPosition = currentMousePosition.cpy().sub(lastMousePosition).scl(MAX_MOVING_PACE);
+                if (deltaPosition.len() > 0.1f) deltaPosition.setLength(0.1f);
+                
+                // 视口位移向量 = 初始视口位置 + 鼠标位移
+                Vector2 newViewPosition = new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y).sub(deltaPosition);
+                
+                // 边界
+                newViewPosition.x = Math.clamp(newViewPosition.x, -INITIAL_MAP_WIDTH * 1.0f / 2, INITIAL_MAP_WIDTH * 1.0f / 2);
+                newViewPosition.y = Math.clamp(newViewPosition.y, -INITIAL_MAP_HEIGHT * 1.0f / 2, INITIAL_MAP_HEIGHT * 1.0f / 2);
+
+                viewport.getCamera().position.set(newViewPosition, 0);
+                viewport.getCamera().update();
+            }
+
+        // 如果没有拖放
+        } else {
+            isDragging = false;
+        }
+
     }
 
     @Override

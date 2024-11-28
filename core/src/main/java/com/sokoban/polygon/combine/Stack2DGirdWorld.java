@@ -59,8 +59,8 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
 
     /**
      * 返回指定格子的左下角世界坐标，左下角为 (0, 0)
-     * @param row 行，0 ~ gridHeight
-     * @param column 列，0 ~ gridWidth
+     * @param row 行，0 ~ gridHeight * cellSize
+     * @param column 列，0 ~ gridWidth * cellSize
      * @return Vector2 坐标
      */
     public Vector2 getCellPosition(int row, int column) {

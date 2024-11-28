@@ -22,6 +22,7 @@ public enum ImageAssets {
     GuestModeButton("img/button/guest_mode.png"),
     LeftArrowButton("img/button/left_arrow.png"),
     LeftSquareArrow("img/button/left_square_arrow.png"),
+    LightSquare("img/light_square.png"),
     LoadingAssetsLabel("img/loading_assets.png"),
     LoginButton("img/button/login.png"),
     LogOutButton("img/button/log_out.png"),

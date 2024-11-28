@@ -158,16 +158,16 @@ public abstract class SokobanFitScene extends SokobanScene {
     }
 
     /**
-     * 将所有 Actor 加入 Stage
+     * 将所有 Actor 加入 UIStage
      */
-    public void addActorsToStage(Actor... actors) {
-        for(Actor actor : actors) stage.addActor(actor);
+    public void addActorsToUIStage(Actor... actors) {
+        for(Actor actor : actors) UIStage.addActor(actor);
     }
 
     /**
-     * 将所有 CombinedObject 加入 Stage
+     * 将所有 CombinedObject 加入 UIStage
      */
-    public void addCombinedObjectToStage(SokobanCombineObject... combineObjects) {
-        for(SokobanCombineObject combineObject : combineObjects) combineObject.addActorsToStage(stage);;
+    public void addCombinedObjectToUIStage(SokobanCombineObject... combineObjects) {
+        for(SokobanCombineObject combineObject : combineObjects) combineObject.addActorsToStage(UIStage);;
     }
 }

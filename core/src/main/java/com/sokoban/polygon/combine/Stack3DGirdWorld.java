@@ -67,7 +67,8 @@ public class Stack3DGirdWorld extends SokobanCombineObject {
      */
     public void addStack2DLayer() {
         stack3DGridWorld.add(new Stack2DGirdWorld(gameMain, gridWidth, gridHeight, cellSize));
-        getTopLayer().setPosition(x, y);
+        // 中心坐标
+        getTopLayer().setPosition(x + width / 2, y + height / 2);
     }
 
     /**
