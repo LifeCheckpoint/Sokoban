@@ -103,4 +103,18 @@ public class MathUtilsEx {
 
         return Direction.None;
     }
+
+    /**
+     * 计算鼠标所属格轴坐标对应索引
+     * @param mouseAxisPosition 鼠标轴坐标
+     * @param gridAxisPosition 网格左下角轴坐标
+     * @param gridAxisWidth 网格轴最大格数
+     * @param gridCellSize 格大小
+     * @return 所属轴坐标，超范围返回 -1
+     */
+    public static int caculateMouseGridAxis(float mouseAxisPosition, float gridAxisPosition, int gridAxisWidth, float gridCellSize) {
+        int pos = (int) ((mouseAxisPosition - gridAxisPosition) / gridCellSize);
+        if (pos <= 0 || pos >= gridAxisWidth) return -1;
+        else return pos;
+    }
 }

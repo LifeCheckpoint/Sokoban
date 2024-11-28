@@ -21,6 +21,7 @@ import com.sokoban.polygon.container.ImageLabelContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
 import com.sokoban.utils.ActionUtils;
+import com.sokoban.utils.MathUtilsEx;
 import com.sokoban.utils.WindowsFileChooser;
 
 /**
@@ -51,6 +52,10 @@ public class MapEditScene extends SokobanFitScene {
     private final int INITIAL_MAP_WIDTH = 48;
     private final int INITIAL_MAP_HEIGHT = 27;
     private final float MAX_MOVING_PACE = 0.06f; // 地图移动最快巡航速度
+    private final float MOUSE_RELATIVE_SQUARE_ALPHA = 0.02f; // 鼠标参照框透明度
+
+    // 其它部件
+    private Image mouseRelativeSquare;
 
     public MapEditScene(Main gameMain) {
         super(gameMain);
@@ -73,6 +78,11 @@ public class MapEditScene extends SokobanFitScene {
         // 顶部下拉菜单
         topMenu = new TopMenu(gameMain, 0.2f);
         topMenu.setPosition(8f, 8.7f);
+
+        // 鼠标参照框
+        mouseRelativeSquare = new Image(gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel));
+        mouseRelativeSquare.setSize(1f, 1f);
+        mouseRelativeSquare.getColor().a = MOUSE_RELATIVE_SQUARE_ALPHA;
         
         // 初始化地图
         map3DGirdWorld = new Stack3DGirdWorld(gameMain, INITIAL_MAP_WIDTH, INITIAL_MAP_HEIGHT, 1f);
@@ -197,6 +207,7 @@ public class MapEditScene extends SokobanFitScene {
         addActorsToUIStage(layerDownButton, layerUpButton);
         
         // 添加 Actor 到非固定 Stage
+        stage.addActor(mouseRelativeSquare);
 
         // 角落标记
         for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
@@ -308,6 +319,42 @@ public class MapEditScene extends SokobanFitScene {
             exitEditScene();
         }
 
+        // 视口右键移动判定
+        processViewportMoving();
+
+        // 鼠标移动参照框
+        mouseRelativeSquareMoving();
+
+        // 在下拉菜单缩回时，允许处理以下事件
+        if (!pullDownTopMenu) {
+
+        }
+    }
+
+    /**
+     * 处理鼠标参照框移动
+     */
+    private void mouseRelativeSquareMoving() {
+        float posX = Gdx.input.getX(), posY = Gdx.input.getY();
+        Vector2 worldPosition = viewport.unproject(new Vector2(posX, posY));
+        int coordinateX = MathUtilsEx.caculateMouseGridAxis(worldPosition.x, map3DGirdWorld.getX(), INITIAL_MAP_WIDTH, 1.0f);
+        int coordinateY = MathUtilsEx.caculateMouseGridAxis(worldPosition.y, map3DGirdWorld.getY(), INITIAL_MAP_HEIGHT, 1.0f);
+
+        // 坐标合法检查
+        if (coordinateX != -1 && coordinateY != -1) {
+            Vector2 coordVector = map3DGirdWorld.getTopLayer().getCellPosition(coordinateY, coordinateX);
+            mouseRelativeSquare.setPosition(coordVector.x, coordVector.y);
+        }
+
+        if (pullDownTopMenu) mouseRelativeSquare.getColor().a = 0f;
+        else mouseRelativeSquare.getColor().a = MOUSE_RELATIVE_SQUARE_ALPHA;
+
+    } 
+
+    /**
+     * 处理鼠标右键引发的视口移动
+     */
+    private void processViewportMoving() {
         // 处理鼠标右键拖动，变换可变视口
         if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
             // 如果是第一次按下右键
@@ -347,7 +394,6 @@ public class MapEditScene extends SokobanFitScene {
         } else {
             isDragging = false;
         }
-
     }
 
     @Override
