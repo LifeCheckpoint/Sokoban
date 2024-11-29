@@ -10,6 +10,18 @@ public class MapFileWriter {
         String addtionInfo = lines[0];
         System.out.println(addtionInfo);
 
+
+
+
+
+
+
+
+
+
+
+
+
         int subMapNum = Integer.parseInt(lines[1]);
         if (subMapNum == 1) {
             String[] setMap = lines[2].split(" ");
@@ -21,11 +33,12 @@ public class MapFileWriter {
                     map.getMap()[i][j] = Integer.parseInt(line[j]);
                 }
             }
-/*            for(int i = 0; i < map.length; i++) {
+
+            for(int i = 0; i < map.length; i++) {
                 for(int j = 0; j < map[i].length; j++) {
                     System.out.print(map[i][j] + " ");
                 }
-            }*/
+            }
         } else if (subMapNum == 2) {
             String[] setMap1 = lines[2].split(" ");
             String[] setMap2 = lines[2+Integer.parseInt(setMap1[0])+1].split(" ");
@@ -45,6 +58,7 @@ public class MapFileWriter {
                 }
             }
         }
+
     }
 }
 
