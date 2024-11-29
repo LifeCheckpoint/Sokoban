@@ -9,7 +9,7 @@ import java.util.Map;
 public class MapData {
     public String addtionInfo;
     public int mapSize;
-    public List<Map[][]> maps;
+    public List<Map> maps;
 
     public MapData(String addtionInfo, List<Map[][]> maps) {
         this.addtionInfo = addtionInfo;
@@ -24,7 +24,7 @@ public class MapData {
         this.addtionInfo = addtionInfo;
     }
 
-    public List<Map[][]> getMaps() {
+    public List<Map> getMaps() {
         return maps;
     }
 
@@ -46,7 +46,7 @@ public class MapData {
         String[] Lines = mapData.getMapReader("tutorial", "map1");//这里应该要读取什么输入
         this.addtionInfo = Lines[0];
         this.mapSize = Integer.parseInt(Lines[1]);
-        List<Map[][]> allmaps = new ArrayList<>();
+        List<Map> allmaps = new ArrayList<>();
 
 
     }
