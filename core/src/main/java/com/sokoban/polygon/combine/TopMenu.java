@@ -20,6 +20,7 @@ public class TopMenu extends SokobanCombineObject {
     private Image saveAsButton;
     private Image exitButton;
     private Image pullButton;
+    private Image backgroundRectangle;
 
     private float buff;
     private float backWidth;
@@ -55,6 +56,11 @@ public class TopMenu extends SokobanCombineObject {
         menuButtonContainer.setScaling(scaling * 1.5f);
         pullButton = menuButtonContainer.create(ImageAssets.DownArrowButton);
 
+        backgroundRectangle = new Image(gameMain.getAssetsPathManager().get(ImageAssets.RoundedRectangleBack));
+        backgroundRectangle.setWidth(backWidth);
+        backgroundRectangle.setHeight(backWidth * 2);
+        backgroundRectangle.getColor().a = 0.03f;
+
         this.buff = buff;
         this.backWidth = backWidth;
 
@@ -75,6 +81,8 @@ public class TopMenu extends SokobanCombineObject {
 
         // 从 pull 按钮开始设置
         float currentY = y;
+        backgroundRectangle.setPosition(x - backgroundRectangle.getWidth() / 2, currentY);
+        currentY += 0.1;
         pullButton.setPosition(x - pullButton.getWidth() / 2, currentY);
         currentY += pullButton.getHeight() + buff;
         exitButton.setPosition(x - exitButton.getWidth() / 2, currentY);
@@ -95,6 +103,7 @@ public class TopMenu extends SokobanCombineObject {
     @Override
     public List<Actor> getAllActors() {
         List<Actor> actors = new ArrayList<>();
+        actors.add(backgroundRectangle);
         actors.add(newButton);
         actors.add(openButton);
         actors.add(saveButton);

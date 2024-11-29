@@ -77,7 +77,7 @@ public class MapEditScene extends SokobanFitScene {
 
         // 顶部下拉菜单
         topMenu = new TopMenu(gameMain, 0.2f);
-        topMenu.setPosition(8f, 8.7f);
+        topMenu.setPosition(8f, 8.6f);
 
         // 鼠标参照框
         mouseRelativeSquare = new Image(gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel));
@@ -108,7 +108,7 @@ public class MapEditScene extends SokobanFitScene {
             @Override
             public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
                 // 滚轮滚动，amountY 发生变动，更新非固定视口大小与相机
-                currentWorldScaling += amountY * 0.02f;
+                currentWorldScaling += amountY * 0.08f;
                 if (currentWorldScaling < 0.2f) currentWorldScaling = 0.2f;
                 if (currentWorldScaling > 2f) currentWorldScaling = 2f;
 
@@ -184,10 +184,10 @@ public class MapEditScene extends SokobanFitScene {
                     // 为每个部件增加动画实例
                     // 如果未处在下拉状态
                     if (!pullDownTopMenu) {
-                        topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, -2.5f, 0.3f, Interpolation.exp10Out)));
+                        topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, -2.3f, 0.3f, Interpolation.exp10Out)));
                         pullDownTopMenu = true;
                     } else {
-                        topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, 2.5f, 0.3f, Interpolation.exp10Out)));
+                        topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, 2.3f, 0.3f, Interpolation.exp10Out)));
                         pullDownTopMenu = false;
                     }
 
@@ -195,7 +195,7 @@ public class MapEditScene extends SokobanFitScene {
             }
         });
 
-        bgParticle = new BackgroundGrayParticleManager(gameMain);
+        bgParticle = new BackgroundGrayParticleManager(gameMain, -INITIAL_MAP_WIDTH / 2, -INITIAL_MAP_HEIGHT / 2, INITIAL_MAP_WIDTH / 2, INITIAL_MAP_HEIGHT / 2);
         bgParticle.startCreateParticles();
 
         ActionUtils.FadeInEffect(layerUpButton);

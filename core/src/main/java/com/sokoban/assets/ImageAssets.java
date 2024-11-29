@@ -38,6 +38,7 @@ public enum ImageAssets {
     RememberPasswordButton("img/button/remember_password.png"),
     RightArrowButton("img/button/right_arrow.png"),
     RightSquareArrow("img/button/right_square_arrow.png"),
+    RoundedRectangleBack("img/rounded_rectangle_back.png"),
     Save1Button("img/button/save_1.png"),
     Save2Button("img/button/save_2.png"),
     Save3Button("img/button/save_3.png"),
