@@ -14,6 +14,7 @@ import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.polygon.combine.HintMessageBox;
+import com.sokoban.polygon.combine.QuestDialog;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.combine.TopMenu;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -257,10 +258,28 @@ public class MapEditScene extends SokobanFitScene {
      * 退出编辑器
      */
     public void exitEditScene() {
-        // 如果当前打开了文件
-        // TODO 询问保存，保存逻辑
+        // 询问是否退出
+        QuestDialog questSave = new QuestDialog(gameMain, "Do you want to exit?\n\nIf you haven't saved your file, click cancel.");
+        questSave.setPosition(8f, 4.5f);
+        questSave.addActorsToStage(UIStage);
 
-        gameMain.getScreenManager().returnPreviousScreen();
+        // 取消则隐藏
+        questSave.getCancelButton().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                questSave.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.2f)));
+                questSave.getCancelButton().clearListeners();
+                questSave.getConfirmButton().clearListeners();
+            }
+        });
+
+        // 确定则退出
+        questSave.getConfirmButton().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMain.getScreenManager().returnPreviousScreen();
+            }
+        });
     }
 
     /**

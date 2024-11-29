@@ -25,7 +25,7 @@ public class QuestDialog extends SokobanCombineObject {
     private List<ImageFontStringObject> hintTextImages;
 
     private final float DEFAULT_BACK_WIDTH = 8f;
-    private final int DEFAULT_MAX_CHARS_PERLINE = 40;
+    private final int DEFAULT_MAX_CHARS_PERLINE = 50;
     private final float DEFAULT_BUTTON_WIDTH = 1.6f, DEFAULT_BUTTON_ATIO = 66f / 227f;
     private final String ANIMATION_IN = "in";
     private final String ANIMATION_OUT = "out";

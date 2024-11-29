@@ -89,7 +89,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
      */
     @Override
     public void setPosition(float x, float y) {
-        float integrateX = x, maxHeight = -1f;
+        float integrateX = x, maxHeight = 0f;
 
         // 计算最高高度
         for (int i = 0; i < charImageObject.size(); i++) {
