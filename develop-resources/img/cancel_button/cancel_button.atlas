@@ -1,0 +1,20 @@
+
+cancel_button.png
+size: 215,130
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+b
+  rotate: false
+  xy: 2, 62
+  size: 211, 66
+  orig: 211, 66
+  offset: 0, 0
+  index: -1
+t
+  rotate: false
+  xy: 2, 2
+  size: 193, 58
+  orig: 193, 58
+  offset: 0, 0
+  index: -1

@@ -6,11 +6,13 @@ package com.sokoban.assets;
  * 只有 atlas 会被统一读取，Json <b>不会</b>被统一读取
  */
 public enum SpineAssets {
+    CancelSpineButton("spine/cancel_button/cancel_button.atlas|spine/cancel_button/cancel_button.json"),
     Checkbox("spine/checkbox/checkbox.atlas|spine/checkbox/checkbox.json"),
-    Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
+    ConfirmSpineButton("spine/confirm_button/confirm_button.atlas|spine/confirm_button/confirm_button.json"),
     Numbers("spine/numbers/numbers.atlas|spine/numbers/numbers.json"),
-    Rectangle("spine/rec/rec.atlas|spine/rec/rec.json"),
     Player1("spine/player_1/player_1.atlas|spine/player_1/player_1.json"),
+    Rectangle("spine/rec/rec.atlas|spine/rec/rec.json"),
+    Slider("spine/slider/slider.atlas|spine/slider/slider.json"),
     Timer("spine/timer/timer.atlas|spine/timer/timer.json"),
     
     BoxBlueBox("spine/boxes/blue_box/blue_box.atlas|spine/boxes/blue_box/blue_box.json"),

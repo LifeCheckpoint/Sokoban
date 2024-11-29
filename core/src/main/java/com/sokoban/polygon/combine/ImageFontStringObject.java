@@ -20,20 +20,20 @@ public class ImageFontStringObject extends SokobanCombineObject {
     private String stringContent;
     private ImageAssets[] pageFileEnums;
     private String fntFileData;
+    private int spaceRepeat; // 通过空格重复改进空格显示
     List<Image> charImageObject;
 
     private final float DEFAULT_BUFF = 0f;
     private final ImageAssets[] DEFAULT_PAGE_FILE = new ImageAssets[1];
     private final String DEFAULT_FNT_FILE_DATA;
-    /** 改进空格显示，由 1 个拓展到 SPACE_REPEAT 个 */
-    private final int SPACE_REPEAT = 6;
+    private final int DEFAULT_SPACE_REPEAT = 6;
 
     public ImageFontStringObject(Main gameMain, String stringContent) {
         super(gameMain);
         DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
-        init(stringContent, DEFAULT_BUFF, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
+        init(stringContent, DEFAULT_BUFF, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
     }
 
     public ImageFontStringObject(Main gameMain, String stringContent, float buff) {
@@ -41,19 +41,26 @@ public class ImageFontStringObject extends SokobanCombineObject {
         DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
-        init(stringContent, buff, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
+        init(stringContent, buff, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
     }
 
-    public ImageFontStringObject(Main gameMain, String stringContent, float buff, ImageAssets[] pageFileEnums, String fntFileData) {
+    public ImageFontStringObject(Main gameMain, String stringContent, float buff, int spaceRepeat) {
         super(gameMain);
         DEFAULT_FNT_FILE_DATA = "";
 
-        init(stringContent, buff, pageFileEnums, fntFileData);
+        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
     }
 
-    private void init(String stringContent, float buff, ImageAssets[] pageFileEnums, String fntFileData) {
+    public ImageFontStringObject(Main gameMain, String stringContent, float buff, int spaceRepeat, ImageAssets[] pageFileEnums, String fntFileData) {
+        super(gameMain);
+        DEFAULT_FNT_FILE_DATA = "";
+
+        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
+    }
+
+    private void init(String stringContent, float buff, int spaceRepeat, ImageAssets[] pageFileEnums, String fntFileData) {
         // 空格显示改进
-        String improvedString = stringContent.replace(" ", new String(" ").repeat(SPACE_REPEAT));
+        String improvedString = stringContent.replace(" ", new String(" ").repeat(DEFAULT_SPACE_REPEAT));
         this.stringContent = stringContent;
         this.buff = buff;
         this.pageFileEnums = pageFileEnums;
@@ -74,7 +81,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
 
     public void reset(String stringContent) {
         charImageObject.forEach(Actor::remove);
-        init(stringContent, buff, pageFileEnums, fntFileData);
+        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
     }
 
     /**

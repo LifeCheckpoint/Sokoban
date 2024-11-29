@@ -1,0 +1,92 @@
+{
+"skeleton": {
+	"hash": "qBfAhZUTI4FuIS3oYuoSKG05Xi8",
+	"spine": "3.8.82",
+	"x": -1,
+	"y": -1,
+	"width": 211,
+	"height": 66,
+	"images": "./cancel_button/",
+	"audio": "D:/wroot/Sokoban/develop-resources/raw"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": 86.31, "y": 29.57 },
+	{ "name": "bone2", "parent": "root", "x": 107.07, "y": 17.14 }
+],
+"slots": [
+	{ "name": "b", "bone": "root", "attachment": "b" },
+	{ "name": "t", "bone": "root", "attachment": "t" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"b": {
+				"b": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 1, 123.69, -30.57, 1, 1, 1, -87.31, -30.57, 1, 1, 1, -87.31, 35.43, 1, 1, 1, 123.69, 35.43, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 211,
+					"height": 66
+				}
+			},
+			"t": {
+				"t": {
+					"type": "mesh",
+					"uvs": [ 1, 1, 0, 1, 0, 0, 1, 0 ],
+					"triangles": [ 1, 2, 3, 1, 3, 0 ],
+					"vertices": [ 1, 2, 92.93, -14.14, 1, 1, 2, -100.07, -14.14, 1, 1, 2, -100.07, 43.86, 1, 1, 2, 92.93, 43.86, 1 ],
+					"hull": 4,
+					"edges": [ 0, 2, 2, 4, 4, 6, 0, 6 ],
+					"width": 193,
+					"height": 58
+				}
+			}
+		}
+	}
+],
+"animations": {
+	"in": {
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "x": -94.87, "curve": 0.226, "c3": 0.023 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "x": 0, "curve": 0.226, "c3": 0.023 },
+					{ "time": 1 }
+				],
+				"shear": [
+					{},
+					{ "time": 0.5, "y": -5.19, "curve": 0.25, "c3": 0.941, "c4": 0.93 },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"out": {
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "curve": 0.341, "c3": 0 },
+					{ "time": 1, "x": 131.86 }
+				],
+				"scale": [
+					{ "curve": 0.341, "c3": 0 },
+					{ "time": 1, "x": 0 }
+				],
+				"shear": [
+					{},
+					{ "time": 0.3333, "y": 8.15 },
+					{ "time": 1 }
+				]
+			}
+		}
+	}
+}
+}

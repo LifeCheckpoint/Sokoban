@@ -11,6 +11,7 @@ import com.sokoban.polygon.combine.GirdWorld;
 // import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.ImageFontStringObject;
+import com.sokoban.polygon.combine.QuestDialog;
 import com.sokoban.polygon.combine.TopMenu;
 
 public class TestScene extends SokobanScene {
@@ -65,7 +66,12 @@ public class TestScene extends SokobanScene {
         topMenu.setPosition(8f, 3f);
         addCombinedObjectToStage(topMenu);
 
+        // 询问框测试
+        QuestDialog questDialog = new QuestDialog(gameMain, "This is my frame ... QAQ ... This is my frame ... QAQ ... This is my frame ... QAQ ... ");
+        questDialog.setPosition(8f, 4.5f);
+        
         addActorsToStage(textField);
+        questDialog.addActorsToStage(stage);
     }
 
     // 重绘逻辑

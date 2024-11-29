@@ -1,0 +1,14 @@
+{"skeleton":{"images":"cancel_button/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"b","bone":"root","attachment":"b"},
+	{"name":"t","bone":"root","attachment":"t"}
+],
+"skins":{
+	"default":{
+		"t":{"t":{"x":103.5,"y":32,"width":193,"height":58}},
+		"b":{"b":{"x":104.5,"y":32,"width":211,"height":66}}
+	}
+},
+"animations":{"animation":{}}
+}

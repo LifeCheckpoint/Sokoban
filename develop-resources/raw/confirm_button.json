@@ -1,0 +1,14 @@
+{"skeleton":{"images":"confirm_button/"},
+"bones":[{"name":"root"}],
+"slots":[
+	{"name":"b","bone":"root","attachment":"b"},
+	{"name":"t","bone":"root","attachment":"t"}
+],
+"skins":{
+	"default":{
+		"t":{"t":{"x":110.5,"y":33,"width":199,"height":52}},
+		"b":{"b":{"x":112.5,"y":32,"width":227,"height":66}}
+	}
+},
+"animations":{"animation":{}}
+}
