@@ -13,8 +13,7 @@ import java.util.List;
 public class MapData {
     public MapInfo mapFileInfo = new MapInfo(); // 地图文件信息
     public String addtionalInfo = ""; // 地图附加信息
-    public int subMapNums = 0; // 子地图数量
-    public List<ObjectType[][]> allMaps = new ArrayList<>(); // 所有子地图
+    public List<SubMapData> allMaps = new ArrayList<>(); // 所有子地图
 
     /**
      * 地图数据类无参构造，属性可以稍后填入
@@ -25,13 +24,11 @@ public class MapData {
      * 地图数据类构造
      * @param mapFileInfo 地图文件数据
      * @param addtionInfo 地图附加数据文本
-     * @param subMapNums 子地图数量
      * @param allMaps 所有子地图
      */
-    public MapData(MapInfo mapFileInfo, String addtionInfo, int subMapNums, List<ObjectType[][]> allMaps) {
+    public MapData(MapInfo mapFileInfo, String addtionInfo, int subMapNums, List<SubMapData> allMaps) {
         this.mapFileInfo = mapFileInfo;
         this.addtionalInfo = addtionInfo;
-        this.subMapNums = subMapNums;
         this.allMaps = allMaps;
     }
 
@@ -46,7 +43,6 @@ public class MapData {
         // 注意，不检查文件路径一致性
         // if (!anotherMapData.mapFileInfo.equals(mapFileInfo)) return false;
         if (!anotherMapData.addtionalInfo.equals(addtionalInfo)) return false;
-        if (anotherMapData.subMapNums != subMapNums) return false;
         if (!anotherMapData.allMaps.equals(allMaps)) return false;
 
         return true;

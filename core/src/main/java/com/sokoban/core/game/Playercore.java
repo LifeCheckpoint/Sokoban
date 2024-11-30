@@ -1,6 +1,20 @@
 package com.sokoban.core.game;
 
+/**
+ * 推箱子逻辑核心类
+ * @author StiCK-bot
+ * @author Life_Checkpoint
+ */
 public class Playercore {
+    private MapData map = new MapData(); // 游戏地图
+
+    public MapData getMap() {
+        return map;
+    }
+
+    public void setMap(MapData map) {
+        this.map = map;
+    }
 
     
 
