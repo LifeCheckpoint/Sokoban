@@ -1,58 +1,37 @@
 package com.sokoban.core.game;
 
-import com.sokoban.core.MapFileReader;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * 地图关卡数据类
+ * @author StiCK-bot
+ * @author Life_Checkpoint
+ */
 public class MapData {
-    public String addtionInfo;
-    public int mapSize;
-    public List<Map> maps;
+    public MapInfo mapFileInfo = new MapInfo(); // 地图文件信息
+    public String addtionalInfo = ""; // 地图附加信息
+    public int subMapNums = 0; // 子地图数量
+    public List<Things[][]> allMaps = new ArrayList<>(); // 所有子地图
 
-    public MapData(String addtionInfo, List<Map[][]> maps) {
-        this.addtionInfo = addtionInfo;
-        this.maps = maps;
+    /**
+     * 地图数据类无参构造，属性可以稍后填入
+     */
+    public MapData() {}
+
+    /**
+     * 地图数据类构造
+     * @param mapFileInfo 地图文件数据
+     * @param addtionInfo 地图附加数据文本
+     * @param subMapNums 子地图数量
+     * @param allMaps 所有子地图
+     */
+    public MapData(MapInfo mapFileInfo, String addtionInfo, int subMapNums, List<Things[][]> allMaps) {
+        this.mapFileInfo = mapFileInfo;
+        this.addtionalInfo = addtionInfo;
+        this.subMapNums = subMapNums;
+        this.allMaps = allMaps;
     }
 
-    public String getAddtionInfo() {
-        return addtionInfo;
-    }
-
-    public void setAddtionInfo(String addtionInfo) {
-        this.addtionInfo = addtionInfo;
-    }
-
-    public List<Map> getMaps() {
-        return maps;
-    }
-
-    public void setMaps(List<Map[][]> maps) {
-        this.maps = maps;
-    }
-
-    public String[] getMapReader(String levelName, String mapName) {
-        MapFileReader reader = new MapFileReader();
-        String mapContent = reader.readMapByLevelAndName("tutorial", "map1");
-        String[] lines = mapContent.split("\n");
-        for (int i = 0; i < lines.length; i++)
-            lines[i] = lines[i].trim();
-        return lines;
-    }
-
-
-    public void MapDataManager(MapData mapData) {
-        String[] Lines = mapData.getMapReader("tutorial", "map1");//这里应该要读取什么输入
-        this.addtionInfo = Lines[0];
-        this.mapSize = Integer.parseInt(Lines[1]);
-        List<Map> allmaps = new ArrayList<>();
-
-
-    }
-
-
-
-
-
+    // public 属性无需使用 getter / setter
 }
