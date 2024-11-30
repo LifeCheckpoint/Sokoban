@@ -1,31 +1,25 @@
 package com.sokoban.core.game;
 
 public class Things {
-    Pos position;
-    int TypeNumber;
-    ObjectType ObjectType;
+    public Pos position = new Pos();
+    public ObjectType objectType;
 
-    public Things(Pos position, int TypeNumber) {
-        this.TypeNumber = TypeNumber;
+    public Things() {}
+
+    public Things(Pos position, ObjectType object) {
         this.position = position;
-        setObjectType();
+        this.objectType = object;
     }
 
-    public void setObjectType() {
-        this.ObjectType = MapMapper.MapNumToType(TypeNumber);
-    }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Things)) return false;
+        Things anotherThing = (Things) obj;
 
-    public ObjectType getObjectType() {
-        return ObjectType;
-    }
+        if (!anotherThing.position.equals(position)) return false;
+        if (!anotherThing.objectType.equals(objectType)) return false;
 
-    public Pos getPosition() {
-        return position;
+        return true;
     }
-
-    public void setPosition(Pos position) {
-        this.position = position;
-    }
-
 }
 

@@ -34,4 +34,19 @@ public class MapData {
     }
 
     // public 属性无需使用 getter / setter
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MapData)) return false;
+
+        MapData anotherMapData = (MapData) obj;
+
+        // 注意，不检查文件路径一致性
+        // if (!anotherMapData.mapFileInfo.equals(mapFileInfo)) return false;
+        if (!anotherMapData.addtionalInfo.equals(addtionalInfo)) return false;
+        if (anotherMapData.subMapNums != subMapNums) return false;
+        if (!anotherMapData.allMaps.equals(allMaps)) return false;
+
+        return true;
+    }
 }

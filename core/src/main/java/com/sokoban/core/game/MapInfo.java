@@ -24,4 +24,16 @@ public class MapInfo {
         this.levelName = levelName;
         this.mapName = mapName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MapInfo)) return false;
+        MapInfo anotherMapInfo = (MapInfo) obj;
+
+        if (!anotherMapInfo.path.equals(path)) return false;
+        if (!anotherMapInfo.levelName.equals(levelName)) return false;
+        if (!anotherMapInfo.mapName.equals(mapName)) return false;
+
+        return true;
+    }
 }

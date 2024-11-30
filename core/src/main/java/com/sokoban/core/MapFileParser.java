@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.sokoban.core.game.MapData;
 import com.sokoban.core.game.MapInfo;
+import com.sokoban.core.game.MapMapper;
 import com.sokoban.core.game.Pos;
 import com.sokoban.core.game.Things;
 
@@ -215,7 +216,7 @@ public class MapFileParser {
         }
 
         for (int i = 0; i < lineThings.length; i++) {
-            subMap[rowIndex][i] = new Things(new Pos(rowIndex, i), Integer.parseInt(lineThings[i]));
+            subMap[rowIndex][i] = new Things(new Pos(rowIndex, i), MapMapper.MapNumToType(Integer.parseInt(lineThings[i])));
         }
     }
 }

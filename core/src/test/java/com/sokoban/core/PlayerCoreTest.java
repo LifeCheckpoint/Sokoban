@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.sokoban.core.game.MapMapper;
 import com.sokoban.core.game.Playercore;
 import com.sokoban.core.game.Pos;
 import com.sokoban.core.game.Things;
@@ -20,35 +21,35 @@ public class PlayerCoreTest {
     @BeforeMethod
     public void setUp() {
         playercore = new Playercore();
-        player = new Things(new Pos(5, 5, 0), 10); // 创建一个玩家，初始位置为 (5, 5, 0)
+        player = new Things(new Pos(5, 5, 0), MapMapper.MapNumToType(10)); // 创建一个玩家，初始位置为 (5, 5, 0)
     }
 
     @Test
     public void testMoveUp() {
         playercore.moveUp(player);
-        Assert.assertEquals(player.getPosition().getX(), 4);
-        Assert.assertEquals(player.getPosition().getY(), 5);
+        Assert.assertEquals(player.position.getX(), 4);
+        Assert.assertEquals(player.position.getY(), 5);
     }
 
     @Test
     public void testMoveDown() {
         playercore.moveDown(player);
-        Assert.assertEquals(player.getPosition().getX(), 6);
-        Assert.assertEquals(player.getPosition().getY(), 5);
+        Assert.assertEquals(player.position.getX(), 6);
+        Assert.assertEquals(player.position.getY(), 5);
     }
 
     @Test
     public void testMoveLeft() {
         playercore.moveLeft(player);
-        Assert.assertEquals(player.getPosition().getX(), 5);
-        Assert.assertEquals(player.getPosition().getY(), 4);
+        Assert.assertEquals(player.position.getX(), 5);
+        Assert.assertEquals(player.position.getY(), 4);
     }
 
     @Test
     public void testMoveRight() {
         playercore.moveRight(player);
-        Assert.assertEquals(player.getPosition().getX(), 5);
-        Assert.assertEquals(player.getPosition().getY(), 6);
+        Assert.assertEquals(player.position.getX(), 5);
+        Assert.assertEquals(player.position.getY(), 6);
     }
 
     @Test

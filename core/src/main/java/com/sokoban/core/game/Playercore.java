@@ -3,32 +3,32 @@ package com.sokoban.core.game;
 public class Playercore {
 
     public void moveUp(Things player) {
-        if (player != null && player.getPosition() != null) {
-            player.getPosition().setX(player.getPosition().getX() - 1);
+        if (player != null && player.position != null) {
+            player.position.setX(player.position.getX() - 1);
         }
     }
 
     public void moveDown(Things player) {
-        if (player != null && player.getPosition() != null) {
-            player.getPosition().setX(player.getPosition().getX() + 1);
+        if (player != null && player.position != null) {
+            player.position.setX(player.position.getX() + 1);
         }
     }
 
     public void moveLeft(Things player) {
-        if (player != null && player.getPosition() != null) {
-            player.getPosition().setY(player.getPosition().getY() - 1);
+        if (player != null && player.position != null) {
+            player.position.setY(player.position.getY() - 1);
         }
     }
 
     public void moveRight(Things player) {
-        if (player != null && player.getPosition() != null) {
-            player.getPosition().setY(player.getPosition().getY() + 1);
+        if (player != null && player.position != null) {
+            player.position.setY(player.position.getY() + 1);
         }
     }
 
     public boolean ifmoveUp(Things player, int[][] map) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX() - 1][position.getY()];
             int typefar = map[position.getX() - 2][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.AIR) {
@@ -43,8 +43,8 @@ public class Playercore {
     }
 
     public boolean ifmoveDown(Things player, int[][] map) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX() + 1][position.getY()];
             int typefar = map[position.getX() + 2][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.AIR) {
@@ -59,8 +59,8 @@ public class Playercore {
     }
 
     public boolean ifmoveLeft(Things player, int[][] map) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getY() - 1][position.getY()];
             int typefar = map[position.getY() - 2][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.AIR) {
@@ -75,8 +75,8 @@ public class Playercore {
     }
 
     public boolean ifmoveRight(Things player, int[][] map) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getY() + 1][position.getY()];
             int typefar = map[position.getY() + 2][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.AIR) {
@@ -92,14 +92,14 @@ public class Playercore {
     }
 
     public void plMoveUp(Things player, int[][] map, Things[] things) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX() - 1][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.BOX) {
                 if (ifmoveUp(player, map)) {
                     Pos position1 = new Pos(position.getX() - 1, position.getY());
                     for (int i = 0; i < things.length; i++) {
-                        if (position1.equals(things[i].getPosition())) {
+                        if (position1.equals(things[i].position)) {
                             moveUp(things[i]);
                         }
                     }
@@ -114,14 +114,14 @@ public class Playercore {
     }
 
     public void plMoveDown(Things player, int[][] map, Things[] things) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX() + 1][position.getY()];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.BOX) {
                 if (ifmoveDown(player, map)) {
                     Pos position1 = new Pos(position.getX() + 1, position.getY());
                     for (int i = 0; i < things.length; i++) {
-                        if (position1.equals(things[i].getPosition())) {
+                        if (position1.equals(things[i].position)) {
                             moveDown(things[i]);
                         }
                     }
@@ -136,14 +136,14 @@ public class Playercore {
     }
 
     public void plMoveLeft(Things player, int[][] map, Things[] things) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX()][position.getY() - 1];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.BOX) {
                 if (ifmoveLeft(player, map)) {
                     Pos position1 = new Pos(position.getX(), position.getY() - 1);
                     for (int i = 0; i < things.length; i++) {
-                        if (position1.equals(things[i].getPosition())) {
+                        if (position1.equals(things[i].position)) {
                             moveLeft(things[i]);
                         }
                     }
@@ -158,14 +158,14 @@ public class Playercore {
     }
 
     public void plMoveRight(Things player, int[][] map, Things[] things) {
-        if (player != null && player.getPosition() != null) {
-            Pos position = player.getPosition();
+        if (player != null && player.position != null) {
+            Pos position = player.position;
             int typeclose = map[position.getX()][position.getY() + 1];
             if (MapMapper.MapNumToType(typeclose) == ObjectType.BOX) {
                 if (ifmoveRight(player, map)) {
                     Pos position1 = new Pos(position.getX(), position.getY() + 1);
                     for (int i = 0; i < things.length; i++) {
-                        if (position1.equals(things[i].getPosition())) {
+                        if (position1.equals(things[i].position)) {
                             moveRight(things[i]);
                         }
                     }
