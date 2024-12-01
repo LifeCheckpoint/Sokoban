@@ -1,5 +1,6 @@
 package com.sokoban.core.user;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,8 +16,8 @@ public class SaveArchiveInfo {
     }
 
     // TODO gameMap 类型
-    private Map<String, MapStatue> mapsStatue;
-    private Map<String, Object> records;
+    private Map<String, MapStatue> mapsStatue = new HashMap<String, MapStatue>();
+    private Map<String, Object> records = new HashMap<String, Object>();
 
     public Map<String, MapStatue> getMapsStatue() {
         return mapsStatue;
@@ -38,6 +39,7 @@ public class SaveArchiveInfo {
     public boolean equals(Object obj) {
         if (obj instanceof SaveArchiveInfo) {
             SaveArchiveInfo anothorSaveArchive = (SaveArchiveInfo) obj;
+            
             if (!mapsStatue.equals(anothorSaveArchive.getMapsStatue())) return false;
             if (!records.equals(anothorSaveArchive.getRecords())) return false;
 
