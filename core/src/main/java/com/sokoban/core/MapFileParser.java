@@ -27,7 +27,7 @@ public class MapFileParser {
      * @return 序列化结果
      */
     public static String serializeMapData(MapData mapData) {
-        MapData mapDataWithoutFileInfo = new MapData(new MapInfo(), mapData.addtionalInfo, mapData.subMapNums, mapData.allMaps); // 去除文件信息
+        MapData mapDataWithoutFileInfo = new MapData(new MapInfo(), mapData.addtionalInfo, mapData.allMaps); // 去除文件信息
         return new JsonManager().getJsonString(mapDataWithoutFileInfo);
     }
 }

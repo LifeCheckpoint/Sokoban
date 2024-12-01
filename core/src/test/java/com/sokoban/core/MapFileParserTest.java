@@ -46,11 +46,11 @@ public class MapFileParserTest {
                            "1 0 0 0");
         List<Things[][]> mapContent = new ArrayList<>();
         ObjectType[][] layer0 = new ObjectType[][] {
-            {ObjectType.WALL, ObjectType.WALL, ObjectType.WALL, ObjectType.WALL},
-            {ObjectType.WALL, ObjectType.AIR, ObjectType.AIR, ObjectType.WALL},
-            {ObjectType.WALL, ObjectType.AIR, ObjectType.AIR, ObjectType.WALL},
-            {ObjectType.WALL, ObjectType.AIR, ObjectType.AIR, ObjectType.WALL},
-            {ObjectType.WALL, ObjectType.AIR, ObjectType.AIR, ObjectType.AIR},
+            {ObjectType.Wall, ObjectType.Wall, ObjectType.Wall, ObjectType.Wall},
+            {ObjectType.Wall, ObjectType.Air, ObjectType.Air, ObjectType.Wall},
+            {ObjectType.Wall, ObjectType.Air, ObjectType.Air, ObjectType.Wall},
+            {ObjectType.Wall, ObjectType.Air, ObjectType.Air, ObjectType.Wall},
+            {ObjectType.Wall, ObjectType.Air, ObjectType.Air, ObjectType.Air},
         };
         mapContent.add(transObjTypeToThings(layer0));
         mapDatas.add(new MapData(mapInfo, "some description", 1, mapContent));

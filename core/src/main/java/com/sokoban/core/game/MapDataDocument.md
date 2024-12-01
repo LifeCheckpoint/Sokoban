@@ -38,14 +38,30 @@
 
 这样会非常繁琐。因此，如果我们换个思路，使用多层 `ObjectType[][]` 来管理，例如：
 
-> 假定一共有两层子地图，**第零层**存放目标点，**第一层**存放当前地图状态
+> 假定一共有三层子地图，**第零层**存放当前地图实际存在的物体，**第一层**存放目标点，**第二层**存放一些地图的装饰，
 >
-> 第零层只会有两种目标点：`PlayerTarget` `BoxTarget`
+> 第零层只会有：`Player` `Box` ...
 > 
-> 第一层只会有：`Player` `Box` ...
+> 第一层只会有两种目标点：`PlayerTarget` `BoxTarget`
+>
+> 第二层 ...
 
-可以看到，这样分就很清楚，不会有那么多弯弯绕绕
+可以看到，这样分工就较为明确，最终设计就得到了 `SubMapData` 这个存放子地图的类
 
-最终设计就得到了 `SubMapData` 这个存放子地图的类
+当然，具体访问第几层，不需要 `MapData` 关心，`SubMapData` 已经封装好了访问函数：
 
-当然，具体访问第几层，不需要 `MapData` 担心，`SubMapData` 已经封装好了访问函数，具体详见代码
+1. `getObjectLayer()` 获得地图的物体层
+2. `getTargetLayer()` 获得地图的目标点层
+3. `getDecorationLayer()` 获得地图的装饰层，在逻辑处理中较少用到，但是前端会用
+
+具体的使用方法也很简单，移动的时候在物体层移动，判断 game over 的时候就检查目标点对应的坐标在物体层中对应物体是否存在即可
+
+当然，如果需要获得具体是第几层，可以访问 `SubMapData` 的如下公开字段：
+
+```Java
+public static final int LAYER_OBJECT = 0; // 存放地图物体的层索引
+public static final int LAYER_TARGET = 1; // 存放地图目标点的层索引
+public static final int LAYER_DECORATION = 2; // 存放地图装饰的层索引
+```
+
+*如果有任何补充，需要及时更新该文档*

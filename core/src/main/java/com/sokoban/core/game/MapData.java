@@ -26,7 +26,7 @@ public class MapData {
      * @param addtionInfo 地图附加数据文本
      * @param allMaps 所有子地图
      */
-    public MapData(MapInfo mapFileInfo, String addtionInfo, int subMapNums, List<SubMapData> allMaps) {
+    public MapData(MapInfo mapFileInfo, String addtionInfo, List<SubMapData> allMaps) {
         this.mapFileInfo = mapFileInfo;
         this.addtionalInfo = addtionInfo;
         this.allMaps = allMaps;
