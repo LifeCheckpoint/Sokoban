@@ -274,7 +274,7 @@ public class MapEditScene extends SokobanFitScene {
         HintMessageBox msgBox;
         msgBox = new HintMessageBox(gameMain, msg);
         msgBox.setPosition(8f, 0.5f);
-        msgBox.addActorsToStage(stage);
+        msgBox.addActorsToStage(UIStage);
     }
 
     /**
