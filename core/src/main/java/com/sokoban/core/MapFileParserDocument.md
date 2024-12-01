@@ -18,3 +18,11 @@
 ```java
     public static String serializeMapData(MapData mapData)
 ```
+
+## 传统格式地图读取支持
+
+通过 `transformCharMapToIntegerMap` 转换传统格式的地图，可用于测试和导入关卡
+
+---
+
+*如果有任何补充，需要及时更新该文档*

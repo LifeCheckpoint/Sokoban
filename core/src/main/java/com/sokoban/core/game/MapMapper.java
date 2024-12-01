@@ -1,7 +1,5 @@
 package com.sokoban.core.game;
 
-// import com.sokoban.core.Logger;
-
 public class MapMapper {
     /**
      * 映射地图元素到整数
@@ -39,85 +37,31 @@ public class MapMapper {
         };
     }
 
-    // TODO 需要重新设计
-    //
-    // /**
-    //  * 映射字符到地图元素，与传统地图格式兼容
-    //  * @param character 字符
-    //  * @return 地图元素
-    //  */
-    // public static ObjectType MapCharToType(char character) {
-    //     return switch (character) {
-    //         case '_', '-' -> ObjectType.AIR;
-    //         case '#' -> ObjectType.WALL;
-    //         case '.' -> ObjectType.BoxTarget;
-    //         case '$' -> ObjectType.BOX;
-    //         case '@' -> ObjectType.PLAYER;
-    //         case '*' -> ObjectType.BoxGetBoxpos;
-    //         case '+' -> ObjectType.PlayerGetBoxpos;
-    //         default -> ObjectType.Unknown;
-    //     };
-    // }
-    //
-    // /**
-    //  * 映射地图元素到字符，与 传统地图格式兼容
-    //  * @param obj 地图元素
-    //  * @return 对应字符
-    //  */
-    // public static char mapObjectToChar(ObjectType obj) {
-    //     return switch (obj) {
-    //         case ObjectType.AIR -> '_';
-    //         case ObjectType.WALL -> '#';
-    //         case ObjectType.BoxTarget -> '.';
-    //         case ObjectType.BoxGetBoxpos -> '*';
-    //         case ObjectType.BOX -> '$';
-    //         case ObjectType.PLAYER -> '@';
-    //         case ObjectType.PlayerGetBoxpos -> '+';
-    //         default -> '?';
-    //     };
-    // }
-    //
-    // /**
-    //  * 将字符地图转换为整数地图，与传统地图格式兼容
-    //  * @param charMap 字符纯地图
-    //  * @return 整数纯地图，失败返回 null
-    //  */
-    // public static int[][] transformCharMapToIntegerMap(char[][] charMap) {
-    //     if (charMap == null) {
-    //         Logger.error("MapMapper", "Cannot convert a null char map object");
-    //         return null;
-    //     }
-    //
-    //     int[][] intMap = new int[charMap.length][charMap[0].length];
-    //
-    //     for (int i = 0; i < intMap.length; i++) {
-    //         for (int j = 0; j < intMap[0].length; j++) {
-    //             intMap[i][j] = mapObjectTypeToNum(MapCharToType(charMap[i][j]));
-    //         }
-    //     }
-    //
-    //     return intMap;
-    // }
-    //
-    // /**
-    //  * 将整数地图转换为字符地图，与传统地图格式兼容
-    //  * @param intMap 整数纯地图
-    //  * @return 字符纯地图，失败返回 null
-    //  */
-    // public static char[][] transformIntegerMapToCharMap(int[][] intMap) {
-    //     if (intMap == null) {
-    //         Logger.error("MapMapper", "Cannot convert a null char map object");
-    //         return null;
-    //     }
-
-    //     char[][] charMap = new char[intMap.length][intMap[0].length];
-
-    //     for (int i = 0; i < charMap.length; i++) {
-    //         for (int j = 0; j < charMap[0].length; j++) {
-    //             charMap[i][j] = mapObjectToChar(MapNumToType(intMap[i][j]));
-    //         }
-    //     }
-
-    //     return charMap;
-    // }
+    
+    /**
+     * 映射字符到地图物块，与传统地图格式兼容
+     * @param character 字符
+     * @return 地图元素，如果字符转换后为非物块类型将返回 Air
+     */
+    public static ObjectType MapCharToObjectType(char character) {
+        return switch (character) {
+            case '_', '-' -> ObjectType.Air;
+            case '#' -> ObjectType.Wall;
+            case '$', '*' -> ObjectType.Box;
+            case '@', '+' -> ObjectType.Player;
+            default -> ObjectType.Air;
+        };
+    }
+    
+    /**
+     * 映射字符到地图目标点，与传统地图格式兼容
+     * @param character 字符
+     * @return 地图元素，如果字符转换后为非目标点类型将返回 Air
+     */
+    public static ObjectType MapCharToTargetType(char character) {
+        return switch (character) {
+            case '.', '*', '+' -> ObjectType.BoxTarget;
+            default -> ObjectType.Air;
+        };
+    }
 }
