@@ -37,16 +37,15 @@ public class SaveArchiveInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof SaveArchiveInfo) {
-            SaveArchiveInfo anothorSaveArchive = (SaveArchiveInfo) obj;
-            if (mapsStatue == null && anothorSaveArchive.getMapsStatue() == null) return true;
-            if (records == null && anothorSaveArchive.getRecords() == null) return true;
-            if (!mapsStatue.equals(anothorSaveArchive.getMapsStatue())) return false;
-            if (!records.equals(anothorSaveArchive.getRecords())) return false;
+        if (!(obj instanceof SaveArchiveInfo)) return false;
+        SaveArchiveInfo anothorSaveArchive = (SaveArchiveInfo) obj;
 
-            return true;
+        if (mapsStatue == null && anothorSaveArchive.getMapsStatue() == null) return true;
+        if (records == null && anothorSaveArchive.getRecords() == null) return true;
+        if (!mapsStatue.equals(anothorSaveArchive.getMapsStatue())) return false;
+        if (!records.equals(anothorSaveArchive.getRecords())) return false;
 
-        } else return false;
+        return true;
     }
 
 }
