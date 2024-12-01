@@ -25,7 +25,7 @@ public class MapFileParser {
 
     /**
      * 序列化地图数据为标准地图格式
-     * @return 序列化结果
+     * @return 序列化结果，失败返回 null
      */
     public static String serializeMapData(MapData mapData) {
         MapData mapDataWithoutFileInfo = new MapData(new MapFileInfo(), mapData.addtionalInfo, mapData.allMaps); // 去除文件信息

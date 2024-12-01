@@ -16,14 +16,16 @@ public class BoxObject extends SpineObject {
     
     /** 盒子 Spine 资源枚举 */
     public enum BoxType {
+        BlueChest(SpineAssets.BoxBlueBox),
+        BoxTarget(SpineAssets.BoxBoxTarget),
         CornerRightDown(SpineAssets.BoxCornerRightDown),
         DarkBlueBack(SpineAssets.BoxDarkBlueBack),
         DarkGrayBack(SpineAssets.BoxDarkGrayBack),
         GreenChest(SpineAssets.BoxGreenBox),
         GreenChestActive(SpineAssets.BoxGreenBoxLight),
-        BlueChest(SpineAssets.BoxBlueBox),
-        BoxTarget(SpineAssets.BoxBoxTarget),
-        PlayerTarget(SpineAssets.BoxPlayerTarget);
+        PlayerTarget(SpineAssets.BoxPlayerTarget),
+
+        Player(SpineAssets.Player1); // 玩家本身也作为盒子
 
         private final SpineAssets asset;
         BoxType(SpineAssets asset) {this.asset = asset;}

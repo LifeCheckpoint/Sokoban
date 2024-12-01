@@ -1,5 +1,7 @@
 package com.sokoban.scenes;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -13,8 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
+import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.map.MapData;
+import com.sokoban.core.map.MapFileInfo;
+import com.sokoban.core.map.MapFileParser;
+import com.sokoban.core.map.MapFileReader;
+import com.sokoban.core.map.SubMapData;
+import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.QuestDialog;
+import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.combine.TopMenu;
 import com.sokoban.polygon.container.ImageButtonContainer;
@@ -49,6 +59,8 @@ public class MapEditScene extends SokobanFitScene {
     // 地图
     private Stack3DGirdWorld map3DGirdWorld;
     private Image[][] cornerDecoration; // 角落的方格标记
+    private MapData map; // 完整地图数据
+    private int currentSubMapIndex = 0; // 当前子地图索引
 
     private final int INITIAL_MAP_WIDTH = 48;
     private final int INITIAL_MAP_HEIGHT = 27;
@@ -85,10 +97,17 @@ public class MapEditScene extends SokobanFitScene {
         mouseRelativeSquare.setSize(1f, 1f);
         mouseRelativeSquare.getColor().a = MOUSE_RELATIVE_SQUARE_ALPHA;
         
-        // 初始化地图
+        // 初始化地图显示
         map3DGirdWorld = new Stack3DGirdWorld(gameMain, INITIAL_MAP_WIDTH, INITIAL_MAP_HEIGHT, 1f);
         map3DGirdWorld.setPosition(8f, 4.5f);
         map3DGirdWorld.addStack2DLayer(); // 新建一层 2D 层
+
+        // 初始化地图数据
+        map = new MapData();
+        map.mapFileInfo = new MapFileInfo();
+        map.addtionalInfo = "";
+        map.allMaps = new ArrayList<>();
+        map.allMaps.add(new SubMapData(INITIAL_MAP_HEIGHT, INITIAL_MAP_WIDTH)); // 添加默认层
 
         cornerDecoration = new Image[INITIAL_MAP_WIDTH][INITIAL_MAP_HEIGHT];
         ImageLabelContainer cornerContainer = new ImageLabelContainer(gameMain, 0.001f);
@@ -103,6 +122,26 @@ public class MapEditScene extends SokobanFitScene {
                 // Logger.info(String.format("%.2f, %.2f", corner_position.x, corner_position.y));
             }
         }
+
+        // 向上移动按钮
+        layerUpButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (currentSubMapIndex == 0) return;
+                currentSubMapIndex -= 1;
+                updateMapShowing();
+            }
+        });
+
+        // 向下移动按钮
+        layerDownButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (currentSubMapIndex == map.allMaps.size() - 1) return;
+                currentSubMapIndex += 1;
+                updateMapShowing();
+            }
+        });
 
         // 地图滚轮、鼠标响应缩放
         stage.addListener(new InputListener() {
@@ -149,12 +188,7 @@ public class MapEditScene extends SokobanFitScene {
         topMenu.getSaveButton().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (saveFile(false)) {
-                    HintMessageBox msgBox;
-                    msgBox = new HintMessageBox(gameMain, "Save OK ;D");
-                    msgBox.setPosition(8f, 0.5f);
-                    msgBox.addActorsToStage(stage);
-                }
+                saveFile(false);
             }
         });
 
@@ -162,16 +196,7 @@ public class MapEditScene extends SokobanFitScene {
         topMenu.getSaveAsButton().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                HintMessageBox msgBox;
-
-                if (saveFile(true)) {
-                    msgBox = new HintMessageBox(gameMain, "Save OK ;D");
-                } else {
-                    msgBox = new HintMessageBox(gameMain, "Fail or cancel to save map");
-                }
-
-                msgBox.setPosition(8f, 0.5f);
-                msgBox.addActorsToStage(stage);
+                saveFile(true);
             }
         });
 
@@ -210,6 +235,8 @@ public class MapEditScene extends SokobanFitScene {
         // 添加 Actor 到非固定 Stage
         stage.addActor(mouseRelativeSquare);
 
+        updateMapShowing(); // 更新当前界面地图显示
+
         // 角落标记
         for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
             for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
@@ -221,14 +248,42 @@ public class MapEditScene extends SokobanFitScene {
     }
 
     /**
+     * 显示消息框
+     * @param msg 消息内容
+     */
+    public void ShowMsgBox(String msg) {
+        HintMessageBox msgBox;
+        msgBox = new HintMessageBox(gameMain, msg);
+        msgBox.setPosition(8f, 0.5f);
+        msgBox.addActorsToStage(stage);
+    }
+
+    /**
      * 新建文件
      */
     public void newFile() {
-        // TODO 询问保存，保存逻辑
-        // Save file?
+        // 询问是否退出
+        QuestDialog questSave = new QuestDialog(gameMain, "Have you saved current file?\n\nIf not, click cancel and save.");
+        questSave.setPosition(8f, 4.5f);
+        questSave.addActorsToStage(UIStage);
 
-        // 直接创建新编辑场景
-        gameMain.getScreenManager().setScreenWithoutSaving(new MapEditScene(gameMain));
+        // 取消则隐藏
+        questSave.getCancelButton().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                questSave.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.2f)));
+                questSave.getCancelButton().clearListeners();
+                questSave.getConfirmButton().clearListeners();
+            }
+        });
+
+        // 确定则直接创建新编辑场景
+        questSave.getConfirmButton().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                gameMain.getScreenManager().setScreenWithoutSaving(new MapEditScene(gameMain));
+            }
+        });
     }
 
     /**
@@ -244,14 +299,25 @@ public class MapEditScene extends SokobanFitScene {
         
         Logger.info("MapEditScene", "Select file path " + filePath);
 
-        // TODO 读取地图逻辑
-        if (true) {
-            currentFilePath = filePath;
-            Logger.info("MapEditScene", "Reads map file successfully");
-        } else {
-            Logger.error("MapEditScene", "Loads map file failed. Check the map format or else");
+        // 使用 MapFileReader 读取地图
+        String mapString = new MapFileReader().readMapByPath(filePath);
+        if (mapString == null) {
+            Logger.error("MapEditScene", "Read map file failed.");
+            ShowMsgBox("Read map file failed.");
         }
 
+        map = MapFileParser.parseMapData(new MapFileInfo(filePath, "", ""), mapString);
+        if (map == null) {
+            Logger.error("MapEditScene", "Parse map file failed.");
+            ShowMsgBox("Read map file failed.");
+            return;
+        }
+
+        currentFilePath = filePath;
+        Logger.info("MapEditScene", "Reads map file successfully");
+
+        // 直接对界面地图进行更新
+        updateMapShowing();
     }
 
     /**
@@ -288,8 +354,9 @@ public class MapEditScene extends SokobanFitScene {
      * @return 是否保存成功
      */
     public boolean saveFile(boolean saveAs) {
-        // if (!currentFileOpen) return false;
         if (currentFilePath == null) saveAs = true;
+
+        // 如果是另存为，则打开对话框选择新路径
         if (saveAs) {
             // 打开保存对话框
             String savePath = WindowsFileChooser.saveFile("Map Files (*.map)|*.map");
@@ -305,37 +372,117 @@ public class MapEditScene extends SokobanFitScene {
             if (!fileNameParts[fileNameParts.length - 1].toLowerCase().equals("map")) savePath += ".map";
 
             Logger.info("MapEditScene", "This map will save to " + savePath);
-            
-            // TODO 尝试写入地图文件
-            if (true) {
-                currentFilePath = savePath;
-                Logger.info("MapEditScene", "Save map successfully");
-                return true;
-            } else {
-                Logger.info("MapEditScene", "Save map failed");
-                return false;
-            }
+            currentFilePath = savePath;
+        }
 
+        // 序列化地图数据
+        String mapDataString = MapFileParser.serializeMapData(map);
+
+        if (mapDataString == null) {
+            Logger.info("MapEditScene", "Serialize map data failed");
+            ShowMsgBox("Fail to save map");
+            return false;
+        }
+
+        Logger.info("MapEditScene", "This map will save to " + currentFilePath);
+        
+        // 写入地图文件
+        if (new MapFileReader().createMapWithContent(currentFilePath, mapDataString)) {
+            Logger.info("MapEditScene", "Save map successfully");
+            ShowMsgBox("Save OK ;D");
+            return true;
         } else {
-            // 直接向路径中写入
-            Logger.info("MapEditScene", "This map will save to " + currentFilePath);
+            Logger.info("MapEditScene", "Save map failed");
+            return false;
+        }
+    }
 
-            // TODO 写入地图文件尝试
-            if (true) {
-                Logger.info("MapEditScene", "Save map successfully");
-                return true;
-            } else {
-                Logger.info("MapEditScene", "Save map failed");
-                return false;
+    /**
+     * 直接更新编辑器界面地图显示
+     */
+    public void updateMapShowing() {
+        SubMapData subMap = map.allMaps.get(currentSubMapIndex);
+
+        // 重置当前网格世界
+        map3DGirdWorld.getStack2DLayer(currentSubMapIndex).getAllActors().forEach(actor -> actor.remove());
+        map3DGirdWorld.stack3DGridWorld.set(currentSubMapIndex, new Stack2DGirdWorld(gameMain, subMap.width, subMap.height, 1.0f));
+
+        // 获取新网格世界
+        Stack2DGirdWorld gridWorld = map3DGirdWorld.getStack2DLayer(currentSubMapIndex);
+
+        // 对于当前子地图的每一层
+        for (int layer = 0; layer < subMap.mapLayer.size(); layer++) {
+
+            //当前层
+            gridWorld.addLayer();
+            ObjectType[][] currentLayer = subMap.mapLayer.get(layer);
+            
+            for (int y = 0; y < subMap.height; y++) {
+                for (int x = 0; x < subMap.width; x++) {
+                    // 空气与未知类型不处理
+                    if (currentLayer[y][x] == ObjectType.Air || currentLayer[y][x] == ObjectType.Unknown) continue;
+
+                    // 数据类型转换为显示类型
+                    BoxType objectBoxType = mapObjectTypeToActor(currentLayer[y][x]);
+                    gridWorld.getTopLayer().addBox(objectBoxType, y, x);
+                }
             }
         }
+
+        // 将网格世界重新加入 stage
+        addCombinedObjectToUIStage(gridWorld);
+    }
+
+    /**
+     * 获得 ObjectType 地图数据的转换类型
+     * @param obj ObjectType 物体数据
+     * @return "Spine" "BoxType"
+     */
+    public BoxType mapObjectTypeToActor(ObjectType obj) {
+        return switch (obj) {
+            case ObjectType.Wall -> BoxType.BlueChest;
+            case ObjectType.Player -> BoxType.Player;
+            case ObjectType.Box -> BoxType.GreenChest;
+            case ObjectType.BoxTarget -> BoxType.BoxTarget;
+            case ObjectType.PlayerTarget -> BoxType.PlayerTarget;
+            case ObjectType.GroundDarkGray -> BoxType.DarkGrayBack;
+            default -> null;
+        };
     }
 
     @Override
     public void input() {
+        boolean controlPressed = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
+        boolean shiftPressed = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT);
+
         // 退出
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             exitEditScene();
+            return;
+        }
+
+        // 保存
+        if (controlPressed && Gdx.input.isKeyJustPressed(Keys.S)) {
+            saveFile(false);
+            return;
+        }
+
+        // 另存为
+        if (controlPressed && shiftPressed && Gdx.input.isKeyJustPressed(Keys.S)) {
+            saveFile(true);
+            return;
+        }
+
+        // 打开
+        if (controlPressed && Gdx.input.isKeyJustPressed(Keys.O)) {
+            openFile();
+            return;
+        }
+
+        // 新建
+        if (controlPressed && Gdx.input.isKeyJustPressed(Keys.N)) {
+            newFile();
+            return;
         }
 
         // 视口右键移动判定

@@ -30,7 +30,7 @@ public class Stack3DGirdWorld extends SokobanCombineObject {
      * <br><br>
      * 遍历方式为地图层（下到上）、层（下到上）、行、列 (ML -> L -> H -> W)
      */
-    List<Stack2DGirdWorld> stack3DGridWorld;
+    public List<Stack2DGirdWorld> stack3DGridWorld;
 
     public Stack3DGirdWorld(Main gameMain, int gridWidth, int gridHeight, float cellSize) {
         super(gameMain);
