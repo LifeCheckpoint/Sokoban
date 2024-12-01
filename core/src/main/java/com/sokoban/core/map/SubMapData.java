@@ -1,6 +1,7 @@
 package com.sokoban.core.map;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.sokoban.core.game.ObjectType;
@@ -19,10 +20,20 @@ public class SubMapData {
      * @param width 子地图宽
      */
     public SubMapData(int height, int width) {
+        this.height = height;
+        this.width = width;
+
         // 添加 3 层
         mapLayer.add(new ObjectType[height][width]);
         mapLayer.add(new ObjectType[height][width]);
         mapLayer.add(new ObjectType[height][width]);
+
+        // 初始化每一层
+        for (ObjectType[][] layer : mapLayer) {
+            for (ObjectType[] line : layer) {
+                Arrays.fill(line, ObjectType.Air);
+            }
+        }
     }
 
     /**

@@ -1,7 +1,11 @@
 package com.sokoban.core.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.sokoban.core.Logger;
+import com.sokoban.core.map.SubMapData;
+import com.sokoban.core.map.serialize.SubMapDataDeserializer;
+import com.sokoban.core.map.serialize.SubMapDataSerializer;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -20,8 +24,9 @@ import java.util.Base64;
 public class JsonManager {
     private static final String ALGORITHM = "AES";
     private static final String HASH_ALGORITHM = "SHA-256";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final int AES_KEY_SIZE = 16; // 16 bytes AES Key
+    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static SimpleModule module = new SimpleModule();
     private final SecretKey secretKey;
 
     private boolean encryptize;
@@ -34,6 +39,7 @@ public class JsonManager {
     public JsonManager() {
         this.encryptize = false;
         this.secretKey = null;
+        registerSerializers();
     }
 
     /**
@@ -45,6 +51,16 @@ public class JsonManager {
     public JsonManager(String key) {
         this.encryptize = true;
         this.secretKey = generateSecretKey(key);
+        registerSerializers();
+    }
+
+    /**
+     * 注册自定义序列化器和反序列化器
+     */
+    public void registerSerializers() {
+        module = module.addSerializer(SubMapData.class, new SubMapDataSerializer());
+        module = module.addDeserializer(SubMapData.class, new SubMapDataDeserializer());
+        objectMapper = objectMapper.registerModule(module);
     }
 
     /** 
