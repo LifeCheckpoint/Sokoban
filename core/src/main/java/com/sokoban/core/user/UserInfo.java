@@ -2,14 +2,12 @@ package com.sokoban.core.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 用户信息类
  * @author Life_Checkpoint
  * @author ChatGPT
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfo {
     private String userID;
     private String userPasswordHash;
@@ -77,17 +75,17 @@ public class UserInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof UserInfo) {
-            UserInfo otherUserInfo = (UserInfo) obj;
-            if (!userID.equals(otherUserInfo.userID)) return false;
-            if (!userPasswordHash.equals(otherUserInfo.getUserPasswordHash())) return false;
-            if (!rememberPassword.equals(otherUserInfo.rememberPassword)) return false;
-            if (!saveArchives.equals(otherUserInfo.getSaveArchives())) return false;
-            if (!tutorial.equals(otherUserInfo.isTutorial())) return false;
-            if (!guest.equals(otherUserInfo.isGuest())) return false;
+        if (!(obj instanceof UserInfo)) return false;
+        UserInfo otherUserInfo = (UserInfo) obj;
 
-            return true;
-        } else return false;
+        if (!userID.equals(otherUserInfo.userID)) return false;
+        if (!userPasswordHash.equals(otherUserInfo.getUserPasswordHash())) return false;
+        if (!rememberPassword.equals(otherUserInfo.rememberPassword)) return false;
+        if (!saveArchives.equals(otherUserInfo.getSaveArchives())) return false;
+        if (!tutorial.equals(otherUserInfo.isTutorial())) return false;
+        if (!guest.equals(otherUserInfo.isGuest())) return false;
+
+        return true;
     }
 
 }

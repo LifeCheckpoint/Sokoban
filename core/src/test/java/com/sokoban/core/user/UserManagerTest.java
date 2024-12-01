@@ -55,8 +55,7 @@ public class UserManagerTest {
 
     @Test
     public void testEmptyPasswordUser() throws Exception {
-        UserInfo emptyPassUser = new UserInfo("emptyPassUser", 
-            userManager.calculatePasswordHash(""), true);
+        UserInfo emptyPassUser = new UserInfo("emptyPassUser", userManager.calculatePasswordHash(""), true);
         assertTrue(userManager.createUserInfo(emptyPassUser), "Failed to create empty password user");
 
         UserInfo readUser = userManager.readUserInfo("emptyPassUser");

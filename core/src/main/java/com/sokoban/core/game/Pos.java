@@ -15,6 +15,11 @@ public class Pos {
         this.z = z;
     }
 
+    public Pos(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public int getX() {
         return x;
     }
@@ -39,9 +44,18 @@ public class Pos {
         this.z = z;
     }
 
-    public Pos(int x, int y) {
-        this.x = x;
-        this.y = y;
+    /**
+     * 坐标加法
+     */
+    public Pos add(Pos pos) {
+        return new Pos(x + pos.x, y + pos.y, z + pos.z);
+    }
+
+    /**
+     * 坐标减法
+     */
+    public Pos sub(Pos pos) {
+        return new Pos(x - pos.x, y - pos.y, z - pos.z);
     }
 
     /**
