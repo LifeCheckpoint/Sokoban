@@ -20,9 +20,9 @@ public abstract class SokobanFitScene extends SokobanScene {
     protected boolean initFlag = false;
 
     /** 舞台 */
-    protected Stage stage, UIStage;
+    protected Stage UIStage;
     /** FitViewport 视口，比例为 16: 9 */
-    protected Viewport viewport, UIViewport;
+    protected Viewport UIViewport;
     /** 输入处理器 */
     protected InputMultiplexer inputMultiplexer;
     /** 游戏全局句柄 */

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -66,6 +67,9 @@ public class MapEditScene extends SokobanFitScene {
     private final int INITIAL_MAP_HEIGHT = 27;
     private final float MAX_MOVING_PACE = 0.06f; // 地图移动最快巡航速度
     private final float MOUSE_RELATIVE_SQUARE_ALPHA = 0.02f; // 鼠标参照框透明度
+
+    // 物体选择框
+    private ObjectType currentObjectChoice = ObjectType.Wall; // 当前选择的物体
 
     // 其它部件
     private Image mouseRelativeSquare;
@@ -210,9 +214,18 @@ public class MapEditScene extends SokobanFitScene {
                     // 为每个部件增加动画实例
                     // 如果未处在下拉状态
                     if (!pullDownTopMenu) {
+                        // 切换输入处理器
+                        Gdx.input.setInputProcessor(UIStage);
+
                         topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, -2.3f, 0.3f, Interpolation.exp10Out)));
                         pullDownTopMenu = true;
                     } else {
+                        // 切换输入处理器
+                        inputMultiplexer = new InputMultiplexer();
+                        inputMultiplexer.addProcessor(UIStage);
+                        inputMultiplexer.addProcessor(stage);
+                        Gdx.input.setInputProcessor(inputMultiplexer);
+
                         topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, 2.3f, 0.3f, Interpolation.exp10Out)));
                         pullDownTopMenu = false;
                     }
@@ -240,11 +253,17 @@ public class MapEditScene extends SokobanFitScene {
         // 角落标记
         for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
             for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
-                // FIXME: Exception in thread "main" java.lang.NullPointerException: "this.stage" is null
-                // addActorsToStage(cornerDecoration[i][j]);
-                stage.addActor(cornerDecoration[i][j]);
+                addActorsToStage(cornerDecoration[i][j]);
             }
         }
+
+        // 为可变舞台增加事件监听
+        stage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                processLeftClick();
+            }
+        });
     }
 
     /**
@@ -413,7 +432,7 @@ public class MapEditScene extends SokobanFitScene {
         // 对于当前子地图的每一层
         for (int layer = 0; layer < subMap.mapLayer.size(); layer++) {
 
-            //当前层
+            // 当前层
             gridWorld.addLayer();
             ObjectType[][] currentLayer = subMap.mapLayer.get(layer);
             
@@ -430,7 +449,7 @@ public class MapEditScene extends SokobanFitScene {
         }
 
         // 将网格世界重新加入 stage
-        addCombinedObjectToUIStage(gridWorld);
+        addCombinedObjectToStage(gridWorld);
     }
 
     /**
@@ -490,21 +509,32 @@ public class MapEditScene extends SokobanFitScene {
 
         // 鼠标移动参照框
         mouseRelativeSquareMoving();
+    }
 
-        // 在下拉菜单缩回时，允许处理以下事件
-        if (!pullDownTopMenu) {
+    /*
+     * 获得鼠标当前指向的 GridWorld X 坐标，超界返回 -1
+     */
+    public int getCoordinateX() {
+        float posX = Gdx.input.getX(), posY = Gdx.input.getY();
+        Vector2 worldPosition = viewport.unproject(new Vector2(posX, posY));
+        return MathUtilsEx.caculateMouseGridAxis(worldPosition.x, map3DGirdWorld.getX(), INITIAL_MAP_WIDTH, 1.0f);
+    }
 
-        }
+    /*
+     * 获得鼠标当前指向的 GridWorld Y 坐标，超界返回 -1
+     */
+    public int getCoordinateY() {
+        float posX = Gdx.input.getX(), posY = Gdx.input.getY();
+        Vector2 worldPosition = viewport.unproject(new Vector2(posX, posY));
+        return MathUtilsEx.caculateMouseGridAxis(worldPosition.y, map3DGirdWorld.getY(), INITIAL_MAP_HEIGHT, 1.0f);
     }
 
     /**
      * 处理鼠标参照框移动
      */
     private void mouseRelativeSquareMoving() {
-        float posX = Gdx.input.getX(), posY = Gdx.input.getY();
-        Vector2 worldPosition = viewport.unproject(new Vector2(posX, posY));
-        int coordinateX = MathUtilsEx.caculateMouseGridAxis(worldPosition.x, map3DGirdWorld.getX(), INITIAL_MAP_WIDTH, 1.0f);
-        int coordinateY = MathUtilsEx.caculateMouseGridAxis(worldPosition.y, map3DGirdWorld.getY(), INITIAL_MAP_HEIGHT, 1.0f);
+        int coordinateX = getCoordinateX();
+        int coordinateY = getCoordinateY();
 
         // 坐标合法检查
         if (coordinateX != -1 && coordinateY != -1) {
@@ -514,8 +544,26 @@ public class MapEditScene extends SokobanFitScene {
 
         if (pullDownTopMenu) mouseRelativeSquare.getColor().a = 0f;
         else mouseRelativeSquare.getColor().a = MOUSE_RELATIVE_SQUARE_ALPHA;
+    }
 
-    } 
+    /**
+     * 处理鼠标指定位置物体
+     */
+    public void processLeftClick() {
+        int coordinateX = getCoordinateX();
+        int coordinateY = getCoordinateY();
+
+        Logger.debug("MapEditScene", String.format("Left Click (%d, %d)", coordinateX, coordinateY));
+
+        // 坐标合法检查
+        if (coordinateX != -1 && coordinateY != -1) {
+            // TODO 如果当前物体是 ... 层
+            map.allMaps.get(currentSubMapIndex).getObjectLayer()[coordinateY][coordinateX] = currentObjectChoice;
+        }
+
+        // 更新画面
+        updateMapShowing();
+    }
 
     /**
      * 处理鼠标右键引发的视口移动
@@ -565,8 +613,8 @@ public class MapEditScene extends SokobanFitScene {
     @Override
     public void draw(float delta) {
         // 固定 Stage 与可变 Stage 绘制
-        UIStage.draw();
         stage.draw();
+        UIStage.draw();
     }
 
     @Override

@@ -25,7 +25,7 @@ public class GirdWorld extends SokobanCombineObject {
      * <br><br>
      * 如果内容不存在则被标记为 null，遍历方式为先行后列 (H -> W)
      */
-    Actor[][] gridSpineObjects;
+    public Actor[][] gridSpineObjects;
 
     public GirdWorld(Main gameMain, int gridWidth, int gridHeight, float cellSize) {
         super(gameMain);

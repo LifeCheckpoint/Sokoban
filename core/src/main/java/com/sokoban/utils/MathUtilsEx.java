@@ -114,7 +114,7 @@ public class MathUtilsEx {
      */
     public static int caculateMouseGridAxis(float mouseAxisPosition, float gridAxisPosition, int gridAxisWidth, float gridCellSize) {
         int pos = (int) ((mouseAxisPosition - gridAxisPosition) / gridCellSize);
-        if (pos <= 0 || pos >= gridAxisWidth) return -1;
+        if (pos < 0 || pos >= gridAxisWidth) return -1;
         else return pos;
     }
 }

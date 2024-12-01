@@ -25,7 +25,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      * <br><br>
      * 遍历方式为层（下到上）、行、列 (L -> H -> W)
      */
-    List<GirdWorld> stack2DGridWorld;
+    public List<GirdWorld> stack2DGridWorld;
 
     public Stack2DGirdWorld(Main gameMain, int gridWidth, int gridHeight, float cellSize) {
         super(gameMain);
@@ -78,7 +78,7 @@ public class Stack2DGirdWorld extends SokobanCombineObject {
      */
     public void addLayer() {
         stack2DGridWorld.add(new GirdWorld(gameMain, gridWidth, gridHeight, cellSize));
-        getTopLayer().setPosition(x, y);
+        getTopLayer().setPosition(x + width / 2, y + height / 2);
     }
 
     /**
