@@ -28,7 +28,7 @@ public class MapData {
         return maps;
     }
 
-    public void setMaps(List<Map[][]> maps) {
+    public void setMaps(List<Map> maps) {
         this.maps = maps;
     }
 
