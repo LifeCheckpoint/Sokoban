@@ -1,6 +1,6 @@
-package com.sokoban.core;
+package com.sokoban.core.map;
 
-import com.sokoban.core.game.MapInfo;
+import com.sokoban.core.Logger;
 import com.sokoban.statics.FileInfo;
 import com.sokoban.utils.FilePathUtils;
 
@@ -43,14 +43,14 @@ public class MapFileReader {
      * 在指定目录中搜索所有地图
      * @return List<MapInfo> 地图信息 List
      */
-    public List<MapInfo> listAllMaps() {
-        List<MapInfo> mapList = new ArrayList<>();
+    public List<MapFileInfo> listAllMaps() {
+        List<MapFileInfo> mapList = new ArrayList<>();
         List<FileInfo> fileInfos = FilePathUtils.walk(mapsDirectory, true);
 
         for (FileInfo fileInfo : fileInfos) {
             if (fileInfo.fileName.endsWith(MAP_FILE_EXTENSION)) {
                 String mapName = fileInfo.fileName.replace(MAP_FILE_EXTENSION, "");
-                mapList.add(new MapInfo(fileInfo.file.getAbsolutePath(), fileInfo.relativePath, mapName));
+                mapList.add(new MapFileInfo(fileInfo.file.getAbsolutePath(), fileInfo.relativePath, mapName));
             }
         }
         return mapList;

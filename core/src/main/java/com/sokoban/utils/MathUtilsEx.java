@@ -2,7 +2,7 @@ package com.sokoban.utils;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sokoban.polygon.manager.AccelerationMovingManager.Direction;
+import com.sokoban.core.game.Direction;
 
 /**
  * 数学增强类

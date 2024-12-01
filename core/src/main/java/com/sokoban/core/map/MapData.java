@@ -1,4 +1,4 @@
-package com.sokoban.core.game;
+package com.sokoban.core.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * @author Life_Checkpoint
  */
 public class MapData {
-    public MapInfo mapFileInfo = new MapInfo(); // 地图文件信息
+    public MapFileInfo mapFileInfo = new MapFileInfo(); // 地图文件信息
     public String addtionalInfo = ""; // 地图附加信息
     public List<SubMapData> allMaps = new ArrayList<>(); // 所有子地图
 
@@ -26,7 +26,7 @@ public class MapData {
      * @param addtionInfo 地图附加数据文本
      * @param allMaps 所有子地图
      */
-    public MapData(MapInfo mapFileInfo, String addtionInfo, List<SubMapData> allMaps) {
+    public MapData(MapFileInfo mapFileInfo, String addtionInfo, List<SubMapData> allMaps) {
         this.mapFileInfo = mapFileInfo;
         this.addtionalInfo = addtionInfo;
         this.allMaps = allMaps;

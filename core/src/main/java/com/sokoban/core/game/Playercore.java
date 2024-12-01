@@ -3,14 +3,15 @@ package com.sokoban.core.game;
 import java.util.List;
 
 import com.sokoban.core.Logger;
-import com.sokoban.polygon.manager.AccelerationMovingManager.Direction;
+import com.sokoban.core.map.MapData;
+import com.sokoban.core.map.SubMapData;
 
 /**
  * 推箱子逻辑核心类
  * @author StiCK-bot
  * @author Life_Checkpoint
  */
-public class Playercore {
+public class PlayerCore {
     private Pos playerPos; // 玩家坐标
     private List<String> moveList; // 这一轮有哪些物块坐标发生了移动
     private MapData map = new MapData(); // 游戏地图
@@ -175,7 +176,7 @@ public class Playercore {
 
             for (int y = 0; y < subMap.height; y++) {
                 for (int x = 0; x < subMap.width; x++) {
-                    
+
                     // 检查箱子目标点
                     if (getTarget(subMapIndex, x, y) == ObjectType.BoxTarget)
                         if (!PlayerCoreUtils.isBox(getObject(subMapIndex, x, y))) return false;

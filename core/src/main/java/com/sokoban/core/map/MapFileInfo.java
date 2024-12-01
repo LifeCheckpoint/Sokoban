@@ -1,4 +1,4 @@
-package com.sokoban.core.game;
+package com.sokoban.core.map;
 
 /**
  * 地图信息类
@@ -6,12 +6,12 @@ package com.sokoban.core.game;
  * 地图相关信息
  * @author Life_Checkpoint
  */
-public class MapInfo {
+public class MapFileInfo {
     public String path = "";
     public String levelName = "";
     public String mapName = "";
 
-    public MapInfo() {}
+    public MapFileInfo() {}
 
     /**
      * 地图文件信息类构造
@@ -19,7 +19,7 @@ public class MapInfo {
      * @param levelName 大关卡名，未知为空字符串
      * @param mapName 小关卡（地图）名，未知为空字符串
      */
-    public MapInfo(String path, String levelName, String mapName) {
+    public MapFileInfo(String path, String levelName, String mapName) {
         this.path = path;
         this.levelName = levelName;
         this.mapName = mapName;
@@ -27,8 +27,8 @@ public class MapInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof MapInfo)) return false;
-        MapInfo anotherMapInfo = (MapInfo) obj;
+        if (!(obj instanceof MapFileInfo)) return false;
+        MapFileInfo anotherMapInfo = (MapFileInfo) obj;
 
         if (!anotherMapInfo.path.equals(path)) return false;
         if (!anotherMapInfo.levelName.equals(levelName)) return false;

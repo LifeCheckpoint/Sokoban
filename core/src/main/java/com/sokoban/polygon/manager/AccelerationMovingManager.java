@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.sokoban.core.Logger;
+import com.sokoban.core.game.Direction;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.utils.MathUtilsEx;
@@ -23,13 +24,6 @@ public class AccelerationMovingManager {
     private float reactPositionX = 0f, reactPositionY = 0f;
     private Map<Object, Rectangle> taggedBound;
 
-    public enum Direction {
-        None("none"), Right("right"), Down("down"), Left("left"), Up("up");
-        private String value;
-        Direction(String value) {this.value = value;}
-        public String getDirection() {return value;}
-    }
-    
     public AccelerationMovingManager(Actor actor, float acceleration, float maxSpeed, float friction) {
         init(actor, acceleration, acceleration, maxSpeed, maxSpeed, friction);
     }

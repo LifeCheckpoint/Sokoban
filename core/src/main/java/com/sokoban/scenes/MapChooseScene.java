@@ -10,20 +10,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
+import com.sokoban.core.game.Direction;
 import com.sokoban.core.game.GameParams;
-import com.sokoban.polygon.BoxObject;
-import com.sokoban.polygon.SpineObject;
-import com.sokoban.polygon.TimerClock;
-import com.sokoban.polygon.BoxObject.BoxType;
+import com.sokoban.Main;
 import com.sokoban.polygon.actioninterface.ClockEndCallback;
+import com.sokoban.polygon.BoxObject;
+import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
@@ -32,12 +31,14 @@ import com.sokoban.polygon.manager.AccelerationMovingManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.OverlappingManager;
 import com.sokoban.polygon.manager.OverlappingManager.OverlapStatue;
+import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.TimerClock;
 import com.sokoban.utils.ActionUtils;
 import com.sokoban.utils.MathUtilsEx;
 
 public class MapChooseScene extends SokobanScene {
     private AccelerationMovingManager accelerationManager;
-    private AccelerationMovingManager.Direction preDirection = AccelerationMovingManager.Direction.None;
+    private Direction preDirection = Direction.None;
     private boolean isPlayerInMove;
     private Image returnButton;
     private Levels level;
@@ -198,26 +199,26 @@ public class MapChooseScene extends SokobanScene {
         // System.out.printf("%s %s %s %s\n", keyUp, keyDown, keyLeft, keyRight);
         
         if (keyUp && !keyDown) {
-            updatePlayerVelocity(AccelerationMovingManager.Direction.Up);
+            updatePlayerVelocity(Direction.Up);
             inMove = true;
         }
         
         if (keyDown && !keyUp) {
-            updatePlayerVelocity(AccelerationMovingManager.Direction.Down);
+            updatePlayerVelocity(Direction.Down);
             inMove = true;
         }
         
         if (keyLeft && !keyRight) {
-            updatePlayerVelocity(AccelerationMovingManager.Direction.Left);
+            updatePlayerVelocity(Direction.Left);
             inMove = true;
         }
         
         if (keyRight && !keyLeft) {
-            updatePlayerVelocity(AccelerationMovingManager.Direction.Right);
+            updatePlayerVelocity(Direction.Right);
             inMove = true;
         }
 
-        if (!inMove) updatePlayerVelocity(AccelerationMovingManager.Direction.None);
+        if (!inMove) updatePlayerVelocity(Direction.None);
 
         // 完成速度更新后进行实际位移
         accelerationManager.updateActorMove();
@@ -232,14 +233,14 @@ public class MapChooseScene extends SokobanScene {
         }
     }
 
-    private void updatePlayerVelocity(AccelerationMovingManager.Direction direction) {
+    private void updatePlayerVelocity(Direction direction) {
         // 相同移动，仅第一次触发动画
-        if (!isPlayerInMove && direction != AccelerationMovingManager.Direction.None) {
+        if (!isPlayerInMove && direction != Direction.None) {
             playerSpine.setAnimation(0, direction.getDirection(), false);
             isPlayerInMove = true;
         }
         // 不相同移动，更改触发动画
-        else if (preDirection != direction && direction != AccelerationMovingManager.Direction.None) {
+        else if (preDirection != direction && direction != Direction.None) {
             playerSpine.setAnimation(0, direction.getDirection(), false);
             isPlayerInMove = true;
         }
@@ -247,7 +248,7 @@ public class MapChooseScene extends SokobanScene {
         // 处理移动
         accelerationManager.updateVelocity(direction);
         // 解锁动画
-        if (direction == AccelerationMovingManager.Direction.None) isPlayerInMove = false;
+        if (direction == Direction.None) isPlayerInMove = false;
         // 更新上一次移动
         preDirection = direction;
     }

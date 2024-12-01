@@ -1,7 +1,9 @@
-package com.sokoban.core.game;
+package com.sokoban.core.map;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sokoban.core.game.ObjectType;
 
 public class SubMapData {
     public int height = 0, width = 0; // 子地图高与宽

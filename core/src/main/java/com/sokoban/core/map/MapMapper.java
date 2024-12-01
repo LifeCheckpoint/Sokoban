@@ -1,4 +1,6 @@
-package com.sokoban.core.game;
+package com.sokoban.core.map;
+
+import com.sokoban.core.game.ObjectType;
 
 public class MapMapper {
     /**

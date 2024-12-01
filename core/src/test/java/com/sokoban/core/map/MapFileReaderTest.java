@@ -1,9 +1,7 @@
-package com.sokoban.core;
+package com.sokoban.core.map;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import com.sokoban.core.game.MapInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +24,7 @@ public class MapFileReaderTest {
 
     @Test
     public void testListAllMaps() {
-        List<MapInfo> maps = mapFileReader.listAllMaps();
+        List<MapFileInfo> maps = mapFileReader.listAllMaps();
         Assert.assertEquals(maps.size(), 9, "Expected 9 maps in total.");
         Assert.assertTrue(maps.stream().anyMatch(map -> map.levelName.equals("level1") && map.mapName.equals("map1")),
                 "Map level1/map1 should be present.");

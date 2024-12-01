@@ -1,11 +1,8 @@
-package com.sokoban.core;
+package com.sokoban.core.map;
 
 import java.util.ArrayList;
 
-import com.sokoban.core.game.MapData;
-import com.sokoban.core.game.MapInfo;
-import com.sokoban.core.game.MapMapper;
-import com.sokoban.core.game.SubMapData;
+import com.sokoban.core.Logger;
 import com.sokoban.core.manager.JsonManager;
 
 /**
@@ -20,7 +17,7 @@ public class MapFileParser {
      * @param mapFileString 地图数据的文本字串
      * @return 解析得到的 MapData，失败返回 null
      */
-    public static MapData parseMapData(MapInfo mapFileInfo, String mapFileString) {
+    public static MapData parseMapData(MapFileInfo mapFileInfo, String mapFileString) {
         MapData mapData = new JsonManager().parseJsonToObject(mapFileString, MapData.class); // 将地图文本 Json 序列化为数据
         mapData.mapFileInfo = mapFileInfo; // 补充文件路径
         return mapData;
@@ -31,7 +28,7 @@ public class MapFileParser {
      * @return 序列化结果
      */
     public static String serializeMapData(MapData mapData) {
-        MapData mapDataWithoutFileInfo = new MapData(new MapInfo(), mapData.addtionalInfo, mapData.allMaps); // 去除文件信息
+        MapData mapDataWithoutFileInfo = new MapData(new MapFileInfo(), mapData.addtionalInfo, mapData.allMaps); // 去除文件信息
         return new JsonManager().getJsonString(mapDataWithoutFileInfo);
     }
 
@@ -47,7 +44,7 @@ public class MapFileParser {
         }
     
         // 初始化一个地图类
-        MapData map = new MapData(new MapInfo(), "", new ArrayList<>());
+        MapData map = new MapData(new MapFileInfo(), "", new ArrayList<>());
         map.allMaps.add(new SubMapData(charMap.length, charMap[0].length));
     
         // 逐元素转换
