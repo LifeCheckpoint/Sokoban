@@ -52,6 +52,7 @@ public class MapEditScene extends SokobanFitScene {
 
     // 状态控制
     private boolean pullDownTopMenu = false; // 下拉菜单是否被拉下
+    private boolean questWindowShowing = false; // 是否有弹出窗口
     private String currentFilePath = null; // 当前文件路径
     private float currentWorldScaling = 1.0f; // 当前世界缩放大小
     private boolean isDragging = false; // 是否正在拖动可变视口
@@ -372,31 +373,59 @@ public class MapEditScene extends SokobanFitScene {
     }
 
     /**
-     * 新建文件
+     * 显示询问框
+     * @param hintText 询问文本
+     * @param cancel 取消按钮点击回调
+     * @param confirm 确认按钮点击回调
      */
-    public void newFile() {
+    public void ShowQuestBox(String hintText, ClickListener cancel, ClickListener confirm) {
+        // 如果当前弹出窗口，直接返回
+        if (questWindowShowing) return;
+
+        questWindowShowing = true;
         // 询问是否退出
         QuestDialog questSave = new QuestDialog(gameMain, "Have you saved current file?\n\nIf not, click cancel and save.");
         questSave.setPosition(8f, 4.5f);
         questSave.addActorsToStage(UIStage);
 
-        // 取消则隐藏
-        questSave.getCancelButton().addListener(new ClickListener() {
+        ClickListener closeQuestBox = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                questSave.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.2f)));
+                questWindowShowing = false;
+                // 添加淡出与销毁线程
+                questSave.getAllActors().forEach(actor -> actor.addAction(Actions.sequence(
+                    Actions.fadeOut(0.2f),
+                    Actions.run(() -> questSave.getAllActors().forEach(Actor::remove))
+                )));
                 questSave.getCancelButton().clearListeners();
                 questSave.getConfirmButton().clearListeners();
             }
-        });
+        };
 
-        // 确定则直接创建新编辑场景
-        questSave.getConfirmButton().addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameMain.getScreenManager().setScreenWithoutSaving(new MapEditScene(gameMain));
+        // 取消确定均隐藏
+        questSave.getCancelButton().addListener(closeQuestBox);
+        questSave.getConfirmButton().addListener(closeQuestBox);
+
+        // 添加指定回调
+        if (cancel != null) questSave.getCancelButton().addListener(cancel);
+        if (confirm != null) questSave.getConfirmButton().addListener(confirm);
+    }
+
+    /**
+     * 新建文件
+     */
+    public void newFile() {
+        // 询问是否退出新建
+        ShowQuestBox(
+            "Have you saved current file?\n\nIf not, click cancel and save.", 
+            null, 
+            new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameMain.getScreenManager().setScreenWithoutSaving(new MapEditScene(gameMain));
+                }
             }
-        });
+        );
     }
 
     /**
@@ -419,18 +448,28 @@ public class MapEditScene extends SokobanFitScene {
             ShowMsgBox("Read map file failed.");
         }
 
-        map = MapFileParser.parseMapData(new MapFileInfo(filePath, "", ""), mapString);
-        if (map == null) {
+        MapData newMap = MapFileParser.parseMapData(new MapFileInfo(filePath, "", ""), mapString);
+        if (newMap == null) {
             Logger.error("MapEditScene", "Parse map file failed.");
             ShowMsgBox("Read map file failed.");
             return;
         }
 
-        currentFilePath = filePath;
-        Logger.info("MapEditScene", "Reads map file successfully");
+        ShowQuestBox(
+            "Have you saved current file?\n\nIf not, click cancel and save.", 
+            null, 
+            new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    map = newMap;
+                    currentFilePath = filePath;
+                    Logger.info("MapEditScene", "Reads map file successfully");
 
-        // 直接对界面地图进行更新
-        updateMapShowing();
+                    // 直接对界面地图进行更新
+                    updateMapShowing();
+                }
+            }
+        );
     }
 
     /**
@@ -438,27 +477,16 @@ public class MapEditScene extends SokobanFitScene {
      */
     public void exitEditScene() {
         // 询问是否退出
-        QuestDialog questSave = new QuestDialog(gameMain, "Do you want to exit?\n\nIf you haven't saved your file, click cancel.");
-        questSave.setPosition(8f, 4.5f);
-        questSave.addActorsToStage(UIStage);
-
-        // 取消则隐藏
-        questSave.getCancelButton().addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                questSave.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.2f)));
-                questSave.getCancelButton().clearListeners();
-                questSave.getConfirmButton().clearListeners();
+        ShowQuestBox(
+            "Do you want to exit?\n\nIf you haven't saved your file, click cancel.", 
+            null, 
+            new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    gameMain.getScreenManager().returnPreviousScreen();
+                }
             }
-        });
-
-        // 确定则退出
-        questSave.getConfirmButton().addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameMain.getScreenManager().returnPreviousScreen();
-            }
-        });
+        );
     }
 
     /**
