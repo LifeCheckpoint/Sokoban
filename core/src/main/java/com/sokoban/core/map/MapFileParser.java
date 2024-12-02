@@ -1,6 +1,7 @@
 package com.sokoban.core.map;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sokoban.core.Logger;
 import com.sokoban.core.game.Direction;
@@ -61,6 +62,8 @@ public class MapFileParser {
 
     /** 
      * 将方向字符转换为标准方向 
+     * @param directionChar 代表方向的字符，支持 UDLR udlr
+     * @return 解析得到的方向，未知返回 Direction.None
      */
     public static Direction parseDirectionChar(char directionChar) {
         return switch (directionChar) {
@@ -70,6 +73,40 @@ public class MapFileParser {
             case 'R', 'r' -> Direction.Right;
             default -> Direction.None;
         };
+    }
+
+    /**
+     * 传统地图数据解析器，解析为标准地图格式
+     * @param mapFileInfo 地图文件信息
+     * @param mapFileString 地图数据的文本字串
+     * @return 解析得到的 MapData，失败返回 null
+     */
+    public static MapData parseMapDataChar(MapFileInfo mapFileInfo, String mapFileString) {
+        List<char[]> currentMap = new ArrayList<>();
+        String[] lines = mapFileString.split("\n");
+
+        for (String line : lines) {
+            line = line.trim(); // 去除行首尾空白符
+            currentMap.add(line.toCharArray()); // 保存地图行
+        }
+
+        char[][] charMap = currentMap.toArray(new char[0][]);
+        flipHorizontal(charMap); // 由于读入地图是从上往下，所以需要翻转地图
+
+        // 将地图映射到标准类型
+        MapData map = parseMapData(charMap);
+        map.mapFileInfo = mapFileInfo;
+        return map;
+    }
+
+    /** 数组沿水平轴反转 */
+    private static void flipHorizontal(char[][] matrix) {
+        int rows = matrix.length;
+        for (int i = 0; i < rows / 2; i++) {
+            char[] temp = matrix[i];
+            matrix[i] = matrix[rows - 1 - i];
+            matrix[rows - 1 - i] = temp;
+        }
     }
 
     // 注意，不支持将标准地图转换回字符地图

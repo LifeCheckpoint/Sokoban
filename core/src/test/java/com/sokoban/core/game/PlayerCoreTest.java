@@ -158,11 +158,4 @@ public class PlayerCoreTest {
             }
         }
     }
-
-    // 便于排查错误输出的主方法
-    public static void main(String[] args) {
-        PlayerCoreTest thisTest = new PlayerCoreTest();
-        thisTest.prepareData();
-        thisTest.generalTest();
-    }
 }
