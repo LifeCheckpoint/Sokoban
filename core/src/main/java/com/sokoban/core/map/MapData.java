@@ -47,4 +47,9 @@ public class MapData {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return MapFileParser.serializeMapData(this);
+    }
 }

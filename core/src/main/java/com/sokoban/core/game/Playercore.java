@@ -1,5 +1,6 @@
 package com.sokoban.core.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sokoban.core.Logger;
@@ -21,6 +22,13 @@ public class PlayerCore {
      * x, y - 代表横、纵坐标，访问是先 y 后 x
      * width, height - 代表宽、高，访问是先 height 后 width
      */
+
+    /**
+     * 逻辑核心构造
+     */
+    public PlayerCore() {
+        moveList = new ArrayList<>();
+    }
     
     /** 获得索引对应子地图 */
     public SubMapData getSubmap(int index) {
@@ -34,6 +42,21 @@ public class PlayerCore {
             return ObjectType.Unknown;
         }
         return getSubmap(subMapIndex).getObjectLayer()[y][x];
+    }
+
+    /**
+     * 在指定子地图中寻找当前地图中玩家位置并更新
+     * @return 玩家位置，未找到返回 null
+     */
+    public Pos findPlayerPosition(int subMapIndex) {
+        SubMapData subMap = getSubmap(subMapIndex);
+        for (int y = 0; y < subMap.height; y++) {
+            for (int x = 0; x < subMap.width; x++) {
+                if (getObject(subMapIndex, x, y) == ObjectType.Player) return new Pos(x, y);
+            }
+        }
+
+        return null;
     }
 
     /** 获得子地图对应位置目标 */
@@ -127,7 +150,7 @@ public class PlayerCore {
             }
 
             // 下一物块为箱子，且连续推动的检验通过，需要进行多个物块的移动
-            if (PlayerCoreUtils.isBox(nextObj) && canPush(subMapIndex, position, direction)) {
+            if (PlayerCoreUtils.isBox(nextObj) && canPush(subMapIndex, nextPos, direction)) {
 
                 // 要进行多个物块的连续推动，但是物块之间的状态不能互相影响，所以需要复制一张新地图，更改完成后才覆盖旧地图
                 // 复制的时候要调用 SubMapData 的 cpy 方法，否则会得到对同一个对象的引用
@@ -206,8 +229,26 @@ public class PlayerCore {
     public MapData getMap() {
         return map;
     }
-    public void setMap(MapData map) {
+
+    /**
+     * 设置地图
+     * @param map 标准地图数据
+     * @return 玩家所在子地图索引，找不到则返回 -1
+     */
+    public int setMap(MapData map) {
         this.map = map;
+
+        // 尝试搜索玩家位置，并返回玩家所在的子地图
+        for (int sumMapIndex = 0; sumMapIndex < map.allMaps.size(); sumMapIndex++) {
+            Pos findingPlayerPos = findPlayerPosition(0);
+            if (findingPlayerPos != null) {
+                playerPos = findingPlayerPos;
+                return sumMapIndex;
+            }
+        }
+
+        // 未找到
+        return -1;
     }
     public Pos getPlayerPos() {
         return playerPos;

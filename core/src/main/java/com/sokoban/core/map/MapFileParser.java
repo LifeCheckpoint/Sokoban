@@ -3,6 +3,7 @@ package com.sokoban.core.map;
 import java.util.ArrayList;
 
 import com.sokoban.core.Logger;
+import com.sokoban.core.game.Direction;
 import com.sokoban.core.manager.JsonManager;
 
 /**
@@ -37,7 +38,7 @@ public class MapFileParser {
      * @param charMap 字符地图
      * @return 标准地图数据，失败返回 null
      */
-    public static MapData transformCharMapToIntegerMap(char[][] charMap) {
+    public static MapData parseMapData(char[][] charMap) {
         if (charMap == null || charMap.length == 0 || charMap[0].length == 0) {
             Logger.error("MapMapper", "Cannot convert a null char map object");
             return null;
@@ -56,6 +57,19 @@ public class MapFileParser {
         }
     
         return map;
+    }
+
+    /** 
+     * 将方向字符转换为标准方向 
+     */
+    public static Direction parseDirectionChar(char directionChar) {
+        return switch (directionChar) {
+            case 'U', 'u' -> Direction.Up;
+            case 'D', 'd' -> Direction.Down;
+            case 'L', 'l' -> Direction.Left;
+            case 'R', 'r' -> Direction.Right;
+            default -> Direction.None;
+        };
     }
 
     // 注意，不支持将标准地图转换回字符地图
