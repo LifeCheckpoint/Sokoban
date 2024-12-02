@@ -22,6 +22,12 @@
 
 ## `SubMapData` 的构成
 
+### 12.2 更新
+
+**层顺序更新, 0 = 装饰, 1 = 目标, 2 = 物体**
+
+---
+
 为什么一个子地图不直接使用 `ObjectType[][]` 这样一个二维数组表示呢？
 
 答案是————这样管理比较混乱
@@ -38,13 +44,15 @@
 
 这样会非常繁琐。因此，如果我们换个思路，使用多层 `ObjectType[][]` 来管理，例如：
 
-> 假定一共有三层子地图，**第零层**存放当前地图实际存在的物体，**第一层**存放目标点，**第二层**存放一些地图的装饰，
+*(注，层顺序已经更新)*
+
+> 假定一共有三层子地图，~~第零层~~ 存放当前地图实际存在的物体，~~第一层~~ 存放目标点，~~第二层~~ 存放一些地图的装饰，
 >
-> 第零层只会有：`Player` `Box` ...
+> ~~第零层~~只会有：`Player` `Box` ...
 > 
-> 第一层只会有两种目标点：`PlayerTarget` `BoxTarget`
+> ~~第一层~~只会有两种目标点：`PlayerTarget` `BoxTarget`
 >
-> 第二层 ...
+> ~~第二层~~ ...
 
 可以看到，这样分工就较为明确，最终设计就得到了 `SubMapData` 这个存放子地图的类
 
@@ -59,9 +67,9 @@
 当然，如果需要获得具体是第几层，可以访问 `SubMapData` 的如下公开字段：
 
 ```Java
-public static final int LAYER_OBJECT = 0; // 存放地图物体的层索引
-public static final int LAYER_TARGET = 1; // 存放地图目标点的层索引
-public static final int LAYER_DECORATION = 2; // 存放地图装饰的层索引
+public static final int LAYER_OBJECT // 存放地图物体的层索引
+public static final int LAYER_TARGET; // 存放地图目标点的层索引
+public static final int LAYER_DECORATION; // 存放地图装饰的层索引
 ```
 
 *如果有任何补充，需要及时更新该文档*

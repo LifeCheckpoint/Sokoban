@@ -10,9 +10,9 @@ public class SubMapData {
     public int height = 0, width = 0; // 子地图高与宽
     public List<ObjectType[][]> mapLayer = new ArrayList<>();
 
-    public static final int LAYER_OBJECT = 0; // 存放地图物体的层索引
+    public static final int LAYER_OBJECT = 2; // 存放地图物体的层索引
     public static final int LAYER_TARGET = 1; // 存放地图目标点的层索引
-    public static final int LAYER_DECORATION = 2; // 存放地图装饰的层索引
+    public static final int LAYER_DECORATION = 0; // 存放地图装饰的层索引
 
     /**
      * 子地图数据类构造，预留好对应的层

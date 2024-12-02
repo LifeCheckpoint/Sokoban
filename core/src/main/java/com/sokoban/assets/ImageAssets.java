@@ -8,6 +8,7 @@ public enum ImageAssets {
     AboutInfo("img/about_info.png"),
     AboutInfoEGG("img/about_info2.png"),
     BlackPixel("img/pixel/black_pixel.png"),
+    BottomBackgroundRectangleWide("img/bottom_background.png"),
     Box("img/box.png"),
     BoxActive("img/box_active.png"),
     BoxTarget("img/target.png"),

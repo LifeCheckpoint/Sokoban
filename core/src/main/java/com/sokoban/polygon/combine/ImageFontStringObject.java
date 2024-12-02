@@ -18,6 +18,7 @@ import com.sokoban.polygon.manager.FontManager;
 public class ImageFontStringObject extends SokobanCombineObject {
     private float buff;
     private String stringContent;
+    private float scaling;
     private ImageAssets[] pageFileEnums;
     private String fntFileData;
     private int spaceRepeat; // 通过空格重复改进空格显示
@@ -27,13 +28,14 @@ public class ImageFontStringObject extends SokobanCombineObject {
     private final ImageAssets[] DEFAULT_PAGE_FILE = new ImageAssets[1];
     private final String DEFAULT_FNT_FILE_DATA;
     private final int DEFAULT_SPACE_REPEAT = 6;
+    private final float DEFAULT_SCALING = 1.0f;
 
     public ImageFontStringObject(Main gameMain, String stringContent) {
         super(gameMain);
         DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
-        init(stringContent, DEFAULT_BUFF, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
+        init(stringContent, DEFAULT_BUFF, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA, DEFAULT_SCALING);
     }
 
     public ImageFontStringObject(Main gameMain, String stringContent, float buff) {
@@ -41,28 +43,38 @@ public class ImageFontStringObject extends SokobanCombineObject {
         DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
         DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
-        init(stringContent, buff, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA);
+        init(stringContent, buff, DEFAULT_SPACE_REPEAT, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA, DEFAULT_SCALING);
     }
 
     public ImageFontStringObject(Main gameMain, String stringContent, float buff, int spaceRepeat) {
         super(gameMain);
-        DEFAULT_FNT_FILE_DATA = "";
+        DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
+        DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
 
-        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
+        init(stringContent, buff, spaceRepeat, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA, DEFAULT_SCALING);
+    }
+
+    public ImageFontStringObject(Main gameMain, String stringContent, float buff, float scaling) {
+        super(gameMain);
+        DEFAULT_PAGE_FILE[0] = ImageAssets.FontpageMetaNormal;
+        DEFAULT_FNT_FILE_DATA = gameMain.getAssetsPathManager().fileObj("font/meta-normal.fnt").readString();
+
+        init(stringContent, buff, spaceRepeat, DEFAULT_PAGE_FILE, DEFAULT_FNT_FILE_DATA, scaling);
     }
 
     public ImageFontStringObject(Main gameMain, String stringContent, float buff, int spaceRepeat, ImageAssets[] pageFileEnums, String fntFileData) {
         super(gameMain);
         DEFAULT_FNT_FILE_DATA = "";
 
-        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
+        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData, DEFAULT_SCALING);
     }
 
-    private void init(String stringContent, float buff, int spaceRepeat, ImageAssets[] pageFileEnums, String fntFileData) {
+    private void init(String stringContent, float buff, int spaceRepeat, ImageAssets[] pageFileEnums, String fntFileData, float scaling) {
         // 空格显示改进
         String improvedString = stringContent.replace(" ", new String(" ").repeat(DEFAULT_SPACE_REPEAT));
         this.stringContent = stringContent;
         this.buff = buff;
+        this.scaling = scaling;
         this.pageFileEnums = pageFileEnums;
         this.fntFileData = fntFileData;
         
@@ -72,6 +84,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
         // 添加字符
         for (int i = 0; i < improvedString.length(); i++) {
             Image currentCharacter = fontManager.getCharImage(improvedString.charAt(i));
+            currentCharacter.setScale(scaling);
             charImageObject.add(currentCharacter);
         }
 
@@ -81,7 +94,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
 
     public void reset(String stringContent) {
         charImageObject.forEach(Actor::remove);
-        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData);
+        init(stringContent, buff, spaceRepeat, pageFileEnums, fntFileData, scaling);
     }
 
     /**
@@ -99,7 +112,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
         // 计算累计宽度并移位
         for (int i = 0; i < charImageObject.size(); i++) {
             charImageObject.get(i).setPosition(integrateX, y);
-            integrateX += charImageObject.get(i).getWidth() + (i == stringContent.length() - 1 ? 0 : buff);
+            integrateX += charImageObject.get(i).getWidth() * scaling + (i == stringContent.length() - 1 ? 0 : buff);
         }
 
         this.x = x;
@@ -124,7 +137,7 @@ public class ImageFontStringObject extends SokobanCombineObject {
         // 计算累计宽度
         float integrateWidth = 0;
         for (int i = 0; i < k; i++) {
-            integrateWidth += charImageObject.get(i).getWidth() + (i == stringContent.length() - 1 ? 0 : buff);
+            integrateWidth += charImageObject.get(i).getWidth() * scaling + (i == stringContent.length() - 1 ? 0 : buff);
         }
         return integrateWidth;
     }

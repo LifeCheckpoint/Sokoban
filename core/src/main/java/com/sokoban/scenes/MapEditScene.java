@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.Logger;
 import com.sokoban.core.game.ObjectType;
 import com.sokoban.core.map.MapData;
@@ -22,7 +24,9 @@ import com.sokoban.core.map.MapFileInfo;
 import com.sokoban.core.map.MapFileParser;
 import com.sokoban.core.map.MapFileReader;
 import com.sokoban.core.map.SubMapData;
+import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.BoxObject.BoxType;
+import com.sokoban.polygon.combine.BottomObjectChooser;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.QuestDialog;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
@@ -56,6 +60,7 @@ public class MapEditScene extends SokobanFitScene {
     // 按钮 菜单
     private Image layerUpButton, layerDownButton;
     private TopMenu topMenu;
+    private BottomObjectChooser bottomChooser;
 
     // 地图
     private Stack3DGirdWorld map3DGirdWorld;
@@ -96,6 +101,8 @@ public class MapEditScene extends SokobanFitScene {
         topMenu = new TopMenu(gameMain, 0.2f);
         topMenu.setPosition(8f, 8.6f);
 
+        initBottomChooser();
+
         // 鼠标参照框
         mouseRelativeSquare = new Image(gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel));
         mouseRelativeSquare.setSize(1f, 1f);
@@ -113,19 +120,7 @@ public class MapEditScene extends SokobanFitScene {
         map.allMaps = new ArrayList<>();
         map.allMaps.add(new SubMapData(INITIAL_MAP_HEIGHT, INITIAL_MAP_WIDTH)); // 添加默认层
 
-        cornerDecoration = new Image[INITIAL_MAP_WIDTH][INITIAL_MAP_HEIGHT];
-        ImageLabelContainer cornerContainer = new ImageLabelContainer(gameMain, 0.001f);
-        Vector2 corner_position;
-        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
-            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
-                corner_position = map3DGirdWorld.getTopLayer().getCellPosition(j, i);
-                // 将角落标记装饰加入
-                cornerDecoration[i][j] = cornerContainer.create(ImageAssets.LightSquare);
-                cornerDecoration[i][j].getColor().a = 0.25f;
-                cornerDecoration[i][j].setPosition(corner_position.x - cornerDecoration[i][j].getWidth() / 2, corner_position.y - cornerDecoration[i][j].getHeight() / 2);
-                // Logger.info(String.format("%.2f, %.2f", corner_position.x, corner_position.y));
-            }
-        }
+        initCornerDecoration();
 
         // 向上移动按钮
         layerUpButton.addListener(new ClickListener() {
@@ -163,6 +158,106 @@ public class MapEditScene extends SokobanFitScene {
                 return true;
             }
         });
+
+        initFileOperatorButtons();
+
+        bgParticle = new BackgroundGrayParticleManager(gameMain, -INITIAL_MAP_WIDTH / 2, -INITIAL_MAP_HEIGHT / 2, INITIAL_MAP_WIDTH / 2, INITIAL_MAP_HEIGHT / 2);
+        bgParticle.startCreateParticles();
+
+        ActionUtils.FadeInEffect(layerUpButton);
+        ActionUtils.FadeInEffect(layerDownButton);
+        topMenu.getAllActors().forEach(ActionUtils::FadeInEffect);
+
+        // 添加 UI 到固定 Stage
+        addCombinedObjectToUIStage(topMenu);
+        addActorsToUIStage(layerDownButton, layerUpButton);
+        
+        // 添加 Actor 到非固定 Stage
+        stage.addActor(mouseRelativeSquare);
+
+        updateMapShowing(); // 更新当前界面地图显示
+
+        // 角落标记
+        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
+            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
+                addActorsToStage(cornerDecoration[i][j]);
+            }
+        }
+
+        // 为可变舞台增加事件监听
+        stage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                processLeftClick();
+            }
+        });
+    }
+
+    /** 初始化底部菜单 */
+    public void initBottomChooser() {
+        bottomChooser = new BottomObjectChooser(gameMain);
+
+        // 设置触发事件为设置当前操作对象 -> ObjectType
+        bottomChooser.setOnClickEvent(objectTag -> {
+            currentObjectChoice = (ObjectType) objectTag;
+        });
+
+        bottomChooser.addObject(0, ObjectType.Box, getBoxSpine(SpineAssets.BoxGreenBox), "Green Box");
+        bottomChooser.addObject(0, ObjectType.Wall, getBoxSpine(SpineAssets.BoxBlueBox), "Wall");
+        bottomChooser.addObject(0, ObjectType.Player, getBoxSpine(SpineAssets.Player1), "Player");
+        bottomChooser.addObject(1, ObjectType.BoxTarget, getBoxSpine(SpineAssets.BoxBoxTarget), "Box Target");
+        bottomChooser.addObject(1, ObjectType.PlayerTarget, getBoxSpine(SpineAssets.BoxPlayerTarget), "Player Target");
+        bottomChooser.addObject(2, ObjectType.GroundDarkGray, getBoxSpine(SpineAssets.BoxDarkGrayBack), "Gray Background");
+
+        bottomChooser.setPosition(8f, 1.6f);
+
+        bottomChooser.getPrevTab().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                bottomChooser.getAllActors().forEach(Actor::remove);
+                bottomChooser.subTabIndex();
+                addCombinedObjectToUIStage(bottomChooser);
+            }
+        });
+
+        bottomChooser.getNextTab().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                bottomChooser.getAllActors().forEach(Actor::remove);
+                bottomChooser.addTabIndex();
+                addCombinedObjectToUIStage(bottomChooser);
+            }
+        });
+
+        bottomChooser.addActorsToStage(UIStage);
+    }
+
+    /** 获得 spineAssetes 对应 SpineObject (initBottomChoser) */
+    private SpineObject getBoxSpine(SpineAssets spineAssets) {
+        SpineObject spine = new SpineObject(gameMain, spineAssets);
+        spine.setSize(1.1f, 1.1f);
+        return spine;
+    }
+
+    /** 初始化角落标记装饰 */
+    public void initCornerDecoration() {
+        cornerDecoration = new Image[INITIAL_MAP_WIDTH][INITIAL_MAP_HEIGHT];
+        ImageLabelContainer cornerContainer = new ImageLabelContainer(gameMain, 0.001f);
+        Vector2 corner_position;
+        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
+            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
+                corner_position = map3DGirdWorld.getTopLayer().getCellPosition(j, i);
+                // 将角落标记装饰加入
+                cornerDecoration[i][j] = cornerContainer.create(ImageAssets.LightSquare);
+                cornerDecoration[i][j].getColor().a = 0.25f;
+                cornerDecoration[i][j].setPosition(corner_position.x - cornerDecoration[i][j].getWidth() / 2, corner_position.y - cornerDecoration[i][j].getHeight() / 2);
+                // Logger.info(String.format("%.2f, %.2f", corner_position.x, corner_position.y));
+            }
+        }
+    }
+
+    /** 初始化文件操作按钮回调 */
+    public void initFileOperatorButtons() {
 
         // 返回
         topMenu.getExitButton().addListener(new ClickListener() {
@@ -217,8 +312,16 @@ public class MapEditScene extends SokobanFitScene {
                         // 切换输入处理器
                         Gdx.input.setInputProcessor(UIStage);
 
+                        // 部件下拉动画
                         topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, -2.3f, 0.3f, Interpolation.exp10Out)));
+                        topMenu.getPullButton().setRotation(180f);
+                        topMenu.getPullButton().setPosition(
+                            topMenu.getPullButton().getX() + topMenu.getPullButton().getWidth(), 
+                            topMenu.getPullButton().getY() + topMenu.getPullButton().getHeight()
+                        );
+                        
                         pullDownTopMenu = true;
+
                     } else {
                         // 切换输入处理器
                         inputMultiplexer = new InputMultiplexer();
@@ -226,42 +329,18 @@ public class MapEditScene extends SokobanFitScene {
                         inputMultiplexer.addProcessor(stage);
                         Gdx.input.setInputProcessor(inputMultiplexer);
 
+                        // 部件回收动画
                         topMenu.getAllActors().forEach(actor -> SAIManager.executeAction(actor, Actions.moveBy(0, 2.3f, 0.3f, Interpolation.exp10Out)));
+                        topMenu.getPullButton().setRotation(0f);
+                        topMenu.getPullButton().setPosition(
+                            topMenu.getPullButton().getX() - topMenu.getPullButton().getWidth(), 
+                            topMenu.getPullButton().getY() - topMenu.getPullButton().getHeight()
+                        );
+                        
                         pullDownTopMenu = false;
                     }
 
                 }
-            }
-        });
-
-        bgParticle = new BackgroundGrayParticleManager(gameMain, -INITIAL_MAP_WIDTH / 2, -INITIAL_MAP_HEIGHT / 2, INITIAL_MAP_WIDTH / 2, INITIAL_MAP_HEIGHT / 2);
-        bgParticle.startCreateParticles();
-
-        ActionUtils.FadeInEffect(layerUpButton);
-        ActionUtils.FadeInEffect(layerDownButton);
-        topMenu.getAllActors().forEach(ActionUtils::FadeInEffect);
-
-        // 添加 UI 到固定 Stage
-        addCombinedObjectToUIStage(topMenu);
-        addActorsToUIStage(layerDownButton, layerUpButton);
-        
-        // 添加 Actor 到非固定 Stage
-        stage.addActor(mouseRelativeSquare);
-
-        updateMapShowing(); // 更新当前界面地图显示
-
-        // 角落标记
-        for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
-            for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
-                addActorsToStage(cornerDecoration[i][j]);
-            }
-        }
-
-        // 为可变舞台增加事件监听
-        stage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                processLeftClick();
             }
         });
     }
@@ -428,12 +507,11 @@ public class MapEditScene extends SokobanFitScene {
 
         // 获取新网格世界
         Stack2DGirdWorld gridWorld = map3DGirdWorld.getStack2DLayer(currentSubMapIndex);
+        for (int layer = 0; layer < subMap.mapLayer.size(); layer++) gridWorld.addLayer();
 
         // 对于当前子地图的每一层
         for (int layer = 0; layer < subMap.mapLayer.size(); layer++) {
-
             // 当前层
-            gridWorld.addLayer();
             ObjectType[][] currentLayer = subMap.mapLayer.get(layer);
             
             for (int y = 0; y < subMap.height; y++) {
@@ -443,7 +521,7 @@ public class MapEditScene extends SokobanFitScene {
 
                     // 数据类型转换为显示类型
                     BoxType objectBoxType = mapObjectTypeToActor(currentLayer[y][x]);
-                    gridWorld.getTopLayer().addBox(objectBoxType, y, x);
+                    gridWorld.getLayer(layer).addBox(objectBoxType, y, x);
                 }
             }
         }
@@ -455,7 +533,7 @@ public class MapEditScene extends SokobanFitScene {
     /**
      * 获得 ObjectType 地图数据的转换类型
      * @param obj ObjectType 物体数据
-     * @return "Spine" "BoxType"
+     * @return BoxType
      */
     public BoxType mapObjectTypeToActor(ObjectType obj) {
         return switch (obj) {
@@ -466,6 +544,20 @@ public class MapEditScene extends SokobanFitScene {
             case ObjectType.PlayerTarget -> BoxType.PlayerTarget;
             case ObjectType.GroundDarkGray -> BoxType.DarkGrayBack;
             default -> null;
+        };
+    }
+
+    /**
+     * 获得 ObjectType 地图数据的物件类型
+     * @param obj ObjectType 物体数据
+     * @return 对应物体层
+     */
+    public int mapObjectTypeToLayerIndex(ObjectType obj) {
+        return switch (obj) {
+            case ObjectType.Wall, ObjectType.Player, ObjectType.Box -> SubMapData.LAYER_OBJECT;
+            case ObjectType.BoxTarget, ObjectType.PlayerTarget -> SubMapData.LAYER_TARGET;
+            case ObjectType.GroundDarkGray -> SubMapData.LAYER_DECORATION;
+            default -> 0;
         };
     }
 
@@ -557,8 +649,8 @@ public class MapEditScene extends SokobanFitScene {
 
         // 坐标合法检查
         if (coordinateX != -1 && coordinateY != -1) {
-            // TODO 如果当前物体是 ... 层
-            map.allMaps.get(currentSubMapIndex).getObjectLayer()[coordinateY][coordinateX] = currentObjectChoice;
+            // 向对应层添加对应物体
+            map.allMaps.get(currentSubMapIndex).mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] = currentObjectChoice;
         }
 
         // 更新画面
