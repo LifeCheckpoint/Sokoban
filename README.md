@@ -94,6 +94,14 @@ Any additional features beyond the basic requirements described above will earn 
 
 ## Log 更新日志
 
+### 0.3.2 update
+
+1. 新增了对游戏核心逻辑的处理，即将推出
+2. 完善关卡编辑器的操作逻辑，现在可以使用它编辑关卡了
+3. 优化游戏的动画美术效果
+4. 修复 DLL 运行依赖不完整问题
+5. 修复编辑器无法覆盖保存文件的问题
+
 ### 0.3.1 update
 
 1. 新增了关卡编辑器功能，下拉菜单等动效组件
