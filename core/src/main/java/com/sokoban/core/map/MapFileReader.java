@@ -102,15 +102,20 @@ public class MapFileReader {
      * @return 是否创建成功
      */
     public boolean createMapWithContent(String path, String content) {
-        if (FilePathUtils.exists(path)) {
-            Logger.error("MapFileReader", "File already exists: " + path);
-            return false;
-        }
+        // if (FilePathUtils.exists(path)) {
+        //     Logger.error("MapFileReader", "File already exists: " + path);
+        //     return false;
+        // }
 
         try {
             String parentDirectory = Path.of(path).getParent().toString();
             FilePathUtils.createDirectories(parentDirectory);
-            Files.writeString(Path.of(path), content, StandardOpenOption.CREATE_NEW);
+            Files.writeString(
+                Path.of(path), 
+                content, 
+                StandardOpenOption.CREATE,             // 如果文件不存在则创建
+                StandardOpenOption.TRUNCATE_EXISTING   // 如果文件存在则清空
+            );
             return true;
         } catch (IOException e) {
             Logger.error("MapFileReader", "Error creating map file with content: " + path + " - " + e.getMessage());

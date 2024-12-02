@@ -190,6 +190,8 @@ public class MapEditScene extends SokobanFitScene {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 draggedMouseButton = button;
+                if (draggedMouseButton == Buttons.MIDDLE) processMiddleClick();
+                if (draggedMouseButton == Buttons.LEFT) processLeftClick();
                 return true; // 返回 true 捕获后续事件
             }
             
