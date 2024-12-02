@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Interpolation;
@@ -56,6 +57,7 @@ public class MapEditScene extends SokobanFitScene {
     private boolean isDragging = false; // 是否正在拖动可变视口
     private Vector2 lastMousePosition = new Vector2(); // 鼠标拖动起始点
     private float lastMouseOriginalX, lastMouseOriginalY; // 鼠标拖动原始坐标
+    private int draggedMouseButton; // 当前拖动鼠标类型
 
     // 按钮 菜单
     private Image layerUpButton, layerDownButton;
@@ -174,9 +176,6 @@ public class MapEditScene extends SokobanFitScene {
         
         // 添加 Actor 到非固定 Stage
         stage.addActor(mouseRelativeSquare);
-
-        updateMapShowing(); // 更新当前界面地图显示
-
         // 角落标记
         for (int i = 0; i < INITIAL_MAP_WIDTH; i++) {
             for (int j = 0; j < INITIAL_MAP_HEIGHT; j++) {
@@ -184,11 +183,25 @@ public class MapEditScene extends SokobanFitScene {
             }
         }
 
+        updateMapShowing(); // 更新当前界面地图显示
+
         // 为可变舞台增加事件监听
-        stage.addListener(new ClickListener() {
+        stage.addListener(new InputListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                processLeftClick();
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                draggedMouseButton = button;
+                return true; // 返回 true 捕获后续事件
+            }
+            
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                if (draggedMouseButton == Buttons.MIDDLE) processMiddleClick();
+                if (draggedMouseButton == Buttons.LEFT) processLeftClick();
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                draggedMouseButton = -1; // 重置记录的按钮
             }
         });
     }
@@ -561,6 +574,7 @@ public class MapEditScene extends SokobanFitScene {
         };
     }
 
+    /** 输入事件处理 */
     @Override
     public void input() {
         boolean controlPressed = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
@@ -639,7 +653,7 @@ public class MapEditScene extends SokobanFitScene {
     }
 
     /**
-     * 处理鼠标指定位置物体
+     * 左键处理鼠标指定位置物体
      */
     public void processLeftClick() {
         int coordinateX = getCoordinateX();
@@ -649,14 +663,42 @@ public class MapEditScene extends SokobanFitScene {
 
         // 坐标合法检查
         if (coordinateX != -1 && coordinateY != -1) {
-            // 向对应层添加对应物体
-            map.allMaps.get(currentSubMapIndex).mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] = currentObjectChoice;
+            // 当前地图
+            SubMapData currentSubMap = map.allMaps.get(currentSubMapIndex);
+
+            // 判断当前层物体存在性
+            boolean thingExists = currentSubMap.mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] != ObjectType.Air;
+            if (!thingExists) {
+                // 向对应层添加对应物体
+                map.allMaps.get(currentSubMapIndex).mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] = currentObjectChoice;
+            } else {
+                // 也许有一些处理
+            }
         }
 
         // 更新画面
         updateMapShowing();
     }
 
+    /**
+     * 中键处理鼠标指定位置物体
+     */
+    public void processMiddleClick() {
+        int coordinateX = getCoordinateX();
+        int coordinateY = getCoordinateY();
+
+        Logger.debug("MapEditScene", String.format("Middle Click (%d, %d)", coordinateX, coordinateY));
+
+        // 坐标合法检查
+        if (coordinateX != -1 && coordinateY != -1) {
+            // 将所有层都清除为空气
+            for (ObjectType[][] layer : map.allMaps.get(currentSubMapIndex).mapLayer) layer[coordinateY][coordinateX] = ObjectType.Air;
+        }
+
+        // 更新画面
+        updateMapShowing();
+    }
+     
     /**
      * 处理鼠标右键引发的视口移动
      */
