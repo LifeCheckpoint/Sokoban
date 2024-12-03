@@ -1,5 +1,7 @@
 package com.sokoban.core.game;
 
+import java.util.Objects;
+
 public class Pos {
     int x, y, z;
 
@@ -86,5 +88,10 @@ public class Pos {
      */
     public Pos cpy() {
         return new Pos(x, y, z);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }

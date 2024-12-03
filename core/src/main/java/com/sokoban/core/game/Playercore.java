@@ -192,7 +192,6 @@ public class PlayerCore {
                 // 最后去除最开始的玩家位置
                 newMap.getObjectLayer()[position.y][position.x] = ObjectType.Air;
                 playerPos = nextPos;
-                moveList.add(PlayerCoreUtils.toObjectMoveString(subMapIndex, position.x, position.y, nextPos.x, nextPos.y)); // 将玩家移动的信息加入到位移列表
 
                 // 新地图覆盖旧地图
                 map.allMaps.set(subMapIndex, newMap);

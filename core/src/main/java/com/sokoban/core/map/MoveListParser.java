@@ -1,6 +1,8 @@
 package com.sokoban.core.map;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.sokoban.core.Logger;
 import com.sokoban.core.game.Pos;
@@ -95,5 +97,14 @@ public class MoveListParser {
         List<MoveInfo> parsedMoves = parseMove(moves);
         List<MoveInfo> inversMoves = parsedMoves.stream().map(move -> new MoveInfo(move.subMapIndex, move.layerIndex, move.to.cpy(), move.origin.cpy())).toList();
         return serializeMove(inversMoves);
+    }
+
+    public static Map<Integer, Map<Integer, List<MoveInfo>>> groupMoves(List<MoveInfo> moves) {
+        return moves.stream().collect(Collectors.groupingBy(
+            move -> move.subMapIndex, // 一级分组：subMapIndex
+            Collectors.groupingBy(
+                    move -> move.layerIndex // 二级分组：layerIndex
+            )
+        ));
     }
 }

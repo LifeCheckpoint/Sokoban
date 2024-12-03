@@ -1,9 +1,14 @@
 package com.sokoban.scenes;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,18 +19,21 @@ import com.sokoban.core.game.Direction;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.game.ObjectType;
 import com.sokoban.core.game.PlayerCore;
+import com.sokoban.core.game.Pos;
 import com.sokoban.core.Logger;
 import com.sokoban.core.manager.JsonManager;
 import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.MapFileInfo;
 import com.sokoban.core.map.MapFileParser;
 import com.sokoban.core.map.MapFileReader;
+import com.sokoban.core.map.MoveListParser;
 import com.sokoban.core.map.SubMapData;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.core.state.GameHistoryRecoder;
 import com.sokoban.core.state.GameStateFrame;
 import com.sokoban.Main;
+import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.action.ViewportRescaleAction;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -35,6 +43,7 @@ import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
+import com.sokoban.polygon.manager.OverlappingManager.OverlapStatue;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
 import com.sokoban.scenes.manager.ActorMapper;
 import com.sokoban.utils.ActionUtils;
@@ -65,11 +74,11 @@ public class GameScene extends SokobanFitScene {
     private CheckboxObject exitGameButton;
 
     // 游戏主内容
-    Stack3DGirdWorld gridWorld;
+    Stack3DGirdWorld gridWorld; // 网格世界
     PlayerCore playerCore; // 游戏逻辑核心
-    int currentSubmap;
+    int currentSubmap; // 当前子地图
 
-    GameHistoryRecoder historyStates;
+    GameHistoryRecoder historyStates; // 历史记录器
 
     private final float DEFAULT_CELL_SIZE = 1f;
     private final float VIEWPORT_RESCALE_RATIO = 1.6f;
@@ -153,7 +162,10 @@ public class GameScene extends SokobanFitScene {
 
     /** 初始化地图显示 */
     public void initMapToGrid() {
-        // 创建子地图网格世界
+        // 针对每个子地图创建 Stack2DLayer
+        for (int subMapIndex = 0; subMapIndex < playerCore.getMap().allMaps.size(); subMapIndex++) gridWorld.addStack2DLayer();
+        
+        // 根据当前子地图创建子地图网格世界
         Stack2DGirdWorld currentSubMapGridWorld = gridWorld.getStack2DLayer(currentSubmap);
         SubMapData subMapData = playerCore.getSubmap(currentSubmap);
 
@@ -183,12 +195,101 @@ public class GameScene extends SokobanFitScene {
         currentSubMapGridWorld.getAllActors().forEach(ActionUtils::FadeInEffect);
     }
 
+    /** 初始化所有动画 */
+    public void initSpineObjectAnimation(BoxType objectType, SpineObject spineObject) {
+        
+        // 玩家动画
+        if (objectType == BoxType.Player) {
+            spineObject.setAnimation(0, "down", false);
+        }
+
+        // 箱子目标点动画
+        if (objectType == BoxType.BoxTarget) {
+            spineObject.setAnimation(1, "deactive", false);
+            spineObject.setAnimationTotalTime(1, 0.5f);
+        }
+    }
+
     /**
      * 动画更新画面表现
      * @param moves 位移列表
      */
     public void updateShowing(List<String> moves) {
+        for (int i = 0; i < moves.size(); i++) Logger.debug("GameScene", String.format("Move instruction #%d: %s", i, moves.get(i)));
 
+        // 解析信息
+        List<MoveListParser.MoveInfo> moveInfo = MoveListParser.parseMove(moves);
+        // 分组处理
+        Map<Integer, Map<Integer, List<MoveListParser.MoveInfo>>> groupedMoves = MoveListParser.groupMoves(moveInfo);
+
+        for (int subMapIndex : groupedMoves.keySet()) { // 每个子地图
+            for (int layerIndex : groupedMoves.get(subMapIndex).keySet()) { // 每层
+                // 进行转移
+                Actor[][] thisLayerGird = gridWorld.getStack2DLayer(subMapIndex).getLayer(layerIndex).gridSpineObjects; // 原数组
+                Actor[][] newLayerGird = new Actor[thisLayerGird.length][thisLayerGird[0].length]; // 新地图层数组
+                Set<Pos> completedMoveTo = new HashSet<>(); // 保存已经成功到达目标移动的数据
+                Set<Pos> completedMoveFrom = new HashSet<>(); // 保存已经成功离开原位移动的数据
+
+                // 对于每个移动，将原数组的相应数据的引用复制到新数组上
+                for (MoveListParser.MoveInfo move : groupedMoves.get(subMapIndex).get(layerIndex)) {
+                    // 进行动画层面移动
+                    doAnimatedMove(thisLayerGird[move.origin.getY()][move.origin.getX()], move.to);
+
+                    // 复制新物体
+                    newLayerGird[move.to.getY()][move.to.getX()] = thisLayerGird[move.origin.getY()][move.origin.getX()];
+                    
+                    // 将已经成功转移的物体加入 completedMoveFrom 与 To
+                    if (!(completedMoveFrom.add(move.origin) && completedMoveTo.add(move.to))) { // 如果集合中出现重复元素，报错并拒绝移动
+                        Logger.error("GameScene", "Find conflict in move instructions");
+                        return;
+                    }
+                }
+
+                /*
+                通过数组引用的复制解决依赖矛盾
+                对于一个物体，如果它未被标记，需要复制
+                如果同时被标记为转移出 / 转移入的目标点，无需复制
+                如果被单独标记为转移入，无需复制
+                如果被单独标记为转移出，需要复制
+
+                -> 简化为检查是否标记转移出即可
+                */
+                for (int y = 0; y < thisLayerGird.length; y++) {
+                    for (int x = 0; x < thisLayerGird[0].length; x++) {
+                        Pos testPos = new Pos(x, y);
+                        if (!completedMoveTo.contains(testPos)) newLayerGird[y][x] = thisLayerGird[y][x];
+                    }
+                }
+
+                // 完成移动，原数组重新被新数组引用覆盖
+                for (int y = 0; y < thisLayerGird.length; y++) {
+                    for (int x = 0; x < thisLayerGird[0].length; x++) {
+                        thisLayerGird[y][x] = newLayerGird[y][x];
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 对 actor 进行动画层面移动
+     * @param actor 要移动的物件
+     * @param to 移动到的网格位置
+     */
+    public void doAnimatedMove(Actor actor, Pos to) {
+        // 计算最终坐标，转换为居中坐标
+        Vector2 finalPosition = gridWorld.getStack2DLayer(currentSubmap).getCellPosition(to.getY(), to.getX()); // row = y, column = x
+
+        // 添加单例动画执行器
+        SAIManager.executeAction(
+            actor,
+            Actions.moveTo(finalPosition.x, finalPosition.y, 0.2f, Interpolation.pow4Out),
+            () -> { // reset 重置回调事件
+                actor.clearActions();
+                actor.setPosition(finalPosition.x, finalPosition.y);
+            }
+        );
     }
 
     /** 初始化退出菜单 */
@@ -273,7 +374,7 @@ public class GameScene extends SokobanFitScene {
                     stateFrame.mapData = playerCore.getMap().cpy();
                     stateFrame.action = moveDirection;
                     stateFrame.stepCount = historyStates.getTotalFrameNum(); // 不包括初始帧
-                    Logger.debug("GameScene", "Current game frame = " + stateFrame.toString(), 500);
+                    Logger.debug("GameScene", "Current game frame = " + stateFrame, 500);
                     historyStates.addNewFrame(stateFrame);
 
                     // 更新画面表现
@@ -289,7 +390,7 @@ public class GameScene extends SokobanFitScene {
                     if (historyStates.getTotalFrameNum() > 1) {
                         // 允许撤销，但是步数和时间都会继续增长
                         historyStates.undo();
-                        Logger.debug("GameScene", "Undo, Current game frame = " + historyStates.getLast().toString(), 500);
+                        Logger.debug("GameScene", "Undo, Current game frame = " + historyStates.getLast(), 500);
 
                         // 更新画面表现
                         updateShowing(historyStates.getLast().moves);

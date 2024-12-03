@@ -49,14 +49,17 @@ public class SingleActionInstanceManager {
      */
     public void executeAction(Actor actor, Action actions, ActionInstanceReset resetEvent) {
         // TODO BUG
-        actorState.put(actor, false);
-
+        
         // 重置 -> 动画 -> 解锁
         actor.addAction(Actions.sequence(
-            Actions.run(() -> {if (resetEvent != null) resetEvent.reset();}),
+            // 重置事件不为空 动画状态存在且动画状态标志真 -> 进行重置
+            Actions.run(() -> {if (resetEvent != null && actorState.containsKey(actor) && actorState.get(actor)) resetEvent.reset();}),
             actions,
             Actions.run(() -> unlockActionState(actor))
-        ));
+            ));
+
+        if (actorState.containsKey(actor)) actorState.replace(actor, false);
+        actorState.put(actor, false);
     }
 
     /**

@@ -44,9 +44,4 @@ public class GameStateFrame {
         newFrame.moves = new ArrayList<>(moves);
         return newFrame;
     }
-
-    @Override
-    public String toString() {
-        return new JsonManager().getJsonString(this);
-    }
 }
