@@ -37,6 +37,7 @@ import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.container.ImageLabelContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
+import com.sokoban.scenes.manager.ActorMapper;
 import com.sokoban.utils.ActionUtils;
 import com.sokoban.utils.MathUtilsEx;
 import com.sokoban.utils.WindowsFileChooser;
@@ -563,7 +564,7 @@ public class MapEditScene extends SokobanFitScene {
                     if (currentLayer[y][x] == ObjectType.Air || currentLayer[y][x] == ObjectType.Unknown) continue;
 
                     // 数据类型转换为显示类型
-                    BoxType objectBoxType = mapObjectTypeToActor(currentLayer[y][x]);
+                    BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
                     gridWorld.getLayer(layer).addBox(objectBoxType, y, x);
                 }
             }
@@ -571,23 +572,6 @@ public class MapEditScene extends SokobanFitScene {
 
         // 将网格世界重新加入 stage
         addCombinedObjectToStage(gridWorld);
-    }
-
-    /**
-     * 获得 ObjectType 地图数据的转换类型
-     * @param obj ObjectType 物体数据
-     * @return BoxType
-     */
-    public BoxType mapObjectTypeToActor(ObjectType obj) {
-        return switch (obj) {
-            case ObjectType.Wall -> BoxType.BlueChest;
-            case ObjectType.Player -> BoxType.Player;
-            case ObjectType.Box -> BoxType.GreenChest;
-            case ObjectType.BoxTarget -> BoxType.BoxTarget;
-            case ObjectType.PlayerTarget -> BoxType.PlayerTarget;
-            case ObjectType.GroundDarkGray -> BoxType.DarkGrayBack;
-            default -> null;
-        };
     }
 
     /**

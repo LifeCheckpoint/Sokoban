@@ -9,6 +9,7 @@ import com.sokoban.core.game.Pos;
  * 移动信息解析类
  * <br><br>
  * 对核心向前端发送的对象移动信息进行解析，反演等的工具类
+ * @author Life_Checkpoint
  */
 public class MoveListParser {
 

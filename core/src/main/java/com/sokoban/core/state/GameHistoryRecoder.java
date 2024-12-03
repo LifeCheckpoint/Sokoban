@@ -8,10 +8,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.sokoban.core.game.GameParams;
+import com.sokoban.core.manager.JsonManager;
 import com.sokoban.core.map.MoveListParser;
 
 /**
  * 游戏历史记录
+ * <br><br>
+ * @author Life_Checkpoint
  * 记录了每一帧游戏
  */
 public class GameHistoryRecoder {
@@ -28,6 +31,10 @@ public class GameHistoryRecoder {
         this.stateFrame = new ArrayList<>();
     }
 
+    /**
+     * 获得总帧数
+     * @return 总帧数
+     */
     public int getTotalFrameNum() {
         return stateFrame.size();
     }
@@ -93,16 +100,28 @@ public class GameHistoryRecoder {
         return Duration.between(startTime, endTime).toMillis();
     }
 
+    public GameStateFrame getLast() {
+        return stateFrame.getLast();
+    }
+
     public GameParams getGameParams() {
         return gameParams;
     }
+
     public void setGameParams(GameParams gameParams) {
         this.gameParams = gameParams;
     }
+
     public List<GameStateFrame> getStateFrame() {
         return stateFrame;
     }
+
     public void setStateFrame(List<GameStateFrame> stateFrame) {
         this.stateFrame = stateFrame;
+    }
+
+    @Override
+    public String toString() {
+        return new JsonManager().getJsonString(this); // 返回序列化得到的数据
     }
 }

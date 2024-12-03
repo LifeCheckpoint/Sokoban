@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sokoban.core.game.Direction;
+import com.sokoban.core.manager.JsonManager;
 import com.sokoban.core.map.MapData;
 
 /**
@@ -42,5 +43,10 @@ public class GameStateFrame {
         newFrame.undo = undo;
         newFrame.moves = new ArrayList<>(moves);
         return newFrame;
+    }
+
+    @Override
+    public String toString() {
+        return new JsonManager().getJsonString(this);
     }
 }

@@ -86,6 +86,11 @@ public class Logger {
         log(LogLevel.ERROR, message);
     }
 
+    public static void debug(String moduleName, String message, int maxLength) {
+        if (message.length() > maxLength) message = message.substring(0, maxLength) + String.format(" ... (%d)", message.length() - maxLength);
+        log(LogLevel.DEBUG, moduleName, message);
+    }
+
     public static void debug(String moduleName, String message) {
         log(LogLevel.DEBUG, moduleName, message);
     }
