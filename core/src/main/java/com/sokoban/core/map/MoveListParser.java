@@ -18,11 +18,13 @@ public class MoveListParser {
      */
     public static class MoveInfo {
         public int subMapIndex;
+        public int layerIndex;
         public Pos origin;
         public Pos to;
 
-        public MoveInfo(int subMapIndex, Pos origin, Pos to) {
+        public MoveInfo(int subMapIndex, int layerIndex, Pos origin, Pos to) {
             this.subMapIndex = subMapIndex;
+            this.layerIndex = layerIndex;
             this.origin = origin;
             this.to = to;
         }
@@ -36,15 +38,16 @@ public class MoveListParser {
     public static MoveInfo parseMove(String move) {
         String[] args = move.strip().split(" ");
 
-        if (args.length != 5) {
-            Logger.error("MoveListParser", "Can not parse moving info. Expected 5 members, get " + args.length);
+        if (args.length != 6) {
+            Logger.error("MoveListParser", "Can not parse moving info. Expected 6 members, get " + args.length);
             return null;
         }
 
         return new MoveInfo(
             Integer.parseInt(args[0]), // 子地图索引
-            new Pos(Integer.parseInt(args[1]), Integer.parseInt(args[2])), // 原位置
-            new Pos(Integer.parseInt(args[3]), Integer.parseInt(args[4])) // 新位置
+            Integer.parseInt(args[1]), // 层数
+            new Pos(Integer.parseInt(args[2]), Integer.parseInt(args[3])), // 原位置
+            new Pos(Integer.parseInt(args[4]), Integer.parseInt(args[5])) // 新位置
         );
     }
 
@@ -56,8 +59,8 @@ public class MoveListParser {
     public static String serializeMove(MoveInfo move) {
         try {
             return String.format(
-                "%d %d %d %d %d",
-                move.subMapIndex, move.origin.getX(), move.origin.getY(), move.to.getX(), move.to.getY()
+                "%d %d %d %d %d %d",
+                move.subMapIndex, move.layerIndex, move.origin.getX(), move.origin.getY(), move.to.getX(), move.to.getY()
             );
         } catch (Exception e) {
             Logger.error("MoveListParser", "Can not serialize move info. Because " + e.getMessage());
@@ -90,7 +93,7 @@ public class MoveListParser {
      */
     public static List<String> inverseMoves(List<String> moves) {
         List<MoveInfo> parsedMoves = parseMove(moves);
-        List<MoveInfo> inversMoves = parsedMoves.stream().map(move -> new MoveInfo(move.subMapIndex, move.to.cpy(), move.origin.cpy())).toList();
+        List<MoveInfo> inversMoves = parsedMoves.stream().map(move -> new MoveInfo(move.subMapIndex, move.layerIndex, move.to.cpy(), move.origin.cpy())).toList();
         return serializeMove(inversMoves);
     }
 }
