@@ -52,4 +52,23 @@ public class MapData {
     public String toString() {
         return MapFileParser.serializeMapData(this);
     }
+
+    /**
+     * 深复制方法
+     * @return 深复制的 MapData 对象
+     */
+    public MapData cpy() {
+        // 深复制 mapFileInfo
+        MapFileInfo copiedMapFileInfo = mapFileInfo != null ? mapFileInfo.cpy() : null;
+
+        // 深复制 allMaps
+        List<SubMapData> copiedAllMaps = new ArrayList<>();
+        if (allMaps != null) {
+            for (SubMapData subMap : allMaps) {
+                copiedAllMaps.add(subMap.cpy());
+            }
+        }
+
+        return new MapData(copiedMapFileInfo, addtionalInfo, copiedAllMaps);
+    }
 }

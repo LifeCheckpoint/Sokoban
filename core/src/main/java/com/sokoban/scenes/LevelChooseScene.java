@@ -10,12 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.Logger;
+import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.WindowImageSelector;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
-import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 
 public class LevelChooseScene extends SokobanScene {
@@ -71,7 +71,7 @@ public class LevelChooseScene extends SokobanScene {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Levels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
+                SokobanLevels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
                 gameMain.getScreenManager().setScreen(new MapChooseScene(gameMain, currentSelectedLevel));
             }
         });
@@ -140,17 +140,17 @@ public class LevelChooseScene extends SokobanScene {
      * @param levelIndex 关卡索引
      * @return 关卡枚举
      */
-    private Levels getLevelEnum(int levelIndex) {
+    private SokobanLevels getLevelEnum(int levelIndex) {
         switch (levelIndex) {
             case 0:
-                return Levels.Origin;
+                return SokobanLevels.Origin;
             case 1:
-                return Levels.Moving;
+                return SokobanLevels.Moving;
             case 2:
-                return Levels.Random;
+                return SokobanLevels.Random;
             default:
                 Logger.error("LevelChooseScene", String.format("%d is not a valid level index, return origin.", levelIndex));
-                return Levels.Origin;
+                return SokobanLevels.Origin;
         }
     }
 
@@ -173,7 +173,7 @@ public class LevelChooseScene extends SokobanScene {
 
         // 进入
         if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-            Levels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
+            SokobanLevels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
             gameMain.getScreenManager().setScreen(new MapChooseScene(gameMain, currentSelectedLevel));
         }
     }

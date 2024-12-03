@@ -19,6 +19,8 @@ import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.Direction;
 import com.sokoban.core.game.GameParams;
+import com.sokoban.core.map.gamedefault.SokobanLevels;
+import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.Main;
 import com.sokoban.polygon.actioninterface.ClockEndCallback;
 import com.sokoban.polygon.BoxObject;
@@ -41,7 +43,7 @@ public class MapChooseScene extends SokobanScene {
     private Direction preDirection = Direction.None;
     private boolean isPlayerInMove;
     private Image returnButton;
-    private Levels level;
+    private SokobanLevels level;
     private MouseMovingTraceManager moveTrace;
     private SpineObject playerSpine;
     private OverlappingManager playerOverlapManager;
@@ -61,18 +63,7 @@ public class MapChooseScene extends SokobanScene {
         public Stack2DGirdWorld gridMap;
     }
 
-    // 关卡名
-    public enum Levels {
-        Origin("origin"),
-        Moving("moving"),
-        Random("random");
-
-        private final String levelName;
-        Levels(String levelName) {this.levelName = levelName;}
-        public String getLevelName() {return levelName;}
-    }
-
-    public MapChooseScene(Main gameMain, Levels levelEnum) {
+    public MapChooseScene(Main gameMain, SokobanLevels levelEnum) {
         super(gameMain);
         this.level = levelEnum;
     }
@@ -182,7 +173,7 @@ public class MapChooseScene extends SokobanScene {
             Actions.delay(0.5f),
             // 进入游戏界面
             // TODO map 选择
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level, gameParams)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level, SokobanMaps.Turotial_Tutorial, gameParams)))
         ));
     }
 

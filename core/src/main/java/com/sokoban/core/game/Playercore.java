@@ -15,7 +15,7 @@ import com.sokoban.core.map.SubMapData;
 public class PlayerCore {
     private Pos playerPos; // 玩家坐标
     private List<String> moveList; // 这一轮有哪些物块坐标发生了移动
-    private MapData map = new MapData(); // 游戏地图
+    private MapData map; // 游戏地图
 
     /*
      * 需要注意的是数组维度的访问顺序
@@ -28,6 +28,8 @@ public class PlayerCore {
      */
     public PlayerCore() {
         moveList = new ArrayList<>();
+        map = new MapData();
+        playerPos = null;
     }
     
     /** 获得索引对应子地图 */
@@ -50,13 +52,26 @@ public class PlayerCore {
      */
     public Pos findPlayerPosition(int subMapIndex) {
         SubMapData subMap = getSubmap(subMapIndex);
+        Pos playerPos = null;
+
+        // 检查每一个位置
         for (int y = 0; y < subMap.height; y++) {
             for (int x = 0; x < subMap.width; x++) {
-                if (getObject(subMapIndex, x, y) == ObjectType.Player) return new Pos(x, y);
+
+                // 当前位置为玩家位置
+                if (getObject(subMapIndex, x, y) == ObjectType.Player) {
+                    if (playerPos == null) {
+                        // 首次找到玩家
+                        playerPos = new Pos(x, y);
+                    } else {
+                        // 多次找到玩家，以首次找到为准
+                        Logger.warning("PlayerCore", "Find more than one player. Please Check your map");
+                    }
+                }
             }
         }
 
-        return null;
+        return playerPos;
     }
 
     /** 获得子地图对应位置目标 */
@@ -248,11 +263,14 @@ public class PlayerCore {
         }
 
         // 未找到
+        Logger.warning("PlayerCore", "Can't find any player in map.");
         return -1;
     }
+
     public Pos getPlayerPos() {
         return playerPos;
     }
+
     public List<String> getMoveList() {
         return moveList;
     }

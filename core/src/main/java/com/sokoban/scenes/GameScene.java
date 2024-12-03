@@ -1,21 +1,24 @@
 package com.sokoban.scenes;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.game.Direction;
+import com.sokoban.core.game.GameHistoryRecoder;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.game.GameStateFrame;
 import com.sokoban.core.Logger;
 import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.map.MapData;
+import com.sokoban.core.map.gamedefault.SokobanLevels;
+import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.Main;
 import com.sokoban.polygon.action.ViewportRescaleAction;
 import com.sokoban.polygon.BoxObject.BoxType;
@@ -26,16 +29,16 @@ import com.sokoban.polygon.container.ButtonCheckboxContainers;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
-import com.sokoban.scenes.MapChooseScene.Levels;
 import com.sokoban.utils.ActionUtils;
 
 /**
  * 主游戏类，负责游戏的显示交互
  * @author Life_Checkpoint
  */
-public class GameScene extends SokobanScene {
-    // 状态
-    private Levels level;
+public class GameScene extends SokobanFitScene {
+    // 状态控制
+    private SokobanLevels levelEnum;
+    private SokobanMaps mapEnum;
     private boolean isInEscapeMenu;
     private GameParams gameParams;
 
@@ -56,24 +59,25 @@ public class GameScene extends SokobanScene {
     // 游戏主内容
     // TODO 多层堆叠
     Stack2DGirdWorld gridWorld;
+    MapData currentMap;
 
-    // TODO 历史记录
-    List<GameStateFrame> historyStates;
+    GameHistoryRecoder historyStates;
 
     private final float DEFAULT_CELL_SIZE = 1f;
     private final float VIEWPORT_RESCALE_RATIO = 1.6f;
     private final float ESCAPE_MENU_ANIMATION_DURATION = 0.2f;
     private final float ESCAPE_MENU_BUTTON_SCALING = 0.011f;
-    private final float ESCAPE_MENU_BUTTON_ALIGN_X = 13f;
+    private final float ESCAPE_MENU_BUTTON_ALIGN_X = 11f;
     private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 2f;
 
     // TODO 地图选择
-    public GameScene(Main gameMain, Levels levelEnum, GameParams gameParams) {
+    public GameScene(Main gameMain, SokobanLevels levelEnum, SokobanMaps mapEnum, GameParams gameParams) {
         super(gameMain);
-        this.level = levelEnum;
+        this.levelEnum = levelEnum;
+        this.mapEnum = mapEnum;
         this.gameParams = gameParams;
 
-        Logger.info("GameScene", String.format("Enter game: level = %s, map = %s", levelEnum, "null"));
+        Logger.info("GameScene", String.format("Enter game: level = %s, map = %s", levelEnum, mapEnum));
         Logger.debug("GameScene", "Game Params = " + new JsonManager().getJsonString(gameParams));
     }
 
@@ -112,11 +116,14 @@ public class GameScene extends SokobanScene {
         gridWorld.addActorsToStage(stage);
         stage.addActor(actorHelper);
 
+        // 添加主 Stage 的输入监听
+        addStageListener();
+
         // 渐入动画
         gridWorld.getAllActors().forEach(ActionUtils::FadeInEffect);
     }
 
-    // 初始化退出菜单，暂时不显示
+    /** 初始化退出菜单 */
     public void initEscapeMenu() {
         escapeFrame = new GameEscapeFrame(gameMain, 11f, 6.5f, 8f, 4.5f);
         
@@ -171,28 +178,82 @@ public class GameScene extends SokobanScene {
             }
         });
 
-        historyStates = new ArrayList<>();
         initHistoryState();
+    }
+
+    /** 添加 Stage 输入监听 */
+    public void addStageListener() {
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                Direction moveDirection = Direction.None;
+
+                // 在退出菜单，不检测操控行为
+                if (isInEscapeMenu) return false;
+
+                if (keycode == Keys.W || keycode == Keys.UP) {
+                    moveDirection = Direction.Up;
+                }
+        
+                if (keycode == Keys.S || keycode == Keys.DOWN) {
+                    moveDirection = Direction.Down;
+                }
+        
+                if (keycode == Keys.A || keycode == Keys.LEFT) {
+                    moveDirection = Direction.Left;
+                }
+        
+                if (keycode == Keys.D || keycode == Keys.RIGHT) {
+                    moveDirection = Direction.Right;
+                }
+    
+                // 如果进行四种移动之一
+                if (moveDirection != Direction.None) {
+                    GameStateFrame stateFrame = new GameStateFrame();
+                    stateFrame.mapData = currentMap;
+                    stateFrame.action = moveDirection;
+                    stateFrame.stepCount = historyStates.getTotalFrameNum() + 1;
+                    historyStates.addNewFrame(stateFrame);
+                    return true;
+                }
+    
+                // 撤销
+                if (Gdx.input.isKeyJustPressed(Keys.Z)) {
+                    // 如果不是初始状态
+                    if (historyStates.getTotalFrameNum() != 0) {
+                        // 允许撤销，但是步数和时间都会继续增长
+                        historyStates.undo();
+                        
+                        // TODO 处理画面
+                    }
+                    return true;
+                }
+    
+                // 重置
+                if (Gdx.input.isKeyJustPressed(Keys.R)) {
+                    replay();
+                    return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     public void initHistoryState() {
         // TODO 初始历史记录 MapInfo
-        GameStateFrame initState = new GameStateFrame();
-        initState.mapInfo = null;
-        initState.action = Direction.None;
-        initState.stepCount = 0;
-        initState.frameTime = LocalDateTime.now();
-        historyStates.add(initState);
+        historyStates = new GameHistoryRecoder(gameParams);
     }
 
+    /** 绘制屏幕场景 */
     public void draw(float delta) {
         // 更新鼠标跟踪
         moveTrace.setPositionWithUpdate();
-
         stage.draw();
+        UIStage.draw();
     }
 
-    // 显示退出菜单
+    /** 显示退出菜单 */
     public void showEscapeMenu() {
         if (!SAIManager.isInAction(actorHelper)) {
             isInEscapeMenu = true;
@@ -200,8 +261,8 @@ public class GameScene extends SokobanScene {
             // 缩放添加后渐显
             SAIManager.executeAction(actorHelper, Actions.sequence(
                 Actions.run(() -> {
-                    addCombinedObjectToStage(escapeFrame);
-                    addCombinedObjectToStage(continueGameButton, settingsButton, exitGameButton, replayButton);
+                    addCombinedObjectToUIStage(escapeFrame);
+                    addCombinedObjectToUIStage(continueGameButton, settingsButton, exitGameButton, replayButton);
                 }),
                 Actions.parallel(
                     new ViewportRescaleAction(viewport, VIEWPORT_RESCALE_RATIO, ESCAPE_MENU_ANIMATION_DURATION),
@@ -217,7 +278,7 @@ public class GameScene extends SokobanScene {
         }
     }
 
-    // 隐藏退出菜单
+    /** 隐藏退出菜单 */
     public void closeEscapeMenu() {
         if (!SAIManager.isInAction(actorHelper)) isInEscapeMenu = false;
 
@@ -246,11 +307,8 @@ public class GameScene extends SokobanScene {
 
     /** 再玩一次 */
     public void replay() {
-        // 清空历史记录，重新开始
-        historyStates.clear();
-        initHistoryState();
-
-        // TODO 处理画面
+        // 直接重启屏幕
+        gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, levelEnum, mapEnum, gameParams));
     }
 
     @Override
@@ -258,53 +316,6 @@ public class GameScene extends SokobanScene {
 
     @Override
     public void input() {
-        Direction moveDirection = Direction.None;
-
-        // 不在退出菜单，检测操控行为
-        // TODO 游戏操控
-        if (!isInEscapeMenu) {
-            if (Gdx.input.isKeyJustPressed(Keys.UP) || Gdx.input.isKeyJustPressed(Keys.W)) {
-                moveDirection = Direction.Up;
-            }
-    
-            if (Gdx.input.isKeyJustPressed(Keys.DOWN) || Gdx.input.isKeyJustPressed(Keys.A)) {
-                moveDirection = Direction.Down;
-            }
-    
-            if (Gdx.input.isKeyJustPressed(Keys.LEFT) || Gdx.input.isKeyJustPressed(Keys.S)) {
-                moveDirection = Direction.Left;
-            }
-    
-            if (Gdx.input.isKeyJustPressed(Keys.RIGHT) || Gdx.input.isKeyJustPressed(Keys.D)) {
-                moveDirection = Direction.Right;
-            }
-
-            if (moveDirection != Direction.None) {
-                // TODO MapInfo
-                GameStateFrame stateFrame = new GameStateFrame();
-                stateFrame.action = moveDirection;
-                stateFrame.stepCount = historyStates.getLast().stepCount + 1;
-                stateFrame.frameTime = LocalDateTime.now();
-                historyStates.add(stateFrame);
-            }
-
-            // 撤销
-            if (Gdx.input.isKeyJustPressed(Keys.Z)) {
-                // 如果不是初始状态
-                if (historyStates.size() != 1) {
-                    // 允许撤销，但是步数和时间都会继续增长
-                    historyStates.removeLast();
-                    historyStates.getLast().frameTime = LocalDateTime.now();
-                    historyStates.getLast().stepCount += 2; // 在后一步基础上增加撤销一步
-                }
-            }
-
-            // 重置
-            if (Gdx.input.isKeyJustPressed(Keys.R)) {
-                replay();
-            }
-        }
-
         // 检测退出行为
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             if (!isInEscapeMenu) showEscapeMenu();
@@ -328,7 +339,7 @@ public class GameScene extends SokobanScene {
             // 等待指定时间
             Actions.delay(0.2f),
             // 返回上一界面
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, level)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)))
         ));
     }
 

@@ -36,4 +36,12 @@ public class MapFileInfo {
 
         return true;
     }
+
+    /**
+     * 深复制方法
+     * @return 新复制对象
+     */
+    public MapFileInfo cpy() {
+        return new MapFileInfo(path, levelName, mapName);
+    }
 }
