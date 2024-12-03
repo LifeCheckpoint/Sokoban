@@ -80,4 +80,11 @@ public class Pos {
         }
     }
 
+    /**
+     * 深复制
+     * @return 深复制对象
+     */
+    public Pos cpy() {
+        return new Pos(x, y, z);
+    }
 }

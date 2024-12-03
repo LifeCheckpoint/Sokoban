@@ -1,4 +1,4 @@
-package com.sokoban.core.game;
+package com.sokoban.core.state;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import com.sokoban.core.game.GameParams;
+import com.sokoban.core.map.MoveListParser;
 
 /**
  * 游戏历史记录
@@ -45,6 +48,8 @@ public class GameHistoryRecoder {
     public GameStateFrame getStepFrame(int step) {
         GameStateFrame targetFrame = new GameStateFrame();
         targetFrame.stepCount = step;
+
+        // 需要保证有序
         int index = Collections.binarySearch(stateFrame, targetFrame, Comparator.comparingInt((frame) -> frame.stepCount));
         return index >= 0 ? stateFrame.get(index) : null;
     }
@@ -65,16 +70,15 @@ public class GameHistoryRecoder {
          * action -> 回到前一步，不需要变更，保持一致性
          * frameTime -> 记录时间更新
          * mapData -> 回到前一步，不需要变更
-         * moves -> 回到前一步，要进行反序变换
-         * stepCount -> 含撤去步与撤销步，+= 2
+         * moves -> 回到前一步，要进行反演变换
+         * stepCount -> 撤去步的新增步数已被删除，所以需要 += 2
          */
 
         UndoFrame.frameTime = LocalDateTime.now();
-        UndoFrame.moves = null; // TODO 反序变换
+        UndoFrame.moves = MoveListParser.inverseMoves(UndoFrame.moves);
         UndoFrame.stepCount += 2;
 
         stateFrame.add(UndoFrame);
-
         return true;
     }
 
@@ -83,6 +87,7 @@ public class GameHistoryRecoder {
      * @return 相差时间, ms
      */
     public long getTotalTime() {
+        if (stateFrame.isEmpty() || stateFrame.size() == 1) return 0;
         LocalDateTime startTime = stateFrame.getFirst().frameTime;
         LocalDateTime endTime = stateFrame.getLast().frameTime;
         return Duration.between(startTime, endTime).toMillis();

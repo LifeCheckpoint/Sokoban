@@ -1,9 +1,10 @@
-package com.sokoban.core.game;
+package com.sokoban.core.state;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sokoban.core.game.Direction;
 import com.sokoban.core.map.MapData;
 
 /**
