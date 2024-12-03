@@ -34,6 +34,10 @@ public class PlayerCore {
     
     /** 获得索引对应子地图 */
     public SubMapData getSubmap(int index) {
+        if (index < 0 || index >= map.allMaps.size()) {
+            Logger.error("PlayerCore", String.format("Can't get sub map. Index expected [0, %d], get %d", map.allMaps.size(), index));
+            return null;
+        }
         return map.allMaps.get(index);
     }
     
@@ -250,6 +254,11 @@ public class PlayerCore {
      * @return 玩家所在子地图索引，找不到则返回 -1
      */
     public int setMap(MapData map) {
+        if (map == null) {
+            Logger.error("PlayerCore", "Load map failed because map is null");
+            return -1;
+        }
+
         this.map = map;
 
         // 尝试搜索玩家位置，并返回玩家所在的子地图

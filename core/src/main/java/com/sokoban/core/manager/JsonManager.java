@@ -150,10 +150,8 @@ public class JsonManager {
             }
             
         } catch (Exception e) {
-            Logger.error("JsonManager", String.format("Fail to read Json %s... because %s", 
-                json.substring(0, Math.min(20, json.length())),
-                e.getMessage()
-            ));
+            if (json == null) json = "";
+            Logger.error("JsonManager", String.format("Because '%s', fail to read Json %s", e.getMessage(), json, 500));
             return null;
         }
     }

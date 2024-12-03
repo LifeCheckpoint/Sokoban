@@ -21,6 +21,11 @@ public class MapFileParser {
      */
     public static MapData parseMapData(MapFileInfo mapFileInfo, String mapFileString) {
         MapData mapData = new JsonManager().parseJsonToObject(mapFileString, MapData.class); // 将地图文本 Json 序列化为数据
+        if (mapData == null) {
+            Logger.error("MapFileParser", "Parse map data failed");
+            return null;
+        }
+
         mapData.mapFileInfo = mapFileInfo; // 补充文件路径
         return mapData;
     }

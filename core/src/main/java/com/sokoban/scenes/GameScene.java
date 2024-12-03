@@ -113,6 +113,7 @@ public class GameScene extends SokobanFitScene {
 
         // 初始化逻辑内核
         currentSubmap = initPlayerCore();
+        if (currentSubmap == -2) return; // 异常情况
 
         // 初始化网格世界
         gridWorld = new Stack3DGirdWorld(gameMain, INITIAL_MAP_WIDTH, INITIAL_MAP_HEIGHT, DEFAULT_CELL_SIZE);
@@ -140,7 +141,7 @@ public class GameScene extends SokobanFitScene {
 
     /** 
      * 初始化逻辑内核
-     * @return 玩家所在子地图索引
+     * @return 玩家所在子地图索引，-1 表示未找到，-2 表示异常
      */
     public int initPlayerCore() {
         playerCore = new PlayerCore();
@@ -148,13 +149,15 @@ public class GameScene extends SokobanFitScene {
         String currentMapString = new MapFileReader().readMapByLevelAndName(levelEnum.getLevelName(), mapEnum.getMapName());
         if (currentMapString == null) {
             Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelEnum.getLevelName(), mapEnum.getMapName()));
-            returnToMapChooseScene(); // 直接返回地图选择界面
+            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)); // 直接返回地图选择界面
+            return -2;
         }
 
         MapData currentMapData = MapFileParser.parseMapData(new MapFileInfo("", levelEnum.getLevelName(), mapEnum.getMapName()), currentMapString);
         if (currentMapData == null) {
             Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelEnum.getLevelName(), mapEnum.getMapName()));
-            returnToMapChooseScene(); // 直接返回地图选择界面
+            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)); // 直接返回地图选择界面
+            return -2;
         }
 
         return playerCore.setMap(currentMapData);
