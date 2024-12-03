@@ -15,10 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.assets.ImageAssets;
+import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.Direction;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.game.ObjectType;
 import com.sokoban.core.game.PlayerCore;
+import com.sokoban.core.game.PlayerCoreUtils;
 import com.sokoban.core.game.Pos;
 import com.sokoban.core.Logger;
 import com.sokoban.core.manager.JsonManager;
@@ -33,6 +35,7 @@ import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.core.state.GameHistoryRecoder;
 import com.sokoban.core.state.GameStateFrame;
 import com.sokoban.Main;
+import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.action.ViewportRescaleAction;
@@ -43,7 +46,6 @@ import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
-import com.sokoban.polygon.manager.OverlappingManager.OverlapStatue;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
 import com.sokoban.scenes.manager.ActorMapper;
 import com.sokoban.utils.ActionUtils;
@@ -235,8 +237,10 @@ public class GameScene extends SokobanFitScene {
 
                 // 对于每个移动，将原数组的相应数据的引用复制到新数组上
                 for (MoveListParser.MoveInfo move : groupedMoves.get(subMapIndex).get(layerIndex)) {
+
                     // 进行动画层面移动
                     doAnimatedMove(thisLayerGird[move.origin.getY()][move.origin.getX()], move.to);
+                    doAnimation(thisLayerGird[move.origin.getY()][move.origin.getX()], subMapIndex, layerIndex, move.origin, move.to);
 
                     // 复制新物体
                     newLayerGird[move.to.getY()][move.to.getX()] = thisLayerGird[move.origin.getY()][move.origin.getX()];
@@ -293,6 +297,38 @@ public class GameScene extends SokobanFitScene {
                 actor.setPosition(finalPosition.x, finalPosition.y);
             }
         );
+    }
+
+    /**
+     * 对 actor 进行动画更新
+     * <br><br>
+     * 注意在 Core 中获取物件应该使用 to 坐标，因为内核已经进行更新，而在 grid 中应该使用 from 坐标获取物件
+     * @param actor
+     * @param x
+     * @param y
+     */
+    public void doAnimation(Actor actor, int subMapIndex, int layerIndex, Pos from, Pos to) {
+        SubMapData subMap = playerCore.getMap().allMaps.get(subMapIndex);
+        ObjectType object = subMap.mapLayer.get(layerIndex)[to.getY()][to.getX()];
+
+        // FIXME 物件错误
+        Logger.debug("Execute Animation: " + object.toString());
+
+        // 玩家
+        if (object == ObjectType.Player) {
+            // 玩家动画更新
+            ((SpineObject) actor).setAnimation(0, PlayerCoreUtils.getDeltaDirection(to.sub(from)).getDirection(), false);
+        }
+
+        // 箱子
+        if (object == ObjectType.Box) {
+            // 到达目标点
+            if (subMap.mapLayer.get(SubMapData.LAYER_TARGET)[to.getY()][to.getX()] == ObjectType.BoxTarget) {
+                ((BoxObject) actor).reset(gameMain, SpineAssets.BoxGreenBoxLight);
+            } else {
+                ((BoxObject) actor).reset(gameMain, SpineAssets.BoxGreenBox);
+            }
+        }
     }
 
     /** 初始化退出菜单 */

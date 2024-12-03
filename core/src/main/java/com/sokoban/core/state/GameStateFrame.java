@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sokoban.core.game.Direction;
-import com.sokoban.core.manager.JsonManager;
 import com.sokoban.core.map.MapData;
 
 /**
