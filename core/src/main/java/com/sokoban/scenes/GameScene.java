@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -419,6 +420,9 @@ public class GameScene extends SokobanFitScene {
                     // 更新画面表现
                     updateShowing(playerCore.getMoveList());
 
+                    // 检查是否胜利
+                    if (playerCore.isGameWin()) endGame(true);
+
                     return true;
                 }
     
@@ -432,6 +436,7 @@ public class GameScene extends SokobanFitScene {
                         Logger.debug("GameScene", "Undo, Current game frame = " + historyStates.getLast(), 500);
 
                         // 更新画面表现
+                        // TODO 核心撤回
                         updateShowing(historyStates.getLast().moves);
                     }
                     return true;
@@ -460,6 +465,22 @@ public class GameScene extends SokobanFitScene {
         Logger.debug("GameScene", "Init, Current game frame = " + stateFrame.toString(), 500);
 
         historyStates.addNewFrame(stateFrame);
+    }
+
+    public void endGame(boolean succcess) {
+
+        // 胜利结束
+        if (succcess) {
+
+            // 等待一会后淡出
+            stage.addAction(Actions.sequence(
+                Actions.delay(0.8f),
+                Actions.run(() -> returnToMapChooseScene())
+            ));
+
+        } else {
+            // TODO 失败逻辑
+        }
     }
 
     /** 绘制屏幕场景 */
@@ -549,14 +570,15 @@ public class GameScene extends SokobanFitScene {
      * 返回地图选择场景
      */
     public void returnToMapChooseScene() {
-        // TODO 离开教程逻辑
         stage.addAction(Actions.sequence(
             // 离开前处理
             Actions.run(() -> {}),
             // 等待指定时间
             Actions.delay(0.2f),
             // 返回上一界面
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)))
+            (levelEnum == SokobanLevels.Tutorial) ?
+                Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new LevelChooseScene(gameMain))) :
+                Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)))
         ));
     }
 
