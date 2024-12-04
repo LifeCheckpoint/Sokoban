@@ -19,6 +19,7 @@ import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.Logger;
+import com.sokoban.core.logic.ObjectClassMapper;
 import com.sokoban.core.logic.ObjectType;
 import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.MapFileInfo;
@@ -221,11 +222,13 @@ public class MapEditScene extends SokobanFitScene {
             currentObjectChoice = (ObjectType) objectTag;
         });
 
-        bottomChooser.addObject(0, ObjectType.Box, getBoxSpine(SpineAssets.BoxGreenBox), "Green Box");
-        bottomChooser.addObject(0, ObjectType.Wall, getBoxSpine(SpineAssets.BoxBlueBox), "Wall");
+        bottomChooser.addObject(0, ObjectType.BoxGreen, getBoxSpine(SpineAssets.BoxGreenBox), "Green Box");
+        bottomChooser.addObject(0, ObjectType.BoxBlue, getBoxSpine(SpineAssets.BoxBlueBox), "BlueBox");
+        bottomChooser.addObject(0, ObjectType.Wall, getBoxSpine(SpineAssets.BoxDarkDarkGrayBack), "Wall");
         bottomChooser.addObject(0, ObjectType.Player, getBoxSpine(SpineAssets.Player1), "Player");
         bottomChooser.addObject(1, ObjectType.BoxTarget, getBoxSpine(SpineAssets.BoxBoxTarget), "Box Target");
         bottomChooser.addObject(1, ObjectType.PlayerTarget, getBoxSpine(SpineAssets.BoxPlayerTarget), "Player Target");
+        bottomChooser.addObject(2, ObjectType.GroundDarkBlue, getBoxSpine(SpineAssets.BoxDarkBlueBack), "Blue Background");
         bottomChooser.addObject(2, ObjectType.GroundDarkGray, getBoxSpine(SpineAssets.BoxDarkGrayBack), "Gray Background");
 
         bottomChooser.setPosition(8f, 1.6f);
@@ -567,6 +570,12 @@ public class MapEditScene extends SokobanFitScene {
 
                     // 数据类型转换为显示类型
                     BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
+
+                    if (objectBoxType == null) {
+                        Logger.error("MapEditScene", String.format("Object %s can't be mapped to BoxType. Check logic", currentLayer[y][x].toString()));
+                        continue;
+                    }
+
                     gridWorld.getLayer(layer).addBox(objectBoxType, y, x);
                 }
             }
@@ -574,20 +583,6 @@ public class MapEditScene extends SokobanFitScene {
 
         // 将网格世界重新加入 stage
         addCombinedObjectToStage(gridWorld);
-    }
-
-    /**
-     * 获得 ObjectType 地图数据的物件类型
-     * @param obj ObjectType 物体数据
-     * @return 对应物体层
-     */
-    public int mapObjectTypeToLayerIndex(ObjectType obj) {
-        return switch (obj) {
-            case ObjectType.Wall, ObjectType.Player, ObjectType.Box -> SubMapData.LAYER_OBJECT;
-            case ObjectType.BoxTarget, ObjectType.PlayerTarget -> SubMapData.LAYER_TARGET;
-            case ObjectType.GroundDarkGray -> SubMapData.LAYER_DECORATION;
-            default -> 0;
-        };
     }
 
     /** 输入事件处理 */
@@ -683,10 +678,10 @@ public class MapEditScene extends SokobanFitScene {
             SubMapData currentSubMap = map.allMaps.get(currentSubMapIndex);
 
             // 判断当前层物体存在性
-            boolean thingExists = currentSubMap.mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] != ObjectType.Air;
+            boolean thingExists = currentSubMap.mapLayer.get(ObjectClassMapper.mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] != ObjectType.Air;
             if (!thingExists) {
                 // 向对应层添加对应物体
-                map.allMaps.get(currentSubMapIndex).mapLayer.get(mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] = currentObjectChoice;
+                map.allMaps.get(currentSubMapIndex).mapLayer.get(ObjectClassMapper.mapObjectTypeToLayerIndex(currentObjectChoice))[coordinateY][coordinateX] = currentObjectChoice;
             } else {
                 // 也许有一些处理
             }

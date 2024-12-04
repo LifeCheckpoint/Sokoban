@@ -63,7 +63,7 @@ public class PlayerCore {
             for (int x = 0; x < subMap.width; x++) {
 
                 // 当前位置为玩家位置
-                if (getObject(subMapIndex, x, y) == ObjectType.Player) {
+                if (PlayerCoreUtils.isPlayer(getObject(subMapIndex, x, y))) {
                     if (playerPos == null) {
                         // 首次找到玩家
                         playerPos = new Pos(x, y);

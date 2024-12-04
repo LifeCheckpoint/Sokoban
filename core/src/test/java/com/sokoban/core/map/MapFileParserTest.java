@@ -33,13 +33,13 @@ public class MapFileParserTest {
         objectLayer1[2][2] = ObjectType.Wall;
         targetLayer1[0][0] = ObjectType.PlayerTarget;
         targetLayer1[1][1] = ObjectType.BoxTarget;
-        decLayer1[3][3] = ObjectType.GroundDarkGray;
+        decLayer1[3][3] = ObjectType.Ground;
 
         objectLayer2[0][13] = ObjectType.Wall;
         objectLayer2[4][9] = ObjectType.Air;
         objectLayer2[8][7] = ObjectType.Unknown;
         targetLayer2[6][6] = ObjectType.PlayerTarget;
-        decLayer2[4][5] = ObjectType.GroundDarkGray;
+        decLayer2[4][5] = ObjectType.Ground;
     }
 
     @Test

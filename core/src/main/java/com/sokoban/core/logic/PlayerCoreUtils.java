@@ -10,17 +10,17 @@ import com.sokoban.core.map.SubMapData;
 public class PlayerCoreUtils {
     /** 判断是否为箱子 */
     public static boolean isBox(ObjectType object) {
-        return object == ObjectType.Box;
+        return ObjectClassMapper.typeClass(object) == ObjectType.Box;
     }
     
     /** 判断是否为玩家 */
     public static boolean isPlayer(ObjectType object) {
-        return object == ObjectType.Player;
+        return ObjectClassMapper.typeClass(object) == ObjectType.Player;
     }
 
     /** 判断是否为墙 */
     public static boolean isWall(ObjectType object) {
-        return object == ObjectType.Wall;
+        return ObjectClassMapper.typeClass(object) == ObjectType.Wall;
     }
 
     /** 判断指定对象是否是可以被占据的，例如空气 */

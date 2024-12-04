@@ -16,13 +16,18 @@ public class ActorMapper {
      */
     public static BoxType mapObjectTypeToActor(ObjectType obj) {
         return switch (obj) {
-            case ObjectType.Wall -> BoxType.BlueChest;
+            case ObjectType.Wall -> BoxType.DarkGrayWall;
             case ObjectType.Player -> BoxType.Player;
             case ObjectType.Box -> BoxType.GreenChest;
             case ObjectType.BoxTarget -> BoxType.BoxTarget;
             case ObjectType.PlayerTarget -> BoxType.PlayerTarget;
+            case ObjectType.Ground -> BoxType.DarkGrayBack;
+            case ObjectType.BoxGreen -> BoxType.GreenChest;
+            case ObjectType.BoxBlue -> BoxType.BlueChest;
             case ObjectType.GroundDarkGray -> BoxType.DarkGrayBack;
-            default -> null;
+            case ObjectType.GroundDarkBlue -> BoxType.DarkBlueBack;
+            case ObjectType.Unknown -> null;
+            case ObjectType.Air -> null;
         };
     }
 }

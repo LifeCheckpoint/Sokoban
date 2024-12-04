@@ -16,7 +16,13 @@ public class MapMapper {
             case ObjectType.Box -> 20;
             case ObjectType.BoxTarget -> 30;
             case ObjectType.PlayerTarget -> 31;
+            case ObjectType.Ground -> 40;
+
+            case ObjectType.BoxGreen -> 20;
+            case ObjectType.BoxBlue -> 21;
             case ObjectType.GroundDarkGray -> 40;
+            case ObjectType.GroundDarkBlue -> 41;
+
             case ObjectType.Unknown -> -1;
         };
     }
@@ -31,10 +37,12 @@ public class MapMapper {
             case 0 -> ObjectType.Air;
             case 1 -> ObjectType.Wall;
             case 10 -> ObjectType.Player;
-            case 20 -> ObjectType.Box;
+            case 20 -> ObjectType.BoxGreen;
+            case 21 -> ObjectType.BoxBlue;
             case 30 -> ObjectType.BoxTarget;
             case 31 -> ObjectType.PlayerTarget;
             case 40 -> ObjectType.GroundDarkGray;
+            case 41 -> ObjectType.GroundDarkBlue;
             default -> ObjectType.Unknown;
         };
     }

@@ -19,6 +19,7 @@ public enum SpineAssets {
     BoxCornerRightDown("spine/boxes/box_corner_rightdown/box_corner_rightdown.atlas|spine/boxes/box_corner_rightdown/box_corner_rightdown.json"),
     BoxDarkBlueBack("spine/boxes/darkblue_pixel/darkblue_pixel.atlas|spine/boxes/darkblue_pixel/darkblue_pixel.json"),
     BoxDarkGrayBack("spine/boxes/darkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkgray_pixel/darkgray_pixel.json"),
+    BoxDarkDarkGrayBack("spine/boxes/darkdarkgray_pixel/darkgray_pixel.atlas|spine/boxes/darkdarkgray_pixel/darkgray_pixel.json"),
     BoxGreenBox("spine/boxes/green_box/green_box.atlas|spine/boxes/green_box/green_box.json"),
     BoxBoxTarget("spine/boxes/box_target/box_target.atlas|spine/boxes/box_target/box_target.json"),
     BoxGreenBoxLight("spine/boxes/green_box_light/green_box_light.atlas|spine/boxes/green_box_light/green_box_light.json"),

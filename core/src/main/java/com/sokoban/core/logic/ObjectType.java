@@ -1,6 +1,10 @@
 package com.sokoban.core.logic;
 
 public enum ObjectType {
+    /**
+     * 默认物体，这些物体的形态是固定的
+     */
+
     // 物体层
     Air, // 空气
     Wall, // 墙
@@ -12,8 +16,18 @@ public enum ObjectType {
     PlayerTarget, // 玩家目标位置
     
     // 装饰层
-    GroundDarkGray, // 深灰色地板
+    Ground, // 深灰色地板
 
     // 其它
-    Unknown // 未知
+    Unknown, // 未知
+
+    /**
+     * 非默认物体，有不同的外貌但实质相同
+     */
+
+    BoxGreen,
+    BoxBlue,
+
+    GroundDarkGray,
+    GroundDarkBlue
 }

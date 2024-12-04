@@ -20,6 +20,7 @@ public class BoxObject extends SpineObject {
         BoxTarget(SpineAssets.BoxBoxTarget),
         CornerRightDown(SpineAssets.BoxCornerRightDown),
         DarkBlueBack(SpineAssets.BoxDarkBlueBack),
+        DarkGrayWall(SpineAssets.BoxDarkDarkGrayBack),
         DarkGrayBack(SpineAssets.BoxDarkGrayBack),
         GreenChest(SpineAssets.BoxGreenBox),
         GreenChestActive(SpineAssets.BoxGreenBoxLight),
