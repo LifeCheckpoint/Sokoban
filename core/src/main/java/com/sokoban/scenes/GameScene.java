@@ -10,7 +10,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -32,7 +31,6 @@ import com.sokoban.core.map.MapFileReader;
 import com.sokoban.core.map.MoveListParser;
 import com.sokoban.core.map.SubMapData;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
-import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.core.state.GameHistoryRecoder;
 import com.sokoban.core.state.GameStateFrame;
 import com.sokoban.Main;
@@ -57,8 +55,7 @@ import com.sokoban.utils.ActionUtils;
  */
 public class GameScene extends SokobanFitScene {
     // 状态控制
-    private SokobanLevels levelEnum;
-    private SokobanMaps mapEnum;
+    private MapFileInfo mapFileInfo;
     private boolean isInEscapeMenu;
     private GameParams gameParams;
 
@@ -92,14 +89,13 @@ public class GameScene extends SokobanFitScene {
     private final int INITIAL_MAP_WIDTH = 48;
     private final int INITIAL_MAP_HEIGHT = 27;
 
-    public GameScene(Main gameMain, SokobanLevels levelEnum, SokobanMaps mapEnum, GameParams gameParams) {
+    public GameScene(Main gameMain, MapFileInfo mapfileInfo, GameParams gameParams) {
         super(gameMain);
-        this.levelEnum = levelEnum;
-        this.mapEnum = mapEnum;
+        this.mapFileInfo = mapfileInfo;
         this.gameParams = gameParams;
 
-        Logger.info("GameScene", String.format("Enter game: level = %s, map = %s", levelEnum, mapEnum));
-        Logger.debug("GameScene", "Game Params = " + new JsonManager().getJsonString(gameParams));
+        Logger.info("GameScene", String.format("Enter game -> " + new JsonManager().getJsonString(mapfileInfo)));
+        Logger.debug("GameScene", "Game Params -> " + new JsonManager().getJsonString(gameParams));
     }
 
     // 初始化游戏屏幕
@@ -148,18 +144,19 @@ public class GameScene extends SokobanFitScene {
      */
     public int initPlayerCore() {
         playerCore = new PlayerCore();
+        String levelName = mapFileInfo.level.toString(), mapName = mapFileInfo.map.getMapName();
 
-        String currentMapString = new MapFileReader().readMapByLevelAndName(levelEnum.getLevelName(), mapEnum.getMapName());
+        String currentMapString = new MapFileReader().readMapByLevelAndName(levelName, mapName);
         if (currentMapString == null) {
-            Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelEnum.getLevelName(), mapEnum.getMapName()));
-            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)); // 直接返回地图选择界面
+            Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelName, mapName));
+            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
             return -2;
         }
 
-        MapData currentMapData = MapFileParser.parseMapData(new MapFileInfo("", levelEnum.getLevelName(), mapEnum.getMapName()), currentMapString);
+        MapData currentMapData = MapFileParser.parseMapData(new MapFileInfo("", mapFileInfo.level, mapFileInfo.map), currentMapString);
         if (currentMapData == null) {
-            Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelEnum.getLevelName(), mapEnum.getMapName()));
-            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)); // 直接返回地图选择界面
+            Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelName, mapName));
+            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
             return -2;
         }
 
@@ -546,7 +543,7 @@ public class GameScene extends SokobanFitScene {
     /** 再玩一次 */
     public void replay() {
         // 直接重启屏幕
-        gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, levelEnum, mapEnum, gameParams));
+        gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, mapFileInfo, gameParams));
     }
 
     @Override
@@ -570,15 +567,19 @@ public class GameScene extends SokobanFitScene {
      * 返回地图选择场景
      */
     public void returnToMapChooseScene() {
+        SokobanScene returnScreen;
+
+        if (mapFileInfo.level == SokobanLevels.Tutorial) returnScreen = new LevelChooseScene(gameMain);
+        else if (mapFileInfo.level != SokobanLevels.None) returnScreen = new MapChooseScene(gameMain, mapFileInfo.level);
+        else returnScreen = new LevelChooseScene(gameMain);
+
         stage.addAction(Actions.sequence(
             // 离开前处理
             Actions.run(() -> {}),
             // 等待指定时间
             Actions.delay(0.2f),
             // 返回上一界面
-            (levelEnum == SokobanLevels.Tutorial) ?
-                Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new LevelChooseScene(gameMain))) :
-                Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, levelEnum)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(returnScreen))
         ));
     }
 

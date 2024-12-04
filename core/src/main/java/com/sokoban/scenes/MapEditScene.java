@@ -25,6 +25,8 @@ import com.sokoban.core.map.MapFileInfo;
 import com.sokoban.core.map.MapFileParser;
 import com.sokoban.core.map.MapFileReader;
 import com.sokoban.core.map.SubMapData;
+import com.sokoban.core.map.gamedefault.SokobanLevels;
+import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.BottomObjectChooser;
@@ -449,7 +451,7 @@ public class MapEditScene extends SokobanFitScene {
             ShowMsgBox("Read map file failed.");
         }
 
-        MapData newMap = MapFileParser.parseMapData(new MapFileInfo(filePath, "", ""), mapString);
+        MapData newMap = MapFileParser.parseMapData(new MapFileInfo(filePath, SokobanLevels.None, SokobanMaps.None), mapString);
         if (newMap == null) {
             Logger.error("MapEditScene", "Parse map file failed.");
             ShowMsgBox("Read map file failed.");

@@ -117,7 +117,7 @@ public class LevelChooseScene extends SokobanScene {
      */
     private void gotoLeftWindow() {
         if (levelSelector.setCurrentWindowToPre()) {
-            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).toString());
             msgBox.setPosition(8f, 0.5f);
             msgBox.addActorsToStage(stage);
         }
@@ -128,7 +128,7 @@ public class LevelChooseScene extends SokobanScene {
      */
     private void gotoRightWindow() {
         if (levelSelector.setCurrentWindowToNext()) {
-            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).getLevelName());
+            HintMessageBox msgBox = new HintMessageBox(gameMain, getLevelEnum(levelSelector.getCurrentWindowIndex()).toString());
             msgBox.setPosition(8f, 0.5f);
             msgBox.addActorsToStage(stage);
         }

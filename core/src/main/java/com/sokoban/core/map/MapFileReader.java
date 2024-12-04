@@ -2,6 +2,7 @@ package com.sokoban.core.map;
 
 import com.sokoban.core.game.FileInfo;
 import com.sokoban.core.game.Logger;
+import com.sokoban.utils.EnumUtils;
 import com.sokoban.utils.FilePathUtils;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class MapFileReader {
         for (FileInfo fileInfo : fileInfos) {
             if (fileInfo.fileName.endsWith(MAP_FILE_EXTENSION)) {
                 String mapName = fileInfo.fileName.replace(MAP_FILE_EXTENSION, "");
-                mapList.add(new MapFileInfo(fileInfo.file.getAbsolutePath(), fileInfo.relativePath, mapName));
+                mapList.add(new MapFileInfo(fileInfo.file.getAbsolutePath(), EnumUtils.nameOfLevel(fileInfo.relativePath), EnumUtils.nameOfMap(mapName)));
             }
         }
         return mapList;

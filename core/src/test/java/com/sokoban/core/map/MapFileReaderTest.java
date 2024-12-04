@@ -26,9 +26,9 @@ public class MapFileReaderTest {
     public void testListAllMaps() {
         List<MapFileInfo> maps = mapFileReader.listAllMaps();
         Assert.assertEquals(maps.size(), 9, "Expected 9 maps in total.");
-        Assert.assertTrue(maps.stream().anyMatch(map -> map.levelName.equals("level1") && map.mapName.equals("map1")),
+        Assert.assertTrue(maps.stream().anyMatch(map -> map.level.equals("level1") && map.map.equals("map1")),
                 "Map level1/map1 should be present.");
-        Assert.assertTrue(maps.stream().anyMatch(map -> map.levelName.equals("level3") && map.mapName.equals("map3")),
+        Assert.assertTrue(maps.stream().anyMatch(map -> map.level.equals("level3") && map.map.equals("map3")),
                 "Map level3/map3 should be present.");
     }
 

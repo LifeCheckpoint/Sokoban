@@ -1,5 +1,8 @@
 package com.sokoban.core.map;
 
+import com.sokoban.core.map.gamedefault.SokobanLevels;
+import com.sokoban.core.map.gamedefault.SokobanMaps;
+
 /**
  * 地图信息类
  * <br><br>
@@ -8,21 +11,21 @@ package com.sokoban.core.map;
  */
 public class MapFileInfo {
     public String path = "";
-    public String levelName = "";
-    public String mapName = "";
+    public SokobanLevels level;
+    public SokobanMaps map;
 
     public MapFileInfo() {}
 
     /**
      * 地图文件信息类构造
      * @param path 文件路径，未知为空字符串
-     * @param levelName 大关卡名，未知为空字符串
-     * @param mapName 小关卡（地图）名，未知为空字符串
+     * @param level 大关卡名，未知为空字符串
+     * @param map 小关卡（地图）名，未知为空字符串
      */
-    public MapFileInfo(String path, String levelName, String mapName) {
+    public MapFileInfo(String path, SokobanLevels level, SokobanMaps map) {
         this.path = path;
-        this.levelName = levelName;
-        this.mapName = mapName;
+        this.level = level;
+        this.map = map;
     }
 
     @Override
@@ -31,8 +34,8 @@ public class MapFileInfo {
         MapFileInfo anotherMapInfo = (MapFileInfo) obj;
 
         if (!anotherMapInfo.path.equals(path)) return false;
-        if (!anotherMapInfo.levelName.equals(levelName)) return false;
-        if (!anotherMapInfo.mapName.equals(mapName)) return false;
+        if (!anotherMapInfo.level.equals(level)) return false;
+        if (!anotherMapInfo.map.equals(map)) return false;
 
         return true;
     }
@@ -42,6 +45,6 @@ public class MapFileInfo {
      * @return 新复制对象
      */
     public MapFileInfo cpy() {
-        return new MapFileInfo(path, levelName, mapName);
+        return new MapFileInfo(path, level, map);
     }
 }

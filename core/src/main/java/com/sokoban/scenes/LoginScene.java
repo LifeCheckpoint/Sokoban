@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.game.Logger;
+import com.sokoban.core.map.MapFileInfo;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.core.user.UserInfo;
@@ -183,7 +184,10 @@ public class LoginScene extends SokobanScene {
                 // 完成写入，进入教程
                 Logger.info("LoginScene", String.format("User %s created successfully", newUser.getUserID()));
                 gameWelcomeScene.setCurrentUser(newUser);
-                gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, SokobanLevels.Tutorial, SokobanMaps.Turotial_Tutorial, new GameParams()));
+                gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(
+                    gameMain, new MapFileInfo("", SokobanLevels.Tutorial, SokobanMaps.Turotial_Tutorial), 
+                    new GameParams()
+                ));
             }
         });
 

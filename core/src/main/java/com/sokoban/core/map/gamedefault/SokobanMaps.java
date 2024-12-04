@@ -1,6 +1,8 @@
 package com.sokoban.core.map.gamedefault;
 
 public enum SokobanMaps {
+    None(""),
+
     // Tutorial
     Turotial_Tutorial("tutorial"),
 

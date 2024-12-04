@@ -19,6 +19,7 @@ import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.logic.Direction;
+import com.sokoban.core.map.MapFileInfo;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.Main;
@@ -85,7 +86,7 @@ public class MapChooseScene extends SokobanScene {
         });
 
         // 提示
-        HintMessageBox msgBox = new HintMessageBox(gameMain, level.getLevelName());
+        HintMessageBox msgBox = new HintMessageBox(gameMain, level.toString());
         msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
 
         // 玩家
@@ -137,7 +138,7 @@ public class MapChooseScene extends SokobanScene {
 
                 returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
                 playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
-                racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
+                if (racingModeCheckbox != null) racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                 if (originLevel != null) {
                     originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
                     // 清除计时器字典所有部件
@@ -173,7 +174,7 @@ public class MapChooseScene extends SokobanScene {
             Actions.delay(0.5f),
             // 进入游戏界面
             // TODO map 选择
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, level, SokobanMaps.Turotial_Tutorial, gameParams)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, new MapFileInfo("", level, SokobanMaps.None), gameParams)))
         ));
     }
 
