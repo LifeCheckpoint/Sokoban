@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.sokoban.core.Logger;
-import com.sokoban.core.game.Pos;
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.logic.Pos;
 
 /**
  * 移动信息解析类

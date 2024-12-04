@@ -1,7 +1,7 @@
 package com.sokoban.core.map;
 
-import com.sokoban.core.Logger;
-import com.sokoban.statics.FileInfo;
+import com.sokoban.core.game.FileInfo;
+import com.sokoban.core.game.Logger;
 import com.sokoban.utils.FilePathUtils;
 
 import java.io.IOException;

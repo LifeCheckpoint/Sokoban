@@ -1,6 +1,6 @@
 package com.sokoban.scenes.manager;
 
-import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.logic.ObjectType;
 import com.sokoban.polygon.BoxObject.BoxType;
 
 /**

@@ -3,7 +3,7 @@ package com.sokoban.scenes.manager;
 import java.util.Stack;
 
 import com.badlogic.gdx.Screen;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.scenes.SokobanScene;
 
 /**

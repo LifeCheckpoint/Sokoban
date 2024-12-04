@@ -8,7 +8,7 @@ import java.util.Map;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.utils.MathUtilsEx;
 
 /**

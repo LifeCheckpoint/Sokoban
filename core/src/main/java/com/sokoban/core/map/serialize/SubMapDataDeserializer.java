@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.logic.ObjectType;
 import com.sokoban.core.map.SubMapData;
 
 import java.io.IOException;

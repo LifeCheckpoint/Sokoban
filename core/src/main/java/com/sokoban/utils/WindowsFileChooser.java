@@ -1,6 +1,6 @@
 package com.sokoban.utils;
 
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * 原生系统文件选择器

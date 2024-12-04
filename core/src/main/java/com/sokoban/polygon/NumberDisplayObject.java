@@ -2,7 +2,7 @@ package com.sokoban.polygon;
 
 import com.sokoban.Main;
 import com.sokoban.assets.SpineAssets;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * 动画显示数字类

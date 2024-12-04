@@ -17,7 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * 统一资源管理器 AssetsPathManager

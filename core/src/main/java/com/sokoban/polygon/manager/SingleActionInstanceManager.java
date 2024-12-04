@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.polygon.actioninterface.ActionInstanceReset;
 
 /**

@@ -3,8 +3,8 @@ package com.sokoban.polygon.manager;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sokoban.core.Logger;
-import com.sokoban.core.game.Direction;
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.logic.Direction;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.sokoban.utils.MathUtilsEx;

@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sokoban.core.Logger;
-import com.sokoban.statics.FileInfo;
+import com.sokoban.core.game.FileInfo;
+import com.sokoban.core.game.Logger;
 
 /**
  * 文件路径增效工具

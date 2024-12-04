@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.Main;
 import com.sokoban.assets.ImageAssets;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.core.settings.GameSettings;
 import com.sokoban.core.settings.GraphicsSettings;
 import com.sokoban.core.settings.SoundSettings;

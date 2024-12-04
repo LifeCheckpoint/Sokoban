@@ -1,4 +1,4 @@
-package com.sokoban.core;
+package com.sokoban.core.game;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.logic.ObjectType;
 import com.sokoban.core.map.SubMapData;
 
 public class SubMapDataSerializer extends JsonSerializer<SubMapData> {

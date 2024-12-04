@@ -1,4 +1,4 @@
-package com.sokoban.core.game;
+package com.sokoban.core.logic;
 
 public enum Direction {
     None("none"), Right("right"), Down("down"), Left("left"), Up("up");

@@ -12,7 +12,7 @@ import com.esotericsoftware.spine.*;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
 import com.sokoban.Main;
 import com.sokoban.assets.SpineAssets;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * Spine 对象类，支持移动缩放与动画切换、错误处理、性能优化、功能扩展

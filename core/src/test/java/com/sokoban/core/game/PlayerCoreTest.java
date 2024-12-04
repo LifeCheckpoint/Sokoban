@@ -7,6 +7,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.sokoban.core.logic.Direction;
+import com.sokoban.core.logic.PlayerCore;
 import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.MapFileParser;
 import com.sokoban.core.map.MapFileReader;

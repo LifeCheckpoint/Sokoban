@@ -4,7 +4,7 @@ import com.badlogic.gdx.audio.Music;
 import com.sokoban.Main;
 import com.sokoban.assets.AssetsPathManager;
 import com.sokoban.assets.MusicAssets;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * 多层堆叠的 GirdWorld，用于多层对象显示

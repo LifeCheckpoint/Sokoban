@@ -18,7 +18,7 @@ package com.sokoban.lwjgl3;
 
 import org.lwjgl.system.macosx.LibC;
 
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;

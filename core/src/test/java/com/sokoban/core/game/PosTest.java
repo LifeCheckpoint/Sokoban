@@ -3,6 +3,8 @@ package com.sokoban.core.game;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.sokoban.core.logic.Pos;
+
 public class PosTest {
 
     @Test

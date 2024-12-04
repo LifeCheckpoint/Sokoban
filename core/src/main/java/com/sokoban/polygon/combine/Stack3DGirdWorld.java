@@ -6,7 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.polygon.actioninterface.Stack3DUpdateIn;
 import com.sokoban.polygon.actioninterface.Stack3DUpdateOut;
 

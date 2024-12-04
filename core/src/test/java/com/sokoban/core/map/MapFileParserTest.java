@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.logic.ObjectType;
 
 public class MapFileParserTest {
     MapData map = new MapData();

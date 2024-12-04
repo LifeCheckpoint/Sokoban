@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.sokoban.core.game.GameParams;
-import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.json.JsonManager;
 import com.sokoban.core.map.MoveListParser;
 
 /**

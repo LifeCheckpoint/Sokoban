@@ -1,4 +1,4 @@
-package com.sokoban.core.game;
+package com.sokoban.core.logic;
 
 public enum ObjectType {
     // 物体层

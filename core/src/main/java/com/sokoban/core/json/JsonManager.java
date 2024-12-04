@@ -1,8 +1,8 @@
-package com.sokoban.core.manager;
+package com.sokoban.core.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.core.map.SubMapData;
 import com.sokoban.core.map.serialize.SubMapDataDeserializer;
 import com.sokoban.core.map.serialize.SubMapDataSerializer;

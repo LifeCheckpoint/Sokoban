@@ -3,11 +3,11 @@ package com.sokoban.lwjgl3;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.sokoban.CoreTest;
 import com.sokoban.Main;
-import com.sokoban.core.Logger;
+import com.sokoban.core.CoreTest;
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.game.MainConfig;
 import com.sokoban.core.settings.SettingManager;
-import com.sokoban.statics.MainConfig;
 
 /** 启动 Sokoban Lwjgl3 前端 */
 public class Lwjgl3Launcher {

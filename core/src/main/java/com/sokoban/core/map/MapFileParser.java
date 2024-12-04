@@ -3,9 +3,9 @@ package com.sokoban.core.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sokoban.core.Logger;
-import com.sokoban.core.game.Direction;
-import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.json.JsonManager;
+import com.sokoban.core.logic.Direction;
 
 /**
  * 地图数据解析类

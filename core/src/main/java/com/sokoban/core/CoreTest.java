@@ -1,6 +1,6 @@
-package com.sokoban;
+package com.sokoban.core;
 
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 
 /**
  * <b>Sokoban 的后端测试</b>

@@ -2,8 +2,8 @@ package com.sokoban.core.settings;
 
 import java.io.File;
 
-import com.sokoban.core.Logger;
-import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.json.JsonManager;
 
 /**
  * 游戏设置管理器

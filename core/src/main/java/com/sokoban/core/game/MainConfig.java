@@ -1,4 +1,4 @@
-package com.sokoban.statics;
+package com.sokoban.core.game;
 
 import com.sokoban.core.settings.SettingManager;
 

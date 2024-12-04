@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sokoban.core.game.ObjectType;
+import com.sokoban.core.logic.ObjectType;
 
 public class SubMapData {
     public int height = 0, width = 0; // 子地图高与宽

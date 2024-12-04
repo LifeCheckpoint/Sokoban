@@ -2,7 +2,7 @@ package com.sokoban.utils;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.sokoban.core.game.Direction;
+import com.sokoban.core.logic.Direction;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

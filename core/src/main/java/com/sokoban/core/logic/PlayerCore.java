@@ -1,9 +1,9 @@
-package com.sokoban.core.game;
+package com.sokoban.core.logic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sokoban.core.Logger;
+import com.sokoban.core.game.Logger;
 import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.SubMapData;
 

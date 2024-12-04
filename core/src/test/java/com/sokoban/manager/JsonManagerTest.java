@@ -2,7 +2,7 @@ package com.sokoban.manager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.sokoban.core.manager.JsonManager;
+import com.sokoban.core.json.JsonManager;
 
 import java.io.File;
 import java.nio.file.Files;
