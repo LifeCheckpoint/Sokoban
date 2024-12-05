@@ -83,9 +83,10 @@ public class GameScene extends SokobanFitScene {
     private final float DEFAULT_CELL_SIZE = 1f;
     private final float VIEWPORT_RESCALE_RATIO = 1.6f;
     private final float ESCAPE_MENU_ANIMATION_DURATION = 0.2f;
-    private final float ESCAPE_MENU_BUTTON_SCALING = 0.011f;
+    private final float ESCAPE_MENU_BUTTON_SCALING = 0.008f;
     private final float ESCAPE_MENU_BUTTON_ALIGN_X = 11f;
-    private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 2f;
+    private final float ESCAPE_MENU_BUTTON_ALIGN_Y = 4f;
+    private final float ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA = 1f;
     private final int INITIAL_MAP_WIDTH = 48;
     private final int INITIAL_MAP_HEIGHT = 27;
 
@@ -336,19 +337,19 @@ public class GameScene extends SokobanFitScene {
         buttonContainer = new ButtonCheckboxContainers();
 
         continueGameButton = buttonContainer.create(gameMain, ImageAssets.ContinueGame, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
-        continueGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 4.5f);
+        continueGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA * 3);
         continueGameButton.setCheckboxType(false);
 
         replayButton = buttonContainer.create(gameMain, ImageAssets.PlayAgainButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
-        replayButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 3f);
+        replayButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA * 2);
         replayButton.setCheckboxType(false);
 
         settingsButton = buttonContainer.create(gameMain, ImageAssets.SettingsButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
-        settingsButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 1.5f);
+        settingsButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA * 1);
         settingsButton.setCheckboxType(false);
 
         exitGameButton = buttonContainer.create(gameMain, ImageAssets.ExitButton, false, true, 0.1f, ESCAPE_MENU_BUTTON_SCALING);
-        exitGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + 0f);
+        exitGameButton.setPosition(ESCAPE_MENU_BUTTON_ALIGN_X, ESCAPE_MENU_BUTTON_ALIGN_Y + ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA * 0);
         exitGameButton.setCheckboxType(false);
 
         // 继续按钮监听
