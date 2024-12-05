@@ -40,7 +40,7 @@ public class PlayerCore {
         }
         return map.allMaps.get(index);
     }
-    
+
     /** 获得子地图对应位置物体 */
     public ObjectType getObject(int subMapIndex, int x, int y) {
         if (outOfBound(subMapIndex, x, y)) {
@@ -86,7 +86,7 @@ public class PlayerCore {
         }
         return getSubmap(subMapIndex).getTargetLayer()[y][x];
     }
-    
+
     /** 设置子地图对应位置物体 */
     public void setObject(int subMapIndex, int x, int y, ObjectType object) {
         if (outOfBound(subMapIndex, x, y)) {
@@ -95,12 +95,12 @@ public class PlayerCore {
         }
         getSubmap(subMapIndex).getObjectLayer()[y][x] = object;
     }
-    
+
     /** 判断坐标是否超出子地图边界 */
     public boolean outOfBound(int subMapIndex, int x, int y) {
         return x < 0 || y < 0 || getSubmap(subMapIndex).width <= x || getSubmap(subMapIndex).height <= y;
     }
-    
+
     /**
      * 判断指定方向上的物块是否能连续推动
      * @param subMapIndex 子地图索引
@@ -111,28 +111,28 @@ public class PlayerCore {
     public boolean canPush(int subMapIndex, Pos position, Direction direction) {
         // 获得新坐标
         Pos nextPos = position.add(PlayerCoreUtils.getDeltaPos(direction));
-        
+
         // 获得当前物体和下一物体
         ObjectType thisObj = getObject(subMapIndex, position.x, position.y);
         ObjectType nextObj = getObject(subMapIndex, nextPos.x, nextPos.y);
-        
+
         // 如果当前物体不是箱子，不可以推
         if (!PlayerCoreUtils.isBox(thisObj)) return false;
-        
+
         // 如果下一个物体是墙或者超边界，不可以推
         if (PlayerCoreUtils.isWall(nextObj) || outOfBound(subMapIndex, nextPos.x, nextPos.y)) return false;
-        
+
         // 如果下一个物体是箱子，则需要通过递归连锁判断
         if (PlayerCoreUtils.isBox(nextObj)) return canPush(subMapIndex, nextPos, direction);
-        
+
         // 如果下一个物体是空的，可以推
         if (PlayerCoreUtils.isWalkable(nextObj)) return true;
-        
+
         // 如果是其它情况，发出警告（判断可能漏掉了一些物块类型）
         Logger.warning("PlayerCore", "method canPush can't identify object type " + nextObj);
         return false;
     }
-    
+
     /**
      * 对所在物块进行一次指定方向的推动（包括玩家）
      * <br><br>
@@ -143,17 +143,17 @@ public class PlayerCore {
      */
     public void doPush(int subMapIndex, Pos position, Direction direction) {
         Logger.debug("PlayerCore", String.format(
-            "doPush -> subMapIndex = %d, position = (%d, %d), direction = %s", 
+            "doPush -> subMapIndex = %d, position = (%d, %d), direction = %s",
             subMapIndex, position.x, position.y, direction
         ));
 
         // 获得新坐标
         Pos nextPos = position.add(PlayerCoreUtils.getDeltaPos(direction));
-        
+
         // 获得当前物体和下一物体
         ObjectType thisObj = getObject(subMapIndex, position.x, position.y);
         ObjectType nextObj = getObject(subMapIndex, nextPos.x, nextPos.y);
-        
+
         // 如果当前物块是玩家
         if (PlayerCoreUtils.isPlayer(thisObj)) {
             Logger.debug("PlayerCore", "Player moving");
@@ -174,7 +174,7 @@ public class PlayerCore {
                 // 要进行多个物块的连续推动，但是物块之间的状态不能互相影响，所以需要复制一张新地图，更改完成后才覆盖旧地图
                 // 复制的时候要调用 SubMapData 的 cpy 方法，否则会得到对同一个对象的引用
                 SubMapData newMap = getSubmap(subMapIndex).cpy();
-                
+
                 // 为了防止栈内存溢出，使用循环实现
                 Pos currentPos = new Pos(position.x, position.y); // 当前处理物块的坐标
                 Pos currentPosNext = currentPos.add(PlayerCoreUtils.getDeltaPos(direction)); // 当前处理物块的目标坐标
