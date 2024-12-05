@@ -1,9 +1,8 @@
 package com.sokoban.polygon.manager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,8 +17,8 @@ public class OverlappingManager {
     // private Main gameMain;
     private int collisionMethod;
     private Actor collisionObject;
-    private List<Actor> collisionSecondaryObject;
-    private Map<Actor, OverlapStatue> collisionStatue;
+    private Map<Actor, String> collisionSecondaryObject; // Actor -> 标签
+    private Map<String, OverlapStatue> collisionStatue; // 标签 -> 状态
 
     /**
      * 状态说明
@@ -44,7 +43,7 @@ public class OverlappingManager {
      */
     public OverlappingManager(Main gameMain, Actor collisionObject) {
         // this.gameMain = gameMain;
-        init(collisionObject, new ArrayList<>(), 0);
+        init(collisionObject, 0);
     }
     
     /**
@@ -55,50 +54,47 @@ public class OverlappingManager {
      */
     public OverlappingManager(Main gameMain, Actor collisionObject, int collisionMethod) {
         // this.gameMain = gameMain;
-        init(collisionObject, new ArrayList<>(), collisionMethod);
+        init(collisionObject, collisionMethod);
     }
     
-    /**
-     * 碰撞检测器构造
-     * @param gameMain 全局句柄
-     * @param collisionObject 主碰撞对象
-     * @param collisionSecondaryObject 副碰撞对象
-     * @param collisionMethos 碰撞检测方式，0 = 方框检测，1 = 圆形检测
-     */
-    public OverlappingManager(Main gameMain, Actor collisionObject, List<Actor> collisionSecondaryObject, int collisionMethod) {
-        // this.gameMain = gameMain;
-        init(collisionObject, collisionSecondaryObject, collisionMethod);
-    }
-
-    private void init(Actor collisionObject, List<Actor> collisionSecondaryObject, int collisionMethod) {
+    private void init(Actor collisionObject, int collisionMethod) {
         this.collisionObject = collisionObject;
-        this.collisionSecondaryObject = collisionSecondaryObject;
+        this.collisionSecondaryObject = new HashMap<>();
         this.collisionStatue = new HashMap<>();
         this.collisionMethod = collisionMethod;
-        for (Actor secondaryObject : collisionSecondaryObject) collisionStatue.put(secondaryObject, OverlapStatue.Leave);
     }
 
     /**
      * 画面更新后，检查主对象碰撞情况，并只返回第一个碰撞结果
      * <br><br>
      * 如果确信不会发生多个碰撞，可以使用该方法进行状态更新
-     * @return 首个碰撞情况发生改变对象，注意，如果没有碰撞将返回 null
+     * @return 首个碰撞情况发生改变对象 tag，如果没有碰撞返回 null
      */
-    public Actor overlapsCheckSingle() {
-        Map<Actor, OverlapStatue> overlapResult = overlapsCheck();
+    public String overlapsCheckSingle() {
+        Map<String, OverlapStatue> overlapResult = overlapsCheck();
         if (overlapResult.size() == 0) return null;
         return overlapResult.keySet().iterator().next();
+    }
+
+    /**
+     * 获取 actor 对应标签
+     * @param actor
+     * @return 标签，不存在则返回 null
+     */
+    public String getTag(Actor actor) {
+        if (!collisionSecondaryObject.containsKey(actor)) return null;
+        return collisionSecondaryObject.get(actor);
     }
 
     /**
      * 画面更新后，检查主对象碰撞情况
      * @return 碰撞情况发生改变对象及其新状态的 Map
      */
-    public Map<Actor, OverlapStatue> overlapsCheck() {
-        Map<Actor, OverlapStatue> changedActorState = new HashMap<>();
+    public Map<String, OverlapStatue> overlapsCheck() {
+        Map<String, OverlapStatue> changedActorTagState = new HashMap<>();
 
         // 对每个对象进行碰撞检测
-        for (Actor secondaryObject : collisionSecondaryObject) {
+        for (Actor secondaryObject : collisionSecondaryObject.keySet()) {
             // 检查对象存在情况
             if (secondaryObject == null) {
                 Logger.warning("OverlappingManager", String.format("It exists an null object!"));
@@ -124,44 +120,49 @@ public class OverlappingManager {
             if (collided) {
                 // 首次碰撞
                 if (getActorOverlapState(secondaryObject) == OverlapStatue.FirstLeave || getActorOverlapState(secondaryObject) == OverlapStatue.Leave) {
-                    collisionStatue.replace(secondaryObject, OverlapStatue.FirstOverlap);
+                    collisionStatue.replace(getTag(secondaryObject), OverlapStatue.FirstOverlap);
                     changed = true;
                 }
                 // 非首次碰撞
                 else if (getActorOverlapState(secondaryObject) == OverlapStatue.FirstOverlap) {
-                    collisionStatue.replace(secondaryObject, OverlapStatue.Overlap);
+                    collisionStatue.replace(getTag(secondaryObject), OverlapStatue.Overlap);
                     changed = true;
                 }
             } else {
                 // 首次离开
                 if (getActorOverlapState(secondaryObject) == OverlapStatue.FirstOverlap || getActorOverlapState(secondaryObject) == OverlapStatue.Overlap) {
-                    collisionStatue.replace(secondaryObject, OverlapStatue.FirstLeave);
+                    collisionStatue.replace(getTag(secondaryObject), OverlapStatue.FirstLeave);
                     changed = true;
                 }
                 // 非首次离开
                 else if (getActorOverlapState(secondaryObject) == OverlapStatue.FirstLeave) {
-                    collisionStatue.replace(secondaryObject, OverlapStatue.Leave);
+                    collisionStatue.replace(getTag(secondaryObject), OverlapStatue.Leave);
                     changed = true;
                 }
             }
 
-            // 将发生修改的对象及新状态加入 changedActorState
+            // 将发生修改的对象及新状态加入 changedActorTagState
             if (changed) {
-                changedActorState.put(secondaryObject, collisionStatue.get(secondaryObject));
-                Logger.debug("OverlappingManager", String.format("Colliding statue: %s -> %s", secondaryObject, changedActorState.get(secondaryObject)));
+                changedActorTagState.put(getTag(secondaryObject), getActorOverlapState(secondaryObject));
+
+                Logger.debug("OverlappingManager", String.format(
+                    "Colliding '%s' statue -> %s", 
+                    getTag(secondaryObject), 
+                    changedActorTagState.get(getTag(secondaryObject))
+                ));
             }
         }
 
-        return changedActorState;
+        return changedActorTagState;
     }
 
     /**
      * 添加副对象
      * @param object 副对象
      */
-    public void addSecondaryObject(Actor object) {
-        collisionSecondaryObject.add(object);
-        collisionStatue.put(object, OverlapStatue.Leave);
+    public void addSecondaryObject(Actor object, String tag) {
+        collisionSecondaryObject.put(object, tag);
+        collisionStatue.put(tag, OverlapStatue.Leave);
     }
 
     /**
@@ -170,25 +171,34 @@ public class OverlappingManager {
      * @return 碰撞状态
      */
     public OverlapStatue getActorOverlapState(Actor actor) {
-        if (!collisionStatue.containsKey(actor)) {
-            Logger.error("OverlappingManager", String.format("Object [%s] is not in checker.", actor.toString()));
+        return getActorOverlapState(getTag(actor));
+    }
+
+    /**
+     * 获取指定对象碰撞情况
+     * @param actor
+     * @return 碰撞状态
+     */
+    public OverlapStatue getActorOverlapState(String tag) {
+        if (!collisionStatue.containsKey(tag)) {
+            Logger.error("OverlappingManager", String.format("Tag '%s' is not in checker.", tag));
             return OverlapStatue.Disable;
         }
 
-        return collisionStatue.get(actor);
+        return collisionStatue.get(tag);
     }
 
     /** 禁止所有碰撞检测 */
     public void disableAllCollision() {
-        for (Actor secondaryObject : collisionSecondaryObject) {
-            collisionStatue.replace(secondaryObject, OverlapStatue.Disable);
+        for (String secondaryObjectTag : collisionSecondaryObject.values()) {
+            collisionStatue.replace(secondaryObjectTag, OverlapStatue.Disable);
         }
     }
 
     /** 解锁所有碰撞检测 */
     public void enableAllCollision() {
-        for (Actor secondaryObject : collisionSecondaryObject) {
-            collisionStatue.replace(secondaryObject, OverlapStatue.Leave);
+        for (String secondaryObjectTag : collisionSecondaryObject.values()) {
+            collisionStatue.replace(secondaryObjectTag, OverlapStatue.Leave);
         }
     }
 
@@ -264,16 +274,7 @@ public class OverlappingManager {
      * 获取副碰撞检测对象
      * @return 副碰撞检测对象
      */
-    public List<Actor> getCollisionSecondaryObject() {
-        return collisionSecondaryObject;
+    public Set<Actor> getCollisionSecondaryObject() {
+        return collisionSecondaryObject.keySet();
     }
-
-    /**
-     * 设置副碰撞检测对象
-     * @param collisionSecondaryObject 副碰撞检测对象
-     */
-    public void setCollisionSecondaryObject(List<Actor> collisionSecondaryObject) {
-        this.collisionSecondaryObject = collisionSecondaryObject;
-    }
-    
 }

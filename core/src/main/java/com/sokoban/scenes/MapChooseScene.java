@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.assets.ImageAssets;
-import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.GameParams;
 import com.sokoban.core.game.Logger;
 import com.sokoban.core.logic.Direction;
@@ -43,28 +42,28 @@ import com.sokoban.scenes.manager.ActorMapper;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.utils.ActionUtils;
-import com.sokoban.utils.MathUtilsEx;
 
 public class MapChooseScene extends SokobanScene {
-    private AccelerationMovingManager accelerationManager;
-    private Direction preDirection = Direction.None;
-    private boolean isPlayerInMove;
-    private Image returnButton;
-    private SokobanLevels level;
-    private MouseMovingTraceManager moveTrace;
-    private SpineObject playerSpine;
-    private OverlappingManager playerOverlapManager;
-    private Image racingModeButton;
-    private CheckboxObject racingModeCheckbox;
-    private GameParams gameParams = new GameParams();
-    private Map<Actor, TimerClock> timer;
+    protected AccelerationMovingManager accelerationManager;
+    protected Direction preDirection = Direction.None;
+    protected boolean isPlayerInMove;
+    protected Image returnButton;
+    protected SokobanLevels level;
+    protected MouseMovingTraceManager moveTrace;
+    protected SpineObject playerSpine;
+    protected OverlappingManager playerOverlapManager;
+    protected Image racingModeButton;
+    protected CheckboxObject racingModeCheckbox;
+    protected GameParams gameParams = new GameParams();
+    protected Map<Actor, TimerClock> timer;
+    protected List<BoxObject> greenBoxObjectOrigin = new ArrayList<>();
 
-    private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
-    private final int INITIAL_MAP_WIDTH = 48, INITIAL_MAP_HEIGHT = 27;
-    private final float DEFAULT_CELL_SIZE = 1f;
+    protected final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
+    protected final int INITIAL_MAP_WIDTH = 48, INITIAL_MAP_HEIGHT = 27;
+    protected final float DEFAULT_CELL_SIZE = 1f;
 
     // 选择界面地图网格
-    private Stack3DGirdWorld gridMap;
+    protected Stack3DGirdWorld gridMap;
 
     public MapChooseScene(Main gameMain, SokobanLevels levelEnum) {
         super(gameMain);
@@ -140,14 +139,15 @@ public class MapChooseScene extends SokobanScene {
     }
 
     /** 进入游玩界面 */
-    public void enterGameScene() {
+    public void enterGameScene(SokobanMaps map) {
         stopAllActivities(); // 结束所有动画
+
+        Logger.info("MapChooseScene", "Enter Map -> " + map.toString());
         stage.addAction(Actions.sequence(
             // 等待指定时间
             Actions.delay(0.8f),
             // 进入游戏界面
-            // TODO map 选择
-            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, new MapFileInfo("", level, SokobanMaps.None), gameParams)))
+            Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, new MapFileInfo("", level, map), gameParams)))
         ));
     }
 
@@ -245,46 +245,56 @@ public class MapChooseScene extends SokobanScene {
             }
         }
 
-        // 对箱子的检测
-        for (Actor boxActor : gridMap.getAllActors()) {
-            if (boxActor instanceof BoxObject) {
-                BoxObject boxObj = (BoxObject) boxActor;
+        if (level == SokobanLevels.Origin) overlapTriggerOrigin(); // 检测第一个地图关卡箱触发
+    }
+
+    /** 检查第一个地图是否有箱子碰撞 */
+    public void overlapTriggerOrigin() {
+        // 检测绿色箱子是否有碰撞发生
+        if (level == SokobanLevels.Origin) {
+            for (int boxIndex = 0; boxIndex < greenBoxObjectOrigin.size(); boxIndex++) {
+                BoxObject boxObj = greenBoxObjectOrigin.get(boxIndex);
 
                 // 碰撞普通绿色箱子
-                if (boxObj.getBoxType() == BoxType.GreenChest) {
-                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
-                        // 箱子变为激活状态
-                        boxObj.resetBoxType(BoxType.GreenChestActive);
+                if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
+                    // 箱子变为激活状态
+                    boxObj.resetBoxType(BoxType.GreenChestActive);
 
-                        // 触发计时器
-                        timer.put(boxObj, 
-                            new TimerClock(gameMain, boxObj, 1.5f, new ClockEndCallback() {
-                                @Override
-                                public void clockEnd() {enterGameScene();} // 进入游戏场景
-                            }, false)
-                        );
-                        timer.get(boxObj).moveBy(-0.3f, 0);
-                        addActorsToStage(timer.get(boxObj));
-                    }
+                    // 获得对应关卡
+                    // 加载的时候从下到上，所以需要反序
+                    SokobanMaps enterMap = switch(boxIndex) {
+                        case 4 -> SokobanMaps.Origin_1;
+                        case 3 -> SokobanMaps.Origin_2;
+                        case 2 -> SokobanMaps.Origin_3;
+                        case 1 -> SokobanMaps.Origin_4;
+                        case 0 -> SokobanMaps.Origin_5;
+                        default -> SokobanMaps.None;
+                    };
+
+                    // 触发计时器
+                    timer.put(boxObj, 
+                        new TimerClock(gameMain, boxObj, 1.5f, new ClockEndCallback() {
+                            @Override
+                            public void clockEnd() {enterGameScene(enterMap);} // 进入游戏场景
+                        }, false)
+                    );
+                    timer.get(boxObj).moveBy(-0.3f, 0);
+                    addActorsToStage(timer.get(boxObj));
                 }
 
                 // 离开绿色激活箱子
-                if (boxObj.getBoxType() == BoxType.GreenChestActive) {
-                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
-                        // 箱子变为普通状态
-                        boxObj.resetBoxType(BoxType.GreenChest);
+                if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
+                    // 箱子变为普通状态
+                    boxObj.resetBoxType(BoxType.GreenChest);
 
-                        // 取消计时器
-                        if (timer.containsKey(boxObj)) {
-                            timer.get(boxObj).cancel();
-                            timer.remove(boxObj);
-                        }
+                    // 取消计时器
+                    if (timer.containsKey(boxObj)) {
+                        timer.get(boxObj).cancel();
+                        timer.remove(boxObj);
                     }
                 }
             }
-            
         }
-    
     }
 
     /**
@@ -304,7 +314,7 @@ public class MapChooseScene extends SokobanScene {
         
         // 碰撞管理器
         playerOverlapManager = new OverlappingManager(gameMain, playerSpine);
-        playerOverlapManager.addSecondaryObject(returnButton);
+        playerOverlapManager.addSecondaryObject(returnButton, "return");
         
         List<Actor> components = new ArrayList<>();
         // 碰撞检测
@@ -314,9 +324,10 @@ public class MapChooseScene extends SokobanScene {
 
                 if (boxObj.getBoxType() == BoxType.Player) continue;
 
-                // 为所有 GreenBox 与 BoxTarget 添加碰撞检测
-                if (boxObj.getBoxType() == BoxType.GreenChest ||boxObj.getBoxType() == BoxType.BoxTarget) {
-                    playerOverlapManager.addSecondaryObject(boxObj);
+                // 为所有 GreenBox 添加碰撞检测
+                if (boxObj.getBoxType() == BoxType.GreenChest) {
+                    playerOverlapManager.addSecondaryObject(boxObj, String.valueOf(greenBoxObjectOrigin.size()));
+                    greenBoxObjectOrigin.add(boxObj);
                 }
 
                 // 为所有 Wall 添加边界
