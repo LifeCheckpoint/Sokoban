@@ -7,7 +7,7 @@
 负责将读入的地图文本字符串转化为地图对象，并且附加上 mapFileInfo
 
 ```java
-    public static MapData parseMapData(MapInfo mapFileInfo, String mapFileString) 
+    public static MapData parseMapData(MapInfo mapFileInfo, String mapFileString); 
 ```
 
 ## 序列化
@@ -16,7 +16,7 @@
 
 
 ```java
-    public static String serializeMapData(MapData mapData)
+    public static String serializeMapData(MapData mapData);
 ```
 
 ## 传统格式地图读取支持
