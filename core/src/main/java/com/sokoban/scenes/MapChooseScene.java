@@ -78,6 +78,7 @@ public class MapChooseScene extends SokobanScene {
         msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
 
         // 根据场景不同调用对应初始化
+        // TODO 其它场景
         switch (level) {
             case Origin:
                 setupLevelOrigin(readMapData());

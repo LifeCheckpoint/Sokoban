@@ -2,7 +2,7 @@
 
 利用 `LibGDX` 开发的推箱子游戏，~~作为 Java 课堂的项目作业~~.
 
-美术风格与游戏机制参考了 `Patrick's Parabox` 和 `Baba is You` 两款推箱子解谜游戏.
+美术风格与游戏机制参考了 `Patrick's Parabox` 和 `Baba is You` 两款推箱子解谜游戏, 操作逻辑融合游戏 `A Dance of Fire and Ice` 等
 
 ## Platforms
 
@@ -24,7 +24,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |动画效果|▶️进行中|
 |设置配置|▶️进行中|
 
-当前版本 `0.3.1`
+当前版本 `0.4.0`
 
 ## Feature 项目特色
 
@@ -32,9 +32,8 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 2. 允许素材异步加载，支持启用 `Mipmap` `MSAA` 等显示优化
 3. 原创美术素材，附加素材源文件，实现大量自定义的 GUI 动画组件，界面美观整洁
 4. GUI 代码采用 `服务定位器` 与 `单例模式` 的结合设计 ，通过 `gameMain` 分发全局控制句柄，简化开发，重用率高
-5. 核心功能基于 `TestNG` 进行了充分单元 + 覆盖率测试
-6. 充分利用 AI 加快项目学习编写工作，可使工作流在高度抽象的逻辑中进行
-7. 通过 `JNI` 高效进行跨语言协作，并且保证游戏对特定平台 api 的兼容
+5. 核心功能基于 `TestNG` 进行了充分单元 / 覆盖率测试
+6. 通过 `JNI` 高效进行跨语言协作，并且保证游戏对特定平台 api 的兼容
 
 ~~（只是因为要答辩所以写这些）~~
 
@@ -45,7 +44,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 ### Task 1: Game Initialization (10 points) 
 
 1. ▶️ After the user logs in or chooses the guest mode, the game will directly enter a level (a level selection interface is an advanced requirement) and correctly display the map. The game should also display the level number and the number of character movement. 
-2. ▶️ The game should allow players to restart a new game at any time during gameplay. (Not exiting the program and run it again.)
+2. ✔️ The game should allow players to restart a new game at any time during gameplay. (Not exiting the program and run it again.)
 3. ▶️ When restarting a new game, the game data needs to be consistent with the new game.
 
 ### Task 2: Multi-user Login (15 points) 
@@ -59,17 +58,17 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 1. ▶️ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
 2. ▶️ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
-3. ▶️ Each user's save data is unique.
+3. ✔️ Each user's save data is unique.
 4. ❌ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
 5. ▶️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
 
 ### Task 4: Gameplay (30 points) 
 
-1. ▶️ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
+1. ✔️ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
 2. ❌ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
 3. ✔️ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
-4. ❌ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
-5. ❌ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
+4. ▶️ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
+5. ▶️ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
 
 ### Task 5: Graphical User Interface (GUI) (10 points) 
 
@@ -85,14 +84,26 @@ Any additional features beyond the basic requirements described above will earn 
 
 1. ✔️ Enhanced graphics and aesthetics
 2. ▶️ More game modes design
-3. ▶️ level selection interface 
+3. ✔️ level selection interface 
 4. ❌ Implementation of AI to achieve high scores
 5. ✔️ Adding some animated effects
 6. ▶️ Adding game time display, save time in the archive, introducing a time-limited mode
-7. ▶️ Adding props in the game 
-8. ▶️ Adding maps of your own design
+7. ✔️ Adding props in the game 
+8. ✔️ Adding maps of your own design
 
 ## Log 更新日志
+
+### 0.4.0 update
+
+1. 推箱子游戏现在可以开始游玩了
+2. 完善了第一个关卡选择界面 Origin
+3. 新增了大关卡 Origin 的五个地图
+4. 重构代码，优化地图更新效率
+5. 调整了游玩界面退出菜单的界面
+6. 修复了地图文件不存在会导致关卡选择界面崩溃问题
+7. 修复询问框重叠和响应问题
+8. 修复人物移动有概率卡墙问题
+9. 修复编辑器打开时自动删除路径的问题
 
 ### 0.3.2 update
 
