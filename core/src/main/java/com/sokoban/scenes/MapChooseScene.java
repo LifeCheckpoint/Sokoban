@@ -1,7 +1,6 @@
 package com.sokoban.scenes;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.GameParams;
+import com.sokoban.core.game.Logger;
 import com.sokoban.core.logic.Direction;
+import com.sokoban.core.logic.ObjectType;
+import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.MapFileInfo;
+import com.sokoban.core.map.MapFileParser;
+import com.sokoban.core.map.SubMapData;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.map.gamedefault.SokobanMaps;
 import com.sokoban.Main;
@@ -29,11 +33,13 @@ import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
+import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.manager.AccelerationMovingManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.OverlappingManager;
 import com.sokoban.polygon.manager.OverlappingManager.OverlapStatue;
+import com.sokoban.scenes.manager.ActorMapper;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
 import com.sokoban.utils.ActionUtils;
@@ -54,15 +60,11 @@ public class MapChooseScene extends SokobanScene {
     private Map<Actor, TimerClock> timer;
 
     private final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
+    private final int INITIAL_MAP_WIDTH = 48, INITIAL_MAP_HEIGHT = 27;
+    private final float DEFAULT_CELL_SIZE = 1f;
 
-    private OriginLevel originLevel;
-
-    /**
-     * Origin Level 组件
-     */
-    private class OriginLevel {
-        public Stack2DGirdWorld gridMap;
-    }
+    // 选择界面地图网格
+    private Stack3DGirdWorld gridMap;
 
     public MapChooseScene(Main gameMain, SokobanLevels levelEnum) {
         super(gameMain);
@@ -72,106 +74,77 @@ public class MapChooseScene extends SokobanScene {
     @Override
     public void init() {
         super.init();
-        
-        // 返回按钮
-        ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
-        returnButton = controlButtonContainer.create(ImageAssets.LeftArrowButton);
-        returnButton.setPosition(0.5f, 8f);
-
-        returnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                returnToPreviousScreen();
-            }
-        });
-
-        // 提示
+        // 提示当前 level
         HintMessageBox msgBox = new HintMessageBox(gameMain, level.toString());
         msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
-
-        // 玩家
-        playerSpine = new SpineObject(gameMain, SpineAssets.Player1);
-        playerSpine.stayAnimationAtFirst("down");
-        playerSpine.setSize(1f, 1f);
-        playerSpine.setPosition(SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);
-
-        // 视角跟随
-        moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTH_CENTER - playerSpine.getWidth() / 2, SCREEN_HEIGHT_CENTER - playerSpine.getHeight() / 2);
-
-        // 加速度管理器
-        accelerationManager = new AccelerationMovingManager(playerSpine, 0.001f, 0.04f, 0.96f);
-        accelerationManager.addBound("MapBound", -16f, 16f, -9f, 9f);
-
-        // 碰撞管理器，这里只能添加共有物体
-        playerOverlapManager = new OverlappingManager(gameMain, playerSpine);
-        playerOverlapManager.addSecondaryObject(returnButton);
-
-        // 组件 - 计时器 字典
-        timer = new HashMap<>();
 
         // 根据场景不同调用对应初始化
         switch (level) {
             case Origin:
-                setupLevelOrigin();
+                setupLevelOrigin(readMapData());
                 break;
             default:
                 break;
         }
 
-        addActorsToStage(returnButton, playerSpine);
+        // 组件 - 计时器 字典
+        timer = new HashMap<>();
+
+        addActorsToStage(playerSpine);
         addCombinedObjectToStage(msgBox);
 
-        ActionUtils.FadeInEffect(returnButton);
-        ActionUtils.FadeInEffect(playerSpine);
-        
+        ActionUtils.FadeInEffect(playerSpine);        
+    }
+
+    /** 获得地图数据 */
+    public MapData readMapData() {
+        try {
+            String mapPath = switch (level) {
+                case SokobanLevels.Origin -> "level/origin.map";
+                default -> "";
+            };
+            return MapFileParser.parseMapData(new MapFileInfo(), Gdx.files.internal(mapPath).readString());
+        } catch (Exception e) {
+            Logger.error("MapChooseScene", "Can't parse level choser map");
+            gameMain.getScreenManager().returnPreviousScreen();
+            return null;
+        }
+    }
+
+    /** 离开前清理所有动画并渐隐所有物体 */
+    public void stopAllActivities() {
+        stage.addAction(Actions.run(() -> {
+            playerOverlapManager.disableAllCollision();
+
+            // 共有物体
+            returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+            playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
+            gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
+
+            // 非共有物体，需要判断存在性
+            if (racingModeCheckbox != null) racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
+            if (timer != null) for (TimerClock tClock : timer.values()) tClock.remove(); // 清除计时器字典所有部件
+        }));
     }
 
     // FIXME 快速退出会出现闪动
-    /**
-     * 返回按钮触发返回上一场景
-     */
+    /** 返回按钮触发返回上一场景 */
     public void returnToPreviousScreen() {
+        stopAllActivities(); // 结束所有动画
         stage.addAction(Actions.sequence(
-            // 停止碰撞检测并渐隐所有物体
-            Actions.run(() -> {
-                playerOverlapManager.disableAllCollision();
-
-                returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
-                playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
-                if (racingModeCheckbox != null) racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                if (originLevel != null) {
-                    originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                    // 清除计时器字典所有部件
-                    if (timer != null) for (TimerClock ti : timer.values()) ti.remove();
-                }
-            }),
             // 等待指定时间
-            Actions.delay(0.5f),
+            Actions.delay(0.8f),
             // 返回上一界面
             Actions.run(() -> gameMain.getScreenManager().returnPreviousScreen())
         ));
     }
 
-    /**
-     * 进入游玩界面
-     */
+    /** 进入游玩界面 */
     public void enterGameScene() {
+        stopAllActivities(); // 结束所有动画
         stage.addAction(Actions.sequence(
-            // 停止碰撞检测并渐隐所有物体
-            Actions.run(() -> {
-                playerOverlapManager.disableAllCollision();
-
-                returnButton.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
-                playerSpine.addAction(Actions.fadeOut(0.3f, Interpolation.sine));
-                racingModeCheckbox.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                if (originLevel != null) {
-                    originLevel.gridMap.getAllActors().forEach(actor -> actor.addAction(Actions.fadeOut(0.3f, Interpolation.sine)));
-                    // 清除计时器字典所有部件
-                    if (timer != null) for (TimerClock ti : timer.values()) ti.remove();
-                }
-            }),
             // 等待指定时间
-            Actions.delay(0.5f),
+            Actions.delay(0.8f),
             // 进入游戏界面
             // TODO map 选择
             Actions.run(() -> gameMain.getScreenManager().setScreenWithoutSaving(new GameScene(gameMain, new MapFileInfo("", level, SokobanMaps.None), gameParams)))
@@ -191,26 +164,26 @@ public class MapChooseScene extends SokobanScene {
         // System.out.printf("%s %s %s %s\n", keyUp, keyDown, keyLeft, keyRight);
         
         if (keyUp && !keyDown) {
-            updatePlayerVelocity(Direction.Up);
+            updatePlayerAnimation(Direction.Up);
             inMove = true;
         }
         
         if (keyDown && !keyUp) {
-            updatePlayerVelocity(Direction.Down);
+            updatePlayerAnimation(Direction.Down);
             inMove = true;
         }
         
         if (keyLeft && !keyRight) {
-            updatePlayerVelocity(Direction.Left);
+            updatePlayerAnimation(Direction.Left);
             inMove = true;
         }
         
         if (keyRight && !keyLeft) {
-            updatePlayerVelocity(Direction.Right);
+            updatePlayerAnimation(Direction.Right);
             inMove = true;
         }
 
-        if (!inMove) updatePlayerVelocity(Direction.None);
+        if (!inMove) updatePlayerAnimation(Direction.None);
 
         // 完成速度更新后进行实际位移
         accelerationManager.updateActorMove();
@@ -225,7 +198,8 @@ public class MapChooseScene extends SokobanScene {
         }
     }
 
-    private void updatePlayerVelocity(Direction direction) {
+    /** 玩家动画更新 */
+    private void updatePlayerAnimation(Direction direction) {
         // 相同移动，仅第一次触发动画
         if (!isPlayerInMove && direction != Direction.None) {
             playerSpine.setAnimation(0, direction.getDirection(), false);
@@ -272,7 +246,7 @@ public class MapChooseScene extends SokobanScene {
         }
 
         // 对箱子的检测
-        if (originLevel != null) for (Actor boxActor : originLevel.gridMap.getAllActors()) {
+        for (Actor boxActor : gridMap.getAllActors()) {
             if (boxActor instanceof BoxObject) {
                 BoxObject boxObj = (BoxObject) boxActor;
 
@@ -286,7 +260,7 @@ public class MapChooseScene extends SokobanScene {
                         timer.put(boxObj, 
                             new TimerClock(gameMain, boxObj, 1.5f, new ClockEndCallback() {
                                 @Override
-                                public void clockEnd() {enterGameScene();}
+                                public void clockEnd() {enterGameScene();} // 进入游戏场景
                             }, false)
                         );
                         timer.get(boxObj).moveBy(-0.3f, 0);
@@ -307,25 +281,6 @@ public class MapChooseScene extends SokobanScene {
                         }
                     }
                 }
-
-                // FIXME 碰撞检测变为箱子右侧，坐标转换失误？
-                // 碰撞箱子目标点
-                if (boxObj.getBoxType() == BoxType.BoxTarget) {
-                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstOverlap) {
-                        // 箱子变为激活状态
-                        boxObj.setAnimation(1, "active", false);
-                        boxObj.setAnimationTotalTime(1, 0.3f);
-                    }
-                }
-
-                // 离开箱子目标点
-                if (boxObj.getBoxType() == BoxType.BoxTarget) {
-                    if (playerOverlapManager.getActorOverlapState(boxObj) == OverlapStatue.FirstLeave) {
-                        // 箱子目标点变为普通状态
-                        boxObj.setAnimation(1, "deactive", false);
-                        boxObj.setAnimationTotalTime(1, 0.5f);
-                    }
-                }
             }
             
         }
@@ -334,53 +289,106 @@ public class MapChooseScene extends SokobanScene {
 
     /**
      * 关卡 origin 初始化
+     * @param levelChoosingMap 关卡选择地图
      */
-    private void setupLevelOrigin() {
-        originLevel = new OriginLevel();
+    private void setupLevelOrigin(MapData levelChoosingMap) {
+        gridMap = new Stack3DGirdWorld(gameMain, INITIAL_MAP_WIDTH, INITIAL_MAP_HEIGHT, DEFAULT_CELL_SIZE);
+        gridMap.setPosition(8f, 4.5f);
+        gridMap.addStack2DLayer(); // 新建一层 2D 层
+        initMapToGrid(levelChoosingMap); // 初始化地图内容
 
-        // TODO 将转换为文件读取初始化
+        addRacingButton(13f, 4f);
+        addReturnButton(9f, 4f);
         
-        originLevel.gridMap = new Stack2DGirdWorld(gameMain, 20, 12, 1f);
-        originLevel.gridMap.addLayer();
-        originLevel.gridMap.getTopLayer().addBox(BoxType.DarkBlueBack, new int[][] {
-            {0, 4}, {0, 5}, {0, 6}, {1, 6},
-            {2, 16}, {2, 15}, {4, 8}, {4, 9}, {5, 9},
-            {5, 15}, {6, 17}, {7, 17}, {8, 17}, {10, 17},
-            {7, 10}, {7, 13}, {9, 12}, {9, 11}, {10, 5},
-            {10, 11}, {10, 14}, {11, 13}, {11, 12}
-        });
-        originLevel.gridMap.getTopLayer().addBox(BoxType.DarkGrayBack, new int[][] {
-            {0, 3}, {0, 1}, {0, 0}, {2, 4},
-            {2, 12}, {2, 13}, {4, 4}, {4, 11}, {5, 11},
-            {5, 16}, {6, 9}, {7, 10}, {8, 19}, {10, 0},
-            {7, 0}, {7, 1}, {9, 2}, {9, 3}, {10, 15},
-            {10, 10}, {10, 18}, {11, 6}, {11, 7}
-        });
-        originLevel.gridMap.addLayer();
-        originLevel.gridMap.getTopLayer().addBox(BoxType.BoxTarget, new int[][] {
-            {0, 4}, {2, 16}, {4, 8}, {5, 15},
-            {6, 17}, {7, 9}, {9, 14}, {10, 5},
-            {10, 11}, {11, 19}
-        });
-        originLevel.gridMap.getTopLayer().addBox(BoxType.GreenChest, new int[][] {
-            {0, 5}, {1, 16}, {2, 16}, {6, 8}, {3, 5},
-            {6, 4}, {7, 9}, {7, 5}, {9, 13}, {0, 5},
-            {0, 11}, {10, 17}, {11, 19}
-        });
-        originLevel.gridMap.getTopLayer().addBox(BoxType.BlueChest, new int[][] {
-            {3, 6}, {2, 12}, {1, 0}, {7, 5}, {6, 3},
-            {9, 4}, {8, 5}, {6, 19}, {10, 10}, {3, 2},
-            {3, 11}, {11, 13}, {10, 0}
+        initPlayerObject();
+        
+        // 碰撞管理器
+        playerOverlapManager = new OverlappingManager(gameMain, playerSpine);
+        playerOverlapManager.addSecondaryObject(returnButton);
+        
+        List<Actor> components = new ArrayList<>();
+        // 碰撞检测
+        for (Actor boxActor : gridMap.getAllActors()) {
+            if (boxActor instanceof BoxObject) {
+                BoxObject boxObj = (BoxObject) boxActor;
+
+                if (boxObj.getBoxType() == BoxType.Player) continue;
+
+                // 为所有 GreenBox 与 BoxTarget 添加碰撞检测
+                if (boxObj.getBoxType() == BoxType.GreenChest ||boxObj.getBoxType() == BoxType.BoxTarget) {
+                    playerOverlapManager.addSecondaryObject(boxObj);
+                }
+
+                // 为所有 Wall 添加边界
+                if (boxObj.getBoxType() == BoxType.DarkGrayWall) {
+                    String BoxBlockTag = String.format("box[%.2f][%.2f]", boxObj.getX(), boxObj.getY()); // 不需要对墙进行变更
+                    float blockX = boxObj.getX() - 8f, blockY = boxObj.getY() - 4.5f;
+                    accelerationManager.addBound(BoxBlockTag, blockX, blockX + boxObj.getSize(), blockY, blockY + boxObj.getSize());
+                }
+
+                // 为所有 BoxTarget 添加动画
+                if (boxObj.getBoxType() == BoxType.BoxTarget) {
+                    boxObj.setAnimation(0, "rotate", true);
+                    boxObj.setAnimationTotalTime(0, MathUtils.random(8f, 12f));
+                }
+
+                // 添加到待加入列表
+                components.add(boxObj);
+            }
+        }
+
+        // 显示淡入
+        components.forEach(actor -> actor.addAction(Actions.fadeIn(0.2f, Interpolation.pow3Out)));
+        playerSpine.remove();
+        addActorsToStage(playerSpine);
+    }
+
+    /** 初始化画面玩家 */
+    private void initPlayerObject() {
+        // 找到玩家并设为当前画面中心
+        for (Actor boxActor : gridMap.getAllActors()) {
+            if (boxActor instanceof BoxObject) {
+                BoxObject boxObj = (BoxObject) boxActor;
+                if (boxObj.getBoxType() == BoxType.Player) {
+                    Logger.debug("MapChooseScene", "Find Player Object");
+                    boxObj.stayAnimationAtFirst("down");
+                    boxObj.setSize(1f, 1f);
+
+                    // 视角跟随
+                    moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTH_CENTER + boxObj.getWidth() / 2, SCREEN_HEIGHT_CENTER + boxObj.getHeight() / 2);
+                    playerSpine = boxObj;
+
+                    // 加速度管理器
+                    accelerationManager = new AccelerationMovingManager(playerSpine, 0.001f, 0.04f, 0.96f);
+                    accelerationManager.setReactPositionXY(boxObj.getX() - SCREEN_WIDTH_CENTER + boxObj.getWidth() / 2, boxObj.getY() - SCREEN_HEIGHT_CENTER + boxObj.getHeight() / 2);
+                }
+            }
+        }
+    }
+
+    /** 添加返回按钮 */
+    public void addReturnButton(float x, float y) {
+        ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
+        returnButton = controlButtonContainer.create(ImageAssets.LeftArrowButton);
+        returnButton.setPosition(x, y);
+
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                returnToPreviousScreen();
+            }
         });
 
-        originLevel.gridMap.setPosition(SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER);
-        originLevel.gridMap.addActorsToStage(stage);
+        addActorsToStage(returnButton);
+        ActionUtils.FadeInEffect(returnButton);
+    }
 
-        // 添加竞速复选框
+    /** 添加竞速复选框 */
+    private void addRacingButton(float x, float y) {
         racingModeButton = new ImageButtonContainer(gameMain).create(ImageAssets.RacingModeButton);
         racingModeCheckbox = new CheckboxObject(gameMain, racingModeButton, false, true);
         racingModeCheckbox.setCheckboxType(true);
-        racingModeCheckbox.setPosition(14f, 8f);
+        racingModeCheckbox.setPosition(x, y);
         racingModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -393,44 +401,38 @@ public class MapChooseScene extends SokobanScene {
         });
 
         racingModeCheckbox.addActorsToStage(stage);
+    }
 
-        for (Actor boxActor : originLevel.gridMap.getAllActors()) {
-            if (boxActor instanceof BoxObject) {
-                BoxObject boxObj = (BoxObject) boxActor;
+    /** 初始化地图显示 */
+    public void initMapToGrid(MapData map) {
+        // 针对每个子地图创建 Stack2DLayer
+        for (int subMapIndex = 0; subMapIndex < map.allMaps.size(); subMapIndex++) gridMap.addStack2DLayer();
+        
+        // 根据当前子地图创建子地图网格世界
+        Stack2DGirdWorld currentSubMapGridWorld = gridMap.getStack2DLayer(0); // 选择关卡的地图只会有一层
+        SubMapData subMapData = map.allMaps.get(0); // 选择关卡的地图只会有一层
 
-                // 为所有 GreenBox 与 BoxTarget 添加碰撞检测
-                if (boxObj.getBoxType() == BoxType.GreenChest ||boxObj.getBoxType() == BoxType.BoxTarget) {
-                    playerOverlapManager.addSecondaryObject(boxObj);
-                }
+        for (int layer = 0; layer < subMapData.mapLayer.size(); layer++) currentSubMapGridWorld.addLayer(); // 添加子地图每一层
 
-                // 为所有 BlueBox 添加边界
-                if (boxObj.getBoxType() == BoxType.BlueChest) {
-                    // TODO 这里的标签与位置强相关，临时设置，后续会改
-                    String BoxBlockTag = String.format("box[%.2f][%.2f]", boxObj.getX(), boxObj.getY());
-                    float blockX = boxObj.getX() - 8f, blockY = boxObj.getY() - 4.5f;
-                    accelerationManager.addBound(BoxBlockTag, blockX, blockX + boxObj.getSize(), blockY, blockY + boxObj.getSize());
-                }
+        // 对于当前子地图的每一层
+        for (int layer = 0; layer < subMapData.mapLayer.size(); layer++) {
+            // 当前层
+            ObjectType[][] currentLayer = subMapData.mapLayer.get(layer);
+            
+            for (int y = 0; y < subMapData.height; y++) {
+                for (int x = 0; x < subMapData.width; x++) {
+                    // 空气与未知类型不处理
+                    if (currentLayer[y][x] == ObjectType.Air || currentLayer[y][x] == ObjectType.Unknown) continue;
 
-                // 为所有 BoxTarget 添加动画
-                if (boxObj.getBoxType() == BoxType.BoxTarget) {
-                    boxObj.setAnimation(0, "rotate", true);
-                    boxObj.setAnimationTotalTime(0, MathUtils.random(8f, 12f));
-                    boxObj.setFlipX(MathUtils.randomSign() > 0);
+                    // 数据类型转换为显示类型
+                    BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
+                    currentSubMapGridWorld.getLayer(layer).addBox(objectBoxType, y, x);
                 }
             }
         }
 
-        
-
-        // 按照距离从近到远显示淡入
-        List<Actor> girdMapActorOrded = new ArrayList<>(originLevel.gridMap.getAllActors());
-        girdMapActorOrded.sort(Comparator.comparingDouble(actor -> MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER)));
-        girdMapActorOrded.forEach(actor -> ActionUtils.FadeInEffect(actor, MathUtils.random(
-            MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER) * 0.05f,
-            MathUtilsEx.distance(actor.getX(), actor.getY(), SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER) * 0.10f
-        )));
-
-        addActorsToStage(playerSpine);
+        // 将网格世界加入 stage
+        addCombinedObjectToStage(gridMap);
     }
 
     // 重绘逻辑

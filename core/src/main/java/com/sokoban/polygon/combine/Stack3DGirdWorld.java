@@ -128,7 +128,7 @@ public class Stack3DGirdWorld extends SokobanCombineObject {
     }
 
     /**
-     * 请勿使用这个方法为 Stage 添加元素
+     * 如果有多个子层，请勿使用这个方法为 Stage 添加元素
      * <br><br>
      * 使用 <b>setShowLayer</b> 为 Actor 执行回调
      * {@inheritDoc}

@@ -24,6 +24,8 @@ public class AccelerationMovingManager {
     private float reactPositionX = 0f, reactPositionY = 0f;
     private Map<Object, Rectangle> taggedBound;
 
+    private final float EPSILON = 0.03f;
+
     public AccelerationMovingManager(Actor actor, float acceleration, float maxSpeed, float friction) {
         init(actor, acceleration, acceleration, maxSpeed, maxSpeed, friction);
     }
@@ -125,7 +127,7 @@ public class AccelerationMovingManager {
             Logger.error("AccelerationMovingManager", String.format("The Tag Object %s is exists.", tagObject.toString()));
             return;
         }
-        taggedBound.put(tagObject, new Rectangle(left, down, right - left, up - down));
+        taggedBound.put(tagObject, new Rectangle(left - EPSILON, down - EPSILON, right - left + 2 * EPSILON, up - down + 2 * EPSILON));
     }
 
     /**
@@ -173,7 +175,12 @@ public class AccelerationMovingManager {
      */
     public boolean moveBlockTestX(Rectangle rectangle) {
         Direction collideDirection = moveBlockTest(rectangle);
-        return collideDirection == Direction.Left || collideDirection == Direction.Right;
+        // 如果是出框，返回 false 允许动作防止卡模，反之返回 true
+        if (collideDirection == Direction.Left)
+            return !(velocityX < 0);
+        if (collideDirection == Direction.Right)
+            return !(velocityX > 0);
+        return false;
     }
 
     /**
@@ -183,7 +190,25 @@ public class AccelerationMovingManager {
      */
     public boolean moveBlockTestY(Rectangle rectangle) {
         Direction collideDirection = moveBlockTest(rectangle);
-        return collideDirection == Direction.Up || collideDirection == Direction.Down;
+        // 如果是出框，返回 false 允许动作防止卡模，反之返回 true
+        if (collideDirection == Direction.Down)
+            return !(velocityY < 0);
+        if (collideDirection == Direction.Up)
+            return !(velocityY > 0);
+        return false;
+    }
+
+    public void setReactPositionXY(float reactPositionX, float reactPositionY) {
+        setReactPositionX(reactPositionX);
+        setReactPositionY(reactPositionY);
+    }
+
+    public void setReactPositionX(float reactPositionX) {
+        this.reactPositionX = reactPositionX;
+    }
+
+    public void setReactPositionY(float reactPositionY) {
+        this.reactPositionY = reactPositionY;
     }
 
     public Actor getActor() {
