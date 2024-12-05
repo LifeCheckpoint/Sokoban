@@ -14,29 +14,39 @@ import com.sokoban.core.logic.Direction;
  */
 public class MapFileParser {
     /**
-     * 地图数据解析器，解析标准地图格式
+     * 地图数据解析器，解析标准地图格式并带附加文件信息
      * @param mapFileInfo 地图文件信息
      * @param mapFileString 地图数据的文本字串
      * @return 解析得到的 MapData，失败返回 null
      */
     public static MapData parseMapData(MapFileInfo mapFileInfo, String mapFileString) {
+        MapData mapData = parseMapData(mapFileString);
+        mapData.mapFileInfo = mapFileInfo; // 补充文件路径
+        return mapData;
+    }
+
+    /**
+     * 地图数据解析器，解析标准地图格式并带储存的文件信息
+     * @param mapFileString 地图数据的文本字串
+     * @return 解析得到的 MapData，失败返回 null
+     */
+    public static MapData parseMapData(String mapFileString) {
         MapData mapData = new JsonManager().parseJsonToObject(mapFileString, MapData.class); // 将地图文本 Json 序列化为数据
         if (mapData == null) {
             Logger.error("MapFileParser", "Parse map data failed");
             return null;
         }
 
-        mapData.mapFileInfo = mapFileInfo; // 补充文件路径
         return mapData;
     }
+
 
     /**
      * 序列化地图数据为标准地图格式
      * @return 序列化结果，失败返回 null
      */
     public static String serializeMapData(MapData mapData) {
-        MapData mapDataWithoutFileInfo = new MapData(new MapFileInfo(), mapData.addtionalInfo, mapData.allMaps); // 去除文件信息
-        return new JsonManager().getJsonString(mapDataWithoutFileInfo);
+        return new JsonManager().getJsonString(mapData);
     }
 
     /**
