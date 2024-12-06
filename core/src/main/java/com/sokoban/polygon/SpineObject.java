@@ -1,11 +1,8 @@
 package com.sokoban.polygon;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.spine.*;
@@ -47,9 +44,6 @@ public class SpineObject extends Actor implements Disposable {
     // 动画混合时间（秒）
     protected float defaultMixTime = 0.2f;
     
-    // 调试模式
-    protected boolean debugBones = false;
-
     // 仅在子类可见的无参构造
     protected SpineObject() {}
 
@@ -278,13 +272,6 @@ public class SpineObject extends Actor implements Disposable {
     }
 
     /**
-     * 设置调试绘制模式
-     */
-    public void setDebugMode(boolean bones) {
-        this.debugBones = bones;
-    }
-
-    /**
      * 更新动画状态
      */
     @Override
@@ -328,29 +315,6 @@ public class SpineObject extends Actor implements Disposable {
             // 正常绘制骨骼
             skeleton.getColor().a = parentAlpha * getColor().a;  // 设置骨骼的透明度
             skeletonRenderer.draw(batch, skeleton);
-            
-            // 调试绘制（未测试）
-            if (debugBones) {
-                if (debugBones) {
-                    // 如果是4.0以下版本使用 debugRenderer.draw(batch, skeleton);
-                    skeletonRenderer.setVertexEffect(null);
-                    // 绘制骨骼线条
-                    ShapeRenderer shapes = new ShapeRenderer();
-                    shapes.setProjectionMatrix(batch.getProjectionMatrix());
-                    shapes.begin(ShapeRenderer.ShapeType.Line);
-                    for (Bone bone : skeleton.getBones()) {
-                        float length = bone.getData().getLength();
-                        float x = bone.getWorldX();
-                        float y = bone.getWorldY();
-                        float rotation = bone.getWorldRotationX();
-                        float endX = x + length * MathUtils.cosDeg(rotation);
-                        float endY = y + length * MathUtils.sinDeg(rotation);
-                        shapes.setColor(Color.RED);
-                        shapes.line(x, y, endX, endY);
-                    }
-                    shapes.end();
-                }   
-            }
             
         } catch (Exception e) {
             Logger.error("SpineObject", "Failed to draw skeleton: " + e.getMessage());
@@ -476,6 +440,12 @@ public class SpineObject extends Actor implements Disposable {
         if (batch != null) {
             batch.dispose();
             batch = null;
+        }
+        if (skeletonData != null) {
+            skeletonData = null;
+        }
+        if (animationData != null) {
+            animationData = null;
         }
         // 不dispose atlas，因为它可能被其他对象共享
         atlas = null;
