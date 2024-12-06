@@ -3,6 +3,9 @@ package com.sokoban.core.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sokoban.core.game.Logger;
+import com.sokoban.core.map.gamedefault.SokobanMaps;
+
 /**
  * 用户信息类
  * @author Life_Checkpoint
@@ -31,9 +34,32 @@ public class UserInfo {
         this.guest = false;
         this.tutorial = false;
         this.saveArchives = new ArrayList<>();
-        this.saveArchives.add(new SaveArchiveInfo());
-        this.saveArchives.add(new SaveArchiveInfo());
-        this.saveArchives.add(new SaveArchiveInfo());
+
+        SaveArchiveInfo newArchive = new SaveArchiveInfo();
+        updateArchiveMapStatue(newArchive);
+        this.saveArchives.add(newArchive.deepCopy());
+        this.saveArchives.add(newArchive.deepCopy());
+        this.saveArchives.add(newArchive.deepCopy());
+    }
+
+    /**
+     * 更新存档所有地图状态
+     * @return 更新状态存档
+     */
+    private void updateArchiveMapStatue(SaveArchiveInfo saveArchive) {
+        // 临时禁用所有 info 输出
+        Logger.enableLog = false;
+
+        // 检测并调整每个地图状态
+        for (SokobanMaps map : SokobanMaps.values()) {
+            if (map == SokobanMaps.None) continue;
+            if (saveArchive.getMapStatue(map) == null || saveArchive.getMapStatue(map) == SaveArchiveInfo.MapStatue.Unknown) {
+                saveArchive.updateMapStaute(map, SaveArchiveInfo.MapStatue.Unreached);
+            }
+        }
+
+        // 启用所有 info 输出
+        Logger.enableLog = true;
     }
 
     public String getUserID() {

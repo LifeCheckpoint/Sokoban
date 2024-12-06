@@ -20,8 +20,8 @@ public class Logger {
     private static final String COLOR_ERROR = "\u001B[31m"; // 红色
     private static final String COLOR_DEBUG = "\u001B[34m"; // 蓝色
 
-    // 当前日志等级
-    public static LogLevel loggerLevel = LogLevel.DEBUG;
+    public static LogLevel loggerLevel = LogLevel.DEBUG; // 当前日志等级
+    public static boolean enableLog = true; // 输出启用标志
 
     /** 
      * 主日志输出
@@ -30,7 +30,7 @@ public class Logger {
      * @param message 日志信息 
      */
     public static void log(LogLevel level, String moduleName, String message) {
-        if (!screenLevel(level)) return;
+        if (!screenLevel(level) || !enableLog) return;
         String shortTime = getShortTime();
         String color = getColorForLevel(level);
         if (level != LogLevel.ERROR) System.out.println(color + String.format("[%s] [%s] [%s] %s", level, moduleName, shortTime, message) + RESET);
@@ -43,7 +43,7 @@ public class Logger {
      * @param message 日志信息 
      */
     public static void log(LogLevel level, String message) {
-        if (!screenLevel(level)) return;
+        if (!screenLevel(level) || !enableLog) return;
         String shortTime = getShortTime();
         String color = getColorForLevel(level);
         if (level != LogLevel.ERROR) System.out.println(color + String.format("[%s] [%s] %s", level, shortTime, message) + RESET);
