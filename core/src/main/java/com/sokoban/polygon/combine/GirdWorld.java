@@ -132,6 +132,7 @@ public class GirdWorld extends SokobanCombineObject {
      * @param column 列，0 ~ gridWidth
      */
     public void remove(int row, int column) {
+        gridSpineObjects[row][column].remove();
         gridSpineObjects[row][column].clearActions();
         gridSpineObjects[row][column] = null;
     }

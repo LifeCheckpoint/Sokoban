@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -549,34 +550,53 @@ public class MapEditScene extends SokobanFitScene {
      */
     public void updateMapShowing() {
         SubMapData subMap = map.allMaps.get(currentSubMapIndex);
-
-        // 重置当前网格世界
-        map3DGirdWorld.getStack2DLayer(currentSubMapIndex).getAllActors().forEach(actor -> actor.remove());
-        map3DGirdWorld.stack3DGridWorld.set(currentSubMapIndex, new Stack2DGirdWorld(gameMain, subMap.width, subMap.height, 1.0f));
-
-        // 获取新网格世界
         Stack2DGirdWorld gridWorld = map3DGirdWorld.getStack2DLayer(currentSubMapIndex);
-        for (int layer = 0; layer < subMap.mapLayer.size(); layer++) gridWorld.addLayer();
+        
+        if (gridWorld.stack2DGridWorld.size() == 0) for (int layer = 0; layer < subMap.mapLayer.size(); layer++) gridWorld.addLayer();
 
         // 对于当前子地图的每一层
         for (int layer = 0; layer < subMap.mapLayer.size(); layer++) {
             // 当前层
             ObjectType[][] currentLayer = subMap.mapLayer.get(layer);
             
+            // 将当前对象删除后，重新绘制或者添加新对象 Memory Leak TOFIX 内存泄露暂时解决方案
+
+            Stage stage = null;
+
+            // 彻底 / 屏幕 删除对象
             for (int y = 0; y < subMap.height; y++) {
                 for (int x = 0; x < subMap.width; x++) {
-                    // 空气与未知类型不处理
-                    if (currentLayer[y][x] == ObjectType.Air || currentLayer[y][x] == ObjectType.Unknown) continue;
 
-                    // 数据类型转换为显示类型
-                    BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
-
-                    if (objectBoxType == null) {
-                        Logger.error("MapEditScene", String.format("Object %s can't be mapped to BoxType. Check logic", currentLayer[y][x].toString()));
+                    // 变为空气与未知类型，彻底删除
+                    if (currentLayer[y][x] == ObjectType.Air || currentLayer[y][x] == ObjectType.Unknown) {
+                        if (gridWorld.getLayer(layer).gridSpineObjects[y][x] != null) {
+                            gridWorld.getLayer(layer).remove(y, x); // 彻底删除
+                        }
                         continue;
                     }
 
-                    gridWorld.getLayer(layer).addBox(objectBoxType, y, x);
+                    // 否则仅从画面上删除
+                    if (gridWorld.getLayer(layer).gridSpineObjects[y][x] != null) {
+                        if (stage == null) stage = gridWorld.getLayer(layer).gridSpineObjects[y][x].getStage();
+                        gridWorld.getLayer(layer).gridSpineObjects[y][x].remove();
+                    }
+                }
+            }
+
+            // 重新加入对象
+            for (int y = 0; y < subMap.height; y++) {
+                for (int x = 0; x < subMap.width; x++) {
+                    // 仅从屏幕上删除的物体可以恢复
+                    if (gridWorld.getLayer(layer).gridSpineObjects[y][x] != null) {
+                        if (stage != null) stage.addActor(gridWorld.getLayer(layer).gridSpineObjects[y][x]);
+                    }
+
+                    // 添加新对象
+                    if (gridWorld.getLayer(layer).gridSpineObjects[y][x] == null) {
+                        // 数据类型转换为显示类型
+                        BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
+                        if (objectBoxType != null) gridWorld.getLayer(layer).addBox(objectBoxType, y, x);
+                    }
                 }
             }
         }
