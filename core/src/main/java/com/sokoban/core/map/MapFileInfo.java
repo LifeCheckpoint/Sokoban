@@ -2,6 +2,7 @@ package com.sokoban.core.map;
 
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.map.gamedefault.SokobanMaps;
+import com.sokoban.utils.DeepClonable;
 
 /**
  * 地图信息类
@@ -9,7 +10,7 @@ import com.sokoban.core.map.gamedefault.SokobanMaps;
  * 地图相关信息
  * @author Life_Checkpoint
  */
-public class MapFileInfo {
+public class MapFileInfo implements DeepClonable<MapFileInfo> {
     public String path = "";
     public SokobanLevels level;
     public SokobanMaps map;
@@ -40,11 +41,8 @@ public class MapFileInfo {
         return true;
     }
 
-    /**
-     * 深复制方法
-     * @return 新复制对象
-     */
-    public MapFileInfo cpy() {
+    @Override
+    public MapFileInfo deepCopy() {
         return new MapFileInfo(path, level, map);
     }
 }

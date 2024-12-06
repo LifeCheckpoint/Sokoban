@@ -2,7 +2,9 @@ package com.sokoban.core.logic;
 
 import java.util.Objects;
 
-public class Pos {
+import com.sokoban.utils.DeepClonable;
+
+public class Pos implements DeepClonable<Pos> {
     int x, y, z;
 
     public Pos() {
@@ -86,7 +88,7 @@ public class Pos {
      * 深复制
      * @return 深复制对象
      */
-    public Pos cpy() {
+    public Pos deepCopy() {
         return new Pos(x, y, z);
     }
 

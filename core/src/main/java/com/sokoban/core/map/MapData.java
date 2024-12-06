@@ -3,6 +3,8 @@ package com.sokoban.core.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sokoban.utils.DeepClonable;
+
 /**
  * 地图关卡数据类
  * <br><br>
@@ -10,7 +12,7 @@ import java.util.List;
  * @author StiCK-bot
  * @author Life_Checkpoint
  */
-public class MapData {
+public class MapData implements DeepClonable<MapData> {
     public MapFileInfo mapFileInfo = new MapFileInfo(); // 地图文件信息
     public String addtionalInfo = ""; // 地图附加信息
     public List<SubMapData> allMaps = new ArrayList<>(); // 所有子地图
@@ -57,15 +59,15 @@ public class MapData {
      * 深复制方法
      * @return 深复制的 MapData 对象
      */
-    public MapData cpy() {
+    public MapData deepCopy() {
         // 深复制 mapFileInfo
-        MapFileInfo copiedMapFileInfo = mapFileInfo != null ? mapFileInfo.cpy() : null;
+        MapFileInfo copiedMapFileInfo = mapFileInfo != null ? mapFileInfo.deepCopy() : null;
 
         // 深复制 allMaps
         List<SubMapData> copiedAllMaps = new ArrayList<>();
         if (allMaps != null) {
             for (SubMapData subMap : allMaps) {
-                copiedAllMaps.add(subMap.cpy());
+                copiedAllMaps.add(subMap.deepCopy());
             }
         }
 

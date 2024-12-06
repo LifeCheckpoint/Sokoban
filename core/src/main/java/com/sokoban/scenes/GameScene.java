@@ -409,7 +409,7 @@ public class GameScene extends SokobanFitScene {
 
                     // 更新历史记录
                     GameStateFrame stateFrame = new GameStateFrame();
-                    stateFrame.mapData = playerCore.getMap().cpy();
+                    stateFrame.mapData = playerCore.getMap().deepCopy();
                     stateFrame.action = moveDirection;
                     stateFrame.stepCount = historyStates.getTotalFrameNum(); // 不包括初始帧
                     Logger.debug("GameScene", "Current game frame = " + stateFrame, 500);
@@ -457,7 +457,7 @@ public class GameScene extends SokobanFitScene {
 
         // 添加初始记录
         GameStateFrame stateFrame = new GameStateFrame();
-        stateFrame.mapData = playerCore.getMap().cpy();
+        stateFrame.mapData = playerCore.getMap().deepCopy();
         stateFrame.action = Direction.None;
         stateFrame.stepCount = 0;
         Logger.debug("GameScene", "Init, Current game frame = " + stateFrame.toString(), 500);

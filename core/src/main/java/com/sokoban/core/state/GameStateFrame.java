@@ -6,13 +6,14 @@ import java.util.List;
 
 import com.sokoban.core.logic.Direction;
 import com.sokoban.core.map.MapData;
+import com.sokoban.utils.DeepClonable;
 
 /**
  * 游戏状态帧
  * <br><br>
  * 用于记录步数与历史记录等
  */
-public class GameStateFrame {
+public class GameStateFrame implements DeepClonable<GameStateFrame> {
     public MapData mapData; // 地图数据
     public int stepCount; // 当前步数
     public LocalDateTime frameTime; // 该帧时间戳
@@ -29,13 +30,9 @@ public class GameStateFrame {
         this.moves = new ArrayList<>();
     }
 
-    /**
-     * GameStateFrame 类深复制
-     * @return 深复制对象
-     */
-    public GameStateFrame cpy() {
+    public GameStateFrame deepCopy() {
         GameStateFrame newFrame = new GameStateFrame();
-        newFrame.mapData = mapData.cpy();
+        newFrame.mapData = mapData.deepCopy();
         newFrame.stepCount = stepCount;
         newFrame.frameTime = frameTime; // 不可变类型直接复制
         newFrame.action = action;

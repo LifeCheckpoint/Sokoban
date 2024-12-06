@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.sokoban.core.logic.ObjectType;
+import com.sokoban.utils.DeepClonable;
 
-public class SubMapData {
+public class SubMapData implements DeepClonable<SubMapData> {
     public int height = 0, width = 0; // 子地图高与宽
     public List<ObjectType[][]> mapLayer = new ArrayList<>();
 
@@ -80,7 +81,7 @@ public class SubMapData {
      * 复制当前对象
      * @return 新对象，与原对象不是同一个引用
      */
-    public SubMapData cpy() {
+    public SubMapData deepCopy() {
         SubMapData newMap = new SubMapData(height, width);
         
         // 对于每一个层

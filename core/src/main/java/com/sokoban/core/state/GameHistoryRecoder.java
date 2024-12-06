@@ -70,7 +70,7 @@ public class GameHistoryRecoder {
 
         // 删除最新记录
         stateFrame.removeLast();
-        GameStateFrame UndoFrame = stateFrame.getLast().cpy(); // 深复制前一步
+        GameStateFrame UndoFrame = stateFrame.getLast().deepCopy(); // 深复制前一步
         
         /*
          * 在 UndoFrame 中，

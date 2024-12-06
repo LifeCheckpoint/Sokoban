@@ -173,7 +173,7 @@ public class PlayerCore {
 
                 // 要进行多个物块的连续推动，但是物块之间的状态不能互相影响，所以需要复制一张新地图，更改完成后才覆盖旧地图
                 // 复制的时候要调用 SubMapData 的 cpy 方法，否则会得到对同一个对象的引用
-                SubMapData newMap = getSubmap(subMapIndex).cpy();
+                SubMapData newMap = getSubmap(subMapIndex).deepCopy();
 
                 // 为了防止栈内存溢出，使用循环实现
                 Pos currentPos = new Pos(position.x, position.y); // 当前处理物块的坐标
