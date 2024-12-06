@@ -43,6 +43,8 @@ import com.sokoban.utils.ActionUtils;
 import com.sokoban.utils.MathUtilsEx;
 import com.sokoban.utils.WindowsFileChooser;
 
+// FIXME 严重内存占用
+
 /**
  * 地图编辑界面
  * @author Life_Checkpoint

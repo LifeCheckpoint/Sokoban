@@ -173,7 +173,6 @@ public class SliderObject extends SokobanCombineObject{
     }
 
     public float getValue() {
-        // TODO
         return value;
     }
 }
