@@ -31,8 +31,8 @@ public class DeadLockTest {
             int[] deltaPos = deltaPoses[directionIndex];
             int newX = x + deltaPos[0], newY = y + deltaPos[1];
             
-            boolean boxLock = (!boxAsAir) && objectLayer[newY][newX] == ObjectType.Box; // 锁箱判定：不将箱子视为空气，且确实存在箱子
-            boolean wallLock = objectLayer[newY][newX] != ObjectType.Air && objectLayer[newY][newX] != ObjectType.Box; // 锁墙判定：存在空气、箱子以外的物体
+            boolean boxLock = (!boxAsAir) && PlayerCoreUtils.isBox(objectLayer[newY][newX]); // 锁箱判定：不将箱子视为空气，且确实存在箱子
+            boolean wallLock = PlayerCoreUtils.isWalkable(objectLayer[newY][newX]) && PlayerCoreUtils.isBox(objectLayer[newY][newX]); // 锁墙判定：存在空气、箱子以外的物体
             lockPos[directionIndex] = boxLock || wallLock;
         }
 
@@ -78,7 +78,7 @@ public class DeadLockTest {
 
             if (outRange(objectMap, newX, newY) || labels[newY][newX] != -1) continue; // 越界或者已被标记，跳过
 
-            if (objectMap[newY][newX] == ObjectType.Air || (boxAsAir && objectMap[newY][newX] == ObjectType.Box)) { // 空快
+            if (PlayerCoreUtils.isWalkable(objectMap[newY][newX]) || (boxAsAir && PlayerCoreUtils.isBox(objectMap[newY][newX]))) { // 空快
                 labels[newY][newX] = labels[y][x]; // 对节点进行染色
                 labeling(labels, objectMap, labelValue, newX, newY, boxAsAir); // 拓展标记
             } else {
@@ -100,7 +100,7 @@ public class DeadLockTest {
         ObjectType[][] objectLayer = subMap.getObjectLayer();
         for (int y = 0; y < subMap.height; y++) {
             for (int x = 0; x < subMap.width; x++) {
-                if (objectLayer[y][x] == ObjectType.Box) {
+                if (PlayerCoreUtils.isBox(objectLayer[y][x])) {
                     // 死锁判断
                     if (cornerLockTest(subMap, x, y, false)) return true; // 角落死锁
                 }

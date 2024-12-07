@@ -6,13 +6,14 @@ import java.util.List;
 import com.sokoban.core.game.Logger;
 import com.sokoban.core.map.MapData;
 import com.sokoban.core.map.SubMapData;
+import com.sokoban.utils.DeepClonable;
 
 /**
  * 推箱子逻辑核心类
  * @author StiCK-bot
  * @author Life_Checkpoint
  */
-public class PlayerCore {
+public class PlayerCore implements DeepClonable<PlayerCore> {
     private Pos playerPos; // 玩家坐标
     private List<String> moveList; // 这一轮有哪些物块坐标发生了移动
     private MapData map; // 游戏地图
@@ -140,8 +141,9 @@ public class PlayerCore {
      * @param subMapIndex 子地图索引
      * @param position 当前物块位置
      * @param direction 推动方向
+     * @return 是否发生移动
      */
-    public void doPush(int subMapIndex, Pos position, Direction direction) {
+    public boolean doPush(int subMapIndex, Pos position, Direction direction) {
         Logger.debug("PlayerCore", String.format(
             "doPush -> subMapIndex = %d, position = (%d, %d), direction = %s",
             subMapIndex, position.x, position.y, direction
@@ -165,7 +167,7 @@ public class PlayerCore {
                 playerPos = nextPos;
 
                 moveList.add(PlayerCoreUtils.toObjectMoveString(subMapIndex, position.x, position.y, nextPos.x, nextPos.y)); // 将玩家移动的信息加入到位移列表
-                return;
+                return true;
             }
 
             // 下一物块为箱子，且连续推动的检验通过，需要进行多个物块的移动
@@ -199,11 +201,15 @@ public class PlayerCore {
 
                 // 新地图覆盖旧地图
                 map.allMaps.set(subMapIndex, newMap);
-                return;
+                return true;
             }
+
+            // 玩家未发生移动
+            return false;
         }
 
         // 如果当前物块是箱子（箱子自主移动，暂时无需开发）
+        return false;
     }
 
     /**
@@ -238,10 +244,11 @@ public class PlayerCore {
      * 操控玩家进行指定方向移动
      * @param subMapIndex 进行移动的子地图
      * @param direction 移动方向
+     * @return Player 是否移动
      */
-    public void move(int subMapIndex, Direction direction) {
+    public boolean move(int subMapIndex, Direction direction) {
         moveList.clear(); // 重置 moveList
-        doPush(subMapIndex, playerPos, direction); // 对玩家进行移动
+        return doPush(subMapIndex, playerPos, direction); // 对玩家进行移动
     }
 
     public MapData getMap() {
@@ -281,5 +288,19 @@ public class PlayerCore {
 
     public List<String> getMoveList() {
         return moveList;
+    }
+
+    @Override
+    public PlayerCore deepCopy() {
+        Pos newPlayerPos = playerPos.deepCopy(); // 玩家坐标
+        List<String> newMoveList = new ArrayList<>(moveList); // 这一轮有哪些物块坐标发生了移动
+        MapData newMap = map.deepCopy(); // 游戏地图
+
+        PlayerCore newPlayerCore = new PlayerCore();
+        newPlayerCore.setMap(newMap);
+        newPlayerCore.moveList = newMoveList;
+        newPlayerCore.playerPos = newPlayerPos;
+
+        return newPlayerCore;
     }
 }

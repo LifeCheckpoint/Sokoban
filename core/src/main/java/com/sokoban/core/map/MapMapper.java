@@ -74,4 +74,34 @@ public class MapMapper {
             default -> ObjectType.Air;
         };
     }
+
+    /**
+     * 将整数地图数组映射到 ObjectType 地图数组
+     * @param intMap 整数地图数组
+     * @return ObjectType 地图数组
+     */
+    public static ObjectType[][] mapIntegerMapToObjectTypeMap (int[][] intMap) {
+        ObjectType[][] objMap = new ObjectType[intMap.length][intMap[0].length];
+        for (int i = 0; i < intMap.length; i++) {
+            for (int j = 0; j < intMap[0].length; j++) {
+                objMap[i][j] = MapNumToType(intMap[i][j]);
+            }
+        }
+        return objMap;
+    }
+
+    /**
+     * 将 ObjectType 地图数组映射到整数地图数组
+     * @param objMap ObjectType 地图数组
+     * @return 整数地图数组
+     */
+    public static int[][] mapObjectTypeMapToIntegerMap (ObjectType[][] objMap) {
+        int[][] intMap = new int[objMap.length][objMap[0].length];
+        for (int i = 0; i < objMap.length; i++) {
+            for (int j = 0; j < objMap[0].length; j++) {
+                intMap[i][j] = mapObjectTypeToNum(objMap[i][j]);
+            }
+        }
+        return intMap;
+    }
 }
