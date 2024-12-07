@@ -23,11 +23,13 @@ public class IDAStar {
     private SubMapData subMap, subMapWithoutBox; // 子地图
     private PlayerCore playerCore; // 逻辑核心
     private IDAState goalState = null;  // 添加成员变量存储目标状态
+    private int boxNum = 0;
 
     // 采用邻接矩阵 + 表双用存储箱子目标点，采用表存储玩家目标点
     private Set<int[]> boxTargetList; // 箱子目标点表
 
     private static final int MAX = Integer.MAX_VALUE;
+    private static final int LAMBDA_DEEPIN = 0;
 
     /** 在 IDA* 中性能高一些的状态类 */
     public static class IDAState {
@@ -57,6 +59,13 @@ public class IDAStar {
         }
 
         @Override
+        public int hashCode() {
+            int hash = 1;
+            for (int[] box : boxesPos) hash += (box[0] + 37) * box[1];
+            return 17 * playerX + playerY + hash; 
+        }
+
+        @Override
         public String toString() {
             String text = String.format("Player (%d, %d)\n", playerX, playerY);
             for (int[] boxPos : boxesPos) {
@@ -79,25 +88,36 @@ public class IDAStar {
 
     /** 启发式损失函数 */
     private int heuristicLoss(IDAState state) {
-        int loss = 0;
-
-        // 计算所有箱子到最近目标点的曼哈顿距离
-        for (int[] box : state.boxesPos) {
-            int minDistance = MAX;
-            for (int[] boxTarget : boxTargetList) {
-                minDistance = Math.min(minDistance, manhattanDistance(box[0], box[1], boxTarget[0], boxTarget[1]));
-            }
-            loss += minDistance;
-        }
+        int loss = 10 * boxNum;
 
         SubMapData tempSubMap = subMapWithoutBox.deepCopy();
         for (int[] box : state.boxesPos) tempSubMap.getObjectLayer()[box[1]][box[0]] = ObjectType.Box;
         
         // 如果有箱子陷入死角，直接置为大数
-        if (DeadLockTest.lockTest(tempSubMap)) loss += 114514;
+        if (DeadLockTest.lockTest(tempSubMap, state.boxesPos)) return 114514;
+
+        // 计算所有箱子到所有目标点的曼哈顿距离
+        for (int[] box : state.boxesPos) {
+            for (int[] boxTarget : boxTargetList) {
+                loss += manhattanDistance(box[0], box[1], boxTarget[0], boxTarget[1]);
+            }
+        }
 
         // 如果有箱子进入割点，启发式认为这个解法不够好
-        for (int[] box : state.boxesPos)  if (new CutVertexChecker(tempSubMap).isCutVertex(box[0], box[1])) loss += 1;
+        // for (int[] box : state.boxesPos)  if (new CutVertexChecker(tempSubMap).isCutVertex(box[0], box[1])) loss += 1;
+
+        // 如果进入一个较大块的区域，认为可能是一个比较好的解法
+        int areaMinus = 0;
+        for (int[] box : state.boxesPos) {
+            if (box[1] > 0) areaMinus += PlayerCoreUtils.isWalkable(tempSubMap.getObjectLayer()[box[1] - 1][box[0]]) ? 1 : 0;
+            if (box[1] < tempSubMap.height - 1) areaMinus += PlayerCoreUtils.isWalkable(tempSubMap.getObjectLayer()[box[1] + 1][box[0]]) ? 1 : 0;
+            if (box[0] > 0) areaMinus += PlayerCoreUtils.isWalkable(tempSubMap.getObjectLayer()[box[1]][box[0] - 1]) ? 1 : 0;
+            if (box[0] < tempSubMap.width - 1) areaMinus += PlayerCoreUtils.isWalkable(tempSubMap.getObjectLayer()[box[1]][box[0] + 1]) ? 1 : 0;
+        }
+        loss -= areaMinus * 6;
+
+        // 玩家与箱子之间的最小曼哈顿距离
+        for (int[] box : state.boxesPos) loss += manhattanDistance(box[0], box[1], state.playerX, state.playerY);
 
         return loss;
     }
@@ -143,8 +163,10 @@ public class IDAStar {
         // 获得没有箱子和人的空地图
         SubMapData tempSubMap = subMap.deepCopy();
         for (int y = 0; y < tempSubMap.height; y++) for (int x = 0; x < tempSubMap.width; x++)
-            if (PlayerCoreUtils.isBox(tempSubMap.getObjectLayer()[y][x]) || PlayerCoreUtils.isPlayer(tempSubMap.getObjectLayer()[y][x]))
+            if (PlayerCoreUtils.isBox(tempSubMap.getObjectLayer()[y][x]) || PlayerCoreUtils.isPlayer(tempSubMap.getObjectLayer()[y][x])) {
+                boxNum += 1;
                 tempSubMap.getObjectLayer()[y][x] = ObjectType.Air;
+            }
         subMapWithoutBox = tempSubMap;
 
         // 找到箱子位置
@@ -213,7 +235,11 @@ public class IDAStar {
     }
 
     /** IDA* 深度限定搜索 */
-    private int depthLimitedSearch(IDAState state, int g, int threshold) {
+    private int depthLimitedSearch(IDAState state, int g, int threshold, Set<IDAState> visited) {
+        // 添加到已访问节点
+        if (visited.contains(state)) return Integer.MAX_VALUE;
+        visited.add(state);
+        
         int f = g + heuristicLoss(state); // 计算当前 loss
 
         // 已经大于阈值，回溯
@@ -238,7 +264,7 @@ public class IDAStar {
             // 重要：设置父节点引用
             nextState.parent = state;
 
-            int tempThreshold = depthLimitedSearch(nextState, g + 2, threshold); // 深度 + 1，进行搜索
+            int tempThreshold = depthLimitedSearch(nextState, g + LAMBDA_DEEPIN, threshold, visited); // 进行搜索
 
             if (tempThreshold == -1) { // 找到了目标
                 return -1;
@@ -255,7 +281,7 @@ public class IDAStar {
     private List<IDAState> IDAStarFind(IDAState startState) {
         int threshold = heuristicLoss(startState);
         while (true) {
-            int tempThreshold = depthLimitedSearch(startState, 0, threshold);
+            int tempThreshold = depthLimitedSearch(startState, 0, threshold, new HashSet<>());
             if (tempThreshold == -1) {
                 return reconstructPath(goalState);
             } else if (tempThreshold == Integer.MAX_VALUE) {

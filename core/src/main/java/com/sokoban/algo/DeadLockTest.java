@@ -1,6 +1,7 @@
 package com.sokoban.algo;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.sokoban.core.logic.ObjectType;
 import com.sokoban.core.logic.PlayerCoreUtils;
@@ -105,6 +106,18 @@ public class DeadLockTest {
                     if (cornerLockTest(subMap, x, y, false)) return true; // 角落死锁
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * 判断地图中是否存在死锁箱
+     * @param subMap 子地图
+     * @return 是否存在死锁
+     */
+    public static boolean lockTest(SubMapData subMap, Set<int[]> boxesPosition) {
+        for (int[] poses : boxesPosition) if (cornerLockTest(subMap, poses[0], poses[1], false)) {
+            return true; // 角落死锁
         }
         return false;
     } 
