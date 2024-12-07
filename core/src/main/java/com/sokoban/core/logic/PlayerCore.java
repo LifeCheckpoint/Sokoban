@@ -192,7 +192,7 @@ public class PlayerCore implements DeepClonable<PlayerCore> {
 
                     // 更新坐标
                     currentPos = new Pos(currentPosNext.x, currentPosNext.y);
-                    currentPosNext = currentPos.add(PlayerCoreUtils.getDeltaPos(direction));
+                    currentPosNext = currentPosNext.add(PlayerCoreUtils.getDeltaPos(direction));
                 }
 
                 // 最后去除最开始的玩家位置
