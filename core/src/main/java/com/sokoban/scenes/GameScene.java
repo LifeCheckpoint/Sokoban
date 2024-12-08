@@ -34,6 +34,8 @@ import com.sokoban.core.map.SubMapData;
 import com.sokoban.core.map.gamedefault.SokobanLevels;
 import com.sokoban.core.state.GameHistoryRecoder;
 import com.sokoban.core.state.GameStateFrame;
+import com.sokoban.core.user.UserManager;
+import com.sokoban.core.user.SaveArchiveInfo.MapStatue;
 import com.sokoban.Main;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
@@ -48,6 +50,7 @@ import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
 import com.sokoban.scenes.manager.ActorMapper;
+import com.sokoban.scenes.mapchoose.MapChooseScene;
 import com.sokoban.utils.ActionUtils;
 
 /**
@@ -134,6 +137,14 @@ public class GameScene extends SokobanFitScene {
             // TODO 计时计步组件
         }
 
+        // 更新地图状态
+        // 如果用户非空非 guest，存档非空
+        if (gameMain.getLoginUser() != null && !gameMain.getLoginUser().isGuest() && gameMain.getSaveArchive() != null) {
+            if (gameMain.getSaveArchive().getMapStatue(mapFileInfo.map) != MapStatue.Success) // 已经成功，不再更新记录
+                gameMain.getSaveArchive().updateMapStaute(mapFileInfo.map, MapStatue.Playing); // 设置档案对应地图状态
+            new UserManager().updateUserInfo(gameMain.getLoginUser());
+        }
+
         stage.addActor(escapeMenuActorStateHelper);
 
         // 添加主 Stage 的输入监听
@@ -151,14 +162,14 @@ public class GameScene extends SokobanFitScene {
         String currentMapString = new MapFileReader().readMapByLevelAndName(levelName, mapName);
         if (currentMapString == null) {
             Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelName, mapName));
-            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
+            gameMain.getScreenManager().setScreenWithoutSaving(MapChooseScene.getMapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
             return -2;
         }
 
         MapData currentMapData = MapFileParser.parseMapData(new MapFileInfo("", mapFileInfo.level, mapFileInfo.map), currentMapString);
         if (currentMapData == null) {
             Logger.error("GameScene", String.format("Can't load level - %s, map - %s", levelName, mapName));
-            gameMain.getScreenManager().setScreenWithoutSaving(new MapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
+            gameMain.getScreenManager().setScreenWithoutSaving(MapChooseScene.getMapChooseScene(gameMain, mapFileInfo.level)); // 直接返回地图选择界面
             return -2;
         }
 
@@ -483,6 +494,13 @@ public class GameScene extends SokobanFitScene {
 
         // 胜利结束
         if (succcess) {
+            // 加入到用户成功地图
+
+            // 如果用户非空非 guest，存档非空
+            if (gameMain.getLoginUser() != null && !gameMain.getLoginUser().isGuest() && gameMain.getSaveArchive() != null) {
+                gameMain.getSaveArchive().updateMapStaute(mapFileInfo.map, MapStatue.Success); // 设置档案对应地图状态
+                new UserManager().updateUserInfo(gameMain.getLoginUser());
+            }
 
             // 等待一会后淡出
             Image whiting = new Image(gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel));
@@ -590,7 +608,7 @@ public class GameScene extends SokobanFitScene {
         SokobanScene returnScreen;
 
         if (mapFileInfo.level == SokobanLevels.Tutorial) returnScreen = new LevelChooseScene(gameMain);
-        else if (mapFileInfo.level != SokobanLevels.None) returnScreen = new MapChooseScene(gameMain, mapFileInfo.level);
+        else if (mapFileInfo.level != SokobanLevels.None) returnScreen = MapChooseScene.getMapChooseScene(gameMain, mapFileInfo.level);
         else returnScreen = new LevelChooseScene(gameMain);
 
         stage.addAction(Actions.sequence(

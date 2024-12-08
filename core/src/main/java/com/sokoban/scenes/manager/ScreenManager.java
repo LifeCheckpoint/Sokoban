@@ -70,6 +70,10 @@ public class ScreenManager {
         Logger.debug("ScreenManager", "Set screen -> " + currentScreen);
     }
 
+    public SokobanScene getRootScreen() {
+        return screenStack.get(0);
+    }
+
     // 获取当前屏幕
     public SokobanScene getCurrentScreen() {
         return currentScreen;

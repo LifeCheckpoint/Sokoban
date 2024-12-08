@@ -180,6 +180,7 @@ public class GameWelcomeScene extends SokobanScene {
             public void clicked(InputEvent event, float x, float y) {
                 // 切换回访客账户
                 setCurrentUser(new UserInfo());
+                gameMain.setSaveArchive(null);
             }
         });
 
@@ -340,6 +341,9 @@ public class GameWelcomeScene extends SokobanScene {
             // 设置档案按钮可见
             selectArchiveButton.getAllActors().forEach(actor -> actor.getColor().a = 1f);
             addCombinedObjectToStage(selectArchiveButton);
+
+            // 自动切换到第一个档案
+            gameMain.setSaveArchive(gameMain.getLoginUser().getSaveArchives().get(0));
         }
         msgBox.setPosition(8f, 0.2f);
         addCombinedObjectToStage(msgBox);

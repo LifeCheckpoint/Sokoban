@@ -16,6 +16,7 @@ import com.sokoban.polygon.combine.WindowImageSelector;
 import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
+import com.sokoban.scenes.mapchoose.MapChooseScene;
 import com.sokoban.utils.ActionUtils;
 
 public class LevelChooseScene extends SokobanScene {
@@ -72,7 +73,7 @@ public class LevelChooseScene extends SokobanScene {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SokobanLevels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
-                gameMain.getScreenManager().setScreen(new MapChooseScene(gameMain, currentSelectedLevel));
+                gameMain.getScreenManager().setScreen(MapChooseScene.getMapChooseScene(gameMain, currentSelectedLevel));
             }
         });
 
@@ -174,7 +175,7 @@ public class LevelChooseScene extends SokobanScene {
         // 进入
         if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
             SokobanLevels currentSelectedLevel = getLevelEnum(levelSelector.getCurrentWindowIndex());
-            gameMain.getScreenManager().setScreen(new MapChooseScene(gameMain, currentSelectedLevel));
+            gameMain.getScreenManager().setScreen(MapChooseScene.getMapChooseScene(gameMain, currentSelectedLevel));
         }
     }
 

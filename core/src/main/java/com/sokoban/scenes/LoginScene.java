@@ -119,19 +119,6 @@ public class LoginScene extends SokobanScene {
             }
         });
 
-        // // 实现上有点复杂
-        // // 记住密码复选框监听
-        // rememberPasswordCheckbox.getCheckbox().setCallback(checked -> {
-        //     if (checked) {
-        //         // 记住密码，不主动更新文件
-        //         passwordField.setText("");
-        //         passwordField.remove();
-        //     } else {
-        //         // 不记住密码，不主动更新文件
-        //         addActorsToStage(passwordField);
-        //     }
-        // });
-
         // 注册按钮监听
         registerButton.addListener(new ClickListener() {
             @Override
@@ -153,6 +140,7 @@ public class LoginScene extends SokobanScene {
                     userManager.calculatePasswordHash(passwordField.getText()), 
                     rememberPasswordCheckbox.getChecked()
                 );
+                newUser.setGuest(false);
                 
                 // 密码为空且不记住密码
                 if (passwordField.getText().equals("") && !newUser.isRememberPassword()) {

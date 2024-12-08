@@ -92,6 +92,33 @@ public class UserManager {
     }
 
     /**
+     * 更新用户信息
+     * @param userInfo
+     * @return 是否更新成功，用户不存在则返回 false
+     */
+    public boolean updateUserInfo(UserInfo userInfo) {
+        // 测试根目录存在性，不存在则创建
+        testUserInfosPathWithCreate();
+
+        if (!isValidUserInfo(userInfo)) {
+            Logger.error("UserManager", "Not a valid userInfo object");
+            return false;
+        }
+
+        // 使用用户名作为加密密钥，创建相应目录下用户文件
+        String userInfoPath = FilePathUtils.combine(userInfosRootPath, userInfo.getUserID() + ".usr");
+
+        // 若不存在用户，返回假
+        if (!FilePathUtils.exists(userInfoPath)) {
+            Logger.warning("UserManager", String.format("User %s is not created", userInfo.getUserID()));
+            return false;
+        }
+
+        new JsonManager(userInfo.getUserID()).saveJsonToFile(userInfoPath, userInfo);
+        return true;
+    }
+
+    /**
      * 删除用户目录下的用户
      * @param userID 用户名
      * @return 删除成功性，若不存在等返回 false

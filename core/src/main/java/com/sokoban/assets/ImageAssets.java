@@ -14,6 +14,7 @@ public enum ImageAssets {
     BoxTarget("img/target.png"),
     CancelButton("img/button/cancel.png"),
     ContinueGame("img/button/continue_game.png"),
+    CorrectIcon("img/correct.png"),
     DownArrowButton("img/button/down_arrow.png"),
     DownSquareButton("img/button/down_square_arrow.png"),
     EditorButton("img/button/editor.png"),
