@@ -10,6 +10,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -484,8 +485,13 @@ public class GameScene extends SokobanFitScene {
         if (succcess) {
 
             // 等待一会后淡出
+            Image whiting = new Image(gameMain.getAssetsPathManager().get(ImageAssets.WhitePixel));
+            whiting.setSize(48f, 48f);
+            whiting.getColor().a = 0f;
+            addActorsToUIStage(whiting);
+            whiting.addAction(Actions.fadeIn(0.95f, Interpolation.sineIn)); 
             stage.addAction(Actions.sequence(
-                Actions.delay(0.8f),
+                Actions.delay(1f),
                 Actions.run(() -> returnToMapChooseScene())
             ));
 
