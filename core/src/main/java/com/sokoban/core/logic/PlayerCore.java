@@ -287,7 +287,7 @@ public class PlayerCore implements DeepClonable<PlayerCore> {
     }
 
     public List<String> getMoveList() {
-        return moveList;
+        return new ArrayList<>(moveList);
     }
 
     @Override

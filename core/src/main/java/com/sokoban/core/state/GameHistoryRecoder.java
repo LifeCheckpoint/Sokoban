@@ -45,6 +45,7 @@ public class GameHistoryRecoder {
      */
     public void addNewFrame(GameStateFrame frame) {
         stateFrame.add(frame);
+
     }
 
     /**
@@ -63,30 +64,19 @@ public class GameHistoryRecoder {
 
     /**
      * 进行一次回退，保留当前时间
-     * @return 回退是否成功
+     * @return 回退的帧信息，失败返回 null
      */
-    public boolean undo() {
-        if (stateFrame.size() <= 1) return false;
+    public GameStateFrame undo() {
+        if (stateFrame.size() <= 1) return null;
 
         // 删除最新记录
-        stateFrame.removeLast();
-        GameStateFrame UndoFrame = stateFrame.getLast().deepCopy(); // 深复制前一步
+        GameStateFrame lastFrame = stateFrame.removeLast();
+        GameStateFrame undoFrame = stateFrame.getLast().deepCopy(); // 深复制前一步
         
-        /*
-         * 在 UndoFrame 中，
-         * action -> 回到前一步，不需要变更，保持一致性
-         * frameTime -> 记录时间更新
-         * mapData -> 回到前一步，不需要变更
-         * moves -> 回到前一步，要进行反演变换
-         * stepCount -> 撤去步的新增步数已被删除，所以需要 += 2
-         */
-
-        UndoFrame.frameTime = LocalDateTime.now();
-        UndoFrame.moves = MoveListParser.inverseMoves(UndoFrame.moves);
-        UndoFrame.stepCount += 2;
-
-        stateFrame.add(UndoFrame);
-        return true;
+        undoFrame.frameTime = LocalDateTime.now();
+        undoFrame.moves = MoveListParser.inverseMoves(lastFrame.moves);
+        undoFrame.stepCount += 1;
+        return undoFrame;
     }
 
     /**

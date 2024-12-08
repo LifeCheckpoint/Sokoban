@@ -405,13 +405,21 @@ public class GameScene extends SokobanFitScene {
                 if (moveDirection != Direction.None) {
                     // 进行逻辑移动
                     Logger.debug("GameScene", "Move direction " + moveDirection);
+                    MapData originalMap = playerCore.getMap().deepCopy();
                     playerCore.move(currentSubmap, moveDirection);
+  
+                    // 如果地图未发生变化，不进行任何更新
+                    if (originalMap.equals(playerCore.getMap())) return true;
 
                     // 更新历史记录
                     GameStateFrame stateFrame = new GameStateFrame();
                     stateFrame.mapData = playerCore.getMap().deepCopy();
                     stateFrame.action = moveDirection;
                     stateFrame.stepCount = historyStates.getTotalFrameNum(); // 不包括初始帧
+                    stateFrame.moves = playerCore.getMoveList();
+
+                    stateFrame.undo = false;
+
                     Logger.debug("GameScene", "Current game frame = " + stateFrame, 500);
                     historyStates.addNewFrame(stateFrame);
 
@@ -430,12 +438,16 @@ public class GameScene extends SokobanFitScene {
                     // 如果不是初始状态
                     if (historyStates.getTotalFrameNum() > 1) {
                         // 允许撤销，但是步数和时间都会继续增长
-                        historyStates.undo();
-                        Logger.debug("GameScene", "Undo, Current game frame = " + historyStates.getLast(), 500);
+                        GameStateFrame undoFrame = historyStates.undo();
 
-                        // 更新画面表现
-                        // TODO 核心撤回
-                        updateShowing(historyStates.getLast().moves);
+                        if (undoFrame != null) {
+                            playerCore.setMap(undoFrame.mapData);
+                            Logger.debug("GameScene", "Undo, Current game frame = " + undoFrame);
+                            Logger.warning(undoFrame.moves.toString());
+
+                            // 更新画面表现
+                            updateShowing(undoFrame.moves);
+                        }
                     }
                     return true;
                 }
@@ -465,6 +477,7 @@ public class GameScene extends SokobanFitScene {
         historyStates.addNewFrame(stateFrame);
     }
 
+    /** 胜利 / 失败结束游戏 */
     public void endGame(boolean succcess) {
 
         // 胜利结束

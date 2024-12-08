@@ -95,7 +95,9 @@ public class MoveListParser {
      */
     public static List<String> inverseMoves(List<String> moves) {
         List<MoveInfo> parsedMoves = parseMove(moves);
-        List<MoveInfo> inversMoves = parsedMoves.stream().map(move -> new MoveInfo(move.subMapIndex, move.layerIndex, move.to.deepCopy(), move.origin.deepCopy())).toList();
+        List<MoveInfo> inversMoves = parsedMoves.stream().map(move -> new MoveInfo(
+            move.subMapIndex, move.layerIndex, move.to.deepCopy(), move.origin.deepCopy()
+        )).toList();
         return serializeMove(inversMoves);
     }
 
