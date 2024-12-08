@@ -19,6 +19,30 @@ struct Map {
         delete[] map;
     }
 
+    // 拷贝构造函数：深复制
+    Map(const Map& other) : height(other.height), width(other.width) {
+        map = new int[height * width]; // 为新对象分配内存
+        std::copy(other.map, other.map + height * width, map); // 深复制
+    }
+
+    // 拷贝赋值操作符：深复制
+    Map& operator=(const Map& other) {
+        if (this == &other) return *this;  // 避免自赋值
+
+        // 释放当前对象的内存
+        delete[] map;
+
+        // 分配新内存
+        height = other.height;
+        width = other.width;
+        map = new int[height * width];
+
+        // 深复制
+        std::copy(other.map, other.map + height * width, map);
+
+        return *this;
+    }
+
     // 判断位置是否合法
     inline int valid_pos(int x, int y) const {
         return x < 0 || y < 0 || x >= width || y >= height;
@@ -48,7 +72,7 @@ struct Map {
     }
 
     // 设置位置 pos 的对象值
-    inline void get_object(Pos* pos, int value) {
+    inline void set_object(Pos* pos, int value) {
         if (valid_pos(pos->x, pos->y)) return;
         *(map + pos->y * width + pos->x) = value;
     }
