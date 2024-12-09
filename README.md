@@ -17,12 +17,12 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |立项|✔️已完成|
 |合作开发|▶️进行中|
 |素材绘制|▶️进行中|
-|推箱子核心玩法|▶️进行中|
-|基本界面开发|▶️进行中|
+|推箱子核心玩法|✔️已完成|
+|基本界面开发|✔️已完成|
 |用户管理|▶️进行中|
 |基础AI|▶️进行中|
 |动画效果|▶️进行中|
-|设置配置|▶️进行中|
+|设置配置|✔️已完成|
 
 当前版本 `0.4.0`
 
@@ -50,16 +50,16 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 ### Task 2: Multi-user Login (15 points) 
 
 1. ✔️ Implement a login selection interface for both guests and registered users.
-2. ▶️ Guests can play without registration but do not have the functionality to save game progress. 
+2. ✔️ Guests can play without registration but do not have the functionality to save game progress. 
 3. ✔️ The user login interface includes a registration page and allows login after entering account credentials.
 4. ✔️ After the program exits and is run again, previously registered users can still log in.
 
 ### Task 3: Save and Load Games (15 points) 
 
-1. ▶️ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
+1. ✔️ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
 2. ▶️ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
 3. ✔️ Each user's save data is unique.
-4. ❌ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
+4. ▶️ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
 5. ▶️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
 
 ### Task 4: Gameplay (30 points) 
@@ -74,16 +74,16 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 
 1. ✔️ Implement a graphical interface for the game using JavaFX, Swing, or any other Java 
 graphical framework.
-2. ⭕ You will earn points for this section by completing the code based on the demo provided in the course.
+2. ✔️ You will earn points for this section by completing the code based on the demo provided in the course.
 3. ✔️ Independently creating a GUI will count as Advanced points.
-4. ⭕ If your program need to input into command line，you can not get full points of this task.
+4. ✔️ If your program need to input into command line，you can not get full points of this task.
 
 ### Task 6: Advanced Features (20 points) 
 
 Any additional features beyond the basic requirements described above will earn points in this advanced category, including but not limited to:
 
 1. ✔️ Enhanced graphics and aesthetics
-2. ▶️ More game modes design
+2. ✔️ More game modes design
 3. ✔️ level selection interface 
 4. ❌ Implementation of AI to achieve high scores
 5. ✔️ Adding some animated effects
