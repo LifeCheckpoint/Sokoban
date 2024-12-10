@@ -90,6 +90,7 @@ public class GameScene extends SokobanFitScene {
     Stack3DGirdWorld gridWorld; // 网格世界
     PlayerCore playerCore; // 游戏逻辑核心
     int currentSubmap; // 当前子地图
+    SpineObject playerSpine; // 玩家对应 Spine
     CombinedNumberDisplayObject racingStep; // 竞速步记录器
     CombinedNumberDisplayObject racingTime; // 竞速时间记录器
     TimerClock racingClock; // 竞速计时器
@@ -105,6 +106,7 @@ public class GameScene extends SokobanFitScene {
     private final float ESCAPE_MENU_BUTTON_ALIGN_Y_DELTA = 1f;
     private final int INITIAL_MAP_WIDTH = 48;
     private final int INITIAL_MAP_HEIGHT = 27;
+    private final float SCREEN_WIDTRH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
 
     public GameScene(Main gameMain, MapFileInfo mapfileInfo, GameParams gameParams) {
         super(gameMain);
@@ -124,7 +126,6 @@ public class GameScene extends SokobanFitScene {
         bgParticle = new BackgroundGrayParticleManager(gameMain);
         bgParticle.startCreateParticles();
         isInEscapeMenu = false;
-        moveTrace = new MouseMovingTraceManager(viewport);
         SAIManager = new SingleActionInstanceManager(gameMain);
 
         // 初始化逻辑内核
@@ -137,6 +138,9 @@ public class GameScene extends SokobanFitScene {
 
         // 网格世界读取
         initMapToGrid();
+
+        // 初始化视口跟随
+        moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTRH_CENTER, SCREEN_HEIGHT_CENTER);
 
         // 初始化退出菜单
         initEscapeMenu();
@@ -210,6 +214,9 @@ public class GameScene extends SokobanFitScene {
                     // 数据类型转换为显示类型
                     BoxType objectBoxType = ActorMapper.mapObjectTypeToActor(currentLayer[y][x]);
                     currentSubMapGridWorld.getLayer(layer).addBox(objectBoxType, y, x);
+
+                    // 玩家类型，引用至特定对象
+                    if (currentLayer[y][x] == ObjectType.Player) playerSpine = (SpineObject) currentSubMapGridWorld.getLayer(layer).gridSpineObjects[y][x];
                 }
             }
         }
@@ -596,7 +603,7 @@ public class GameScene extends SokobanFitScene {
     /** 绘制屏幕场景 */
     public void draw(float delta) {
         // 更新鼠标跟踪
-        moveTrace.setPositionWithUpdate();
+        if (playerSpine != null) moveTrace.setPositionWithUpdate(playerSpine);
         stage.draw();
         UIStage.draw();
     }
