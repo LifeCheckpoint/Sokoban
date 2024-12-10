@@ -364,7 +364,6 @@ public class GameScene extends SokobanFitScene {
         SubMapData subMap = playerCore.getMap().allMaps.get(subMapIndex);
         ObjectType object = subMap.mapLayer.get(layerIndex)[to.getY()][to.getX()];
 
-        // FIXME 物件错误
         Logger.debug("Execute Animation: " + object.toString());
 
         // 玩家
@@ -426,7 +425,6 @@ public class GameScene extends SokobanFitScene {
         exitGameButton.getCheckboxText().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // TODO 保存逻辑
                 returnToMapChooseScene();
             }
         });
@@ -548,7 +546,6 @@ public class GameScene extends SokobanFitScene {
             // 如果用户非空非 guest，存档非空
             if (gameMain.getLoginUser() != null && !gameMain.getLoginUser().isGuest() && gameMain.getSaveArchive() != null)  {
                 
-                // FIXME 用户存档未能保存
                 // 检查 racing 是否破纪录
                 if (gameParams.racing) {
                     StepRecordInfo stepRecord = gameMain.getSaveArchive().updateStepRecords(mapFileInfo.map, historyStates.getLast().stepCount);

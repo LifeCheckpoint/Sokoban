@@ -29,7 +29,7 @@ public class Main extends ApplicationAdapter {
     private MusicManager musicManager;
 
     private UserInfo loginUser;
-    private SaveArchiveInfo saveArchive;
+    private int saveArchiveIndex;
     
     private Color backGroundColorRGBA = new Color(0x101010ff);
 
@@ -87,19 +87,25 @@ public class Main extends ApplicationAdapter {
     }
     
     /**
+     * 获得当前游戏档案索引
+     * @return 当前游戏档案
+     */
+    public int getSaveArchiveIndex() {
+        return saveArchiveIndex;
+    }
+
+    /**
      * 获得当前游戏档案
      * @return 当前游戏档案
      */
     public SaveArchiveInfo getSaveArchive() {
-        return saveArchive;
+        if (getLoginUser().isGuest()) return null;
+        return getLoginUser().getSaveArchives().get(saveArchiveIndex);
     }
 
-    /**
-     * 设置当前游戏档案
-     * @param saveArchive 游戏档案
-     */
-    public void setSaveArchive(SaveArchiveInfo saveArchive) {
-        this.saveArchive = saveArchive;
+    /** 设置当前游戏档案索引 */
+    public void setSaveArchive(int saveArchiveIndex) {
+        this.saveArchiveIndex = saveArchiveIndex;
     }
 
     // 主游戏创建

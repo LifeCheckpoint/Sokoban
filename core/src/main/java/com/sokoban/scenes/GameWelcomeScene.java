@@ -24,8 +24,6 @@ import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.MusicAssets;
 import com.sokoban.assets.ShaderAssets;
 import com.sokoban.core.game.Logger;
-import com.sokoban.core.json.JsonManager;
-import com.sokoban.core.user.SaveArchiveInfo;
 import com.sokoban.core.user.UserInfo;
 import com.sokoban.polygon.TextureSquare;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -180,7 +178,7 @@ public class GameWelcomeScene extends SokobanScene {
             public void clicked(InputEvent event, float x, float y) {
                 // 切换回访客账户
                 setCurrentUser(new UserInfo());
-                gameMain.setSaveArchive(null);
+                gameMain.setSaveArchive(0);
             }
         });
 
@@ -288,22 +286,15 @@ public class GameWelcomeScene extends SokobanScene {
      * @param archiveInfo 档案信息
      * @param archiveIndex 档案编号, 1, 2, 3...
      */
-    public void setCurrentArchive(SaveArchiveInfo archiveInfo, int archiveIndex) {
+    public void setCurrentArchive(int archiveIndex) {
         HintMessageBox msgBox;
 
-        // 空档案
-        if (archiveInfo == null) {
-            Logger.error("GameWelcomeScene", "Null save archive is not valid!");
-            return;
-        }
-
         Logger.info("GameWelcomeScene", "Current archive has switched to " + archiveIndex);
-        Logger.debug("GameWelcomeScene", "Archive content: " + new JsonManager().getJsonString(archiveInfo));
         msgBox = new HintMessageBox(gameMain, "Select Archive: #" + archiveIndex);
         msgBox.setPosition(8f, 0.2f);
         addCombinedObjectToStage(msgBox);
 
-        gameMain.setSaveArchive(archiveInfo);
+        gameMain.setSaveArchive(archiveIndex);
     }
 
     /**
@@ -343,7 +334,7 @@ public class GameWelcomeScene extends SokobanScene {
             addCombinedObjectToStage(selectArchiveButton);
 
             // 自动切换到第一个档案
-            gameMain.setSaveArchive(gameMain.getLoginUser().getSaveArchives().get(0));
+            gameMain.setSaveArchive(0);
         }
         msgBox.setPosition(8f, 0.2f);
         addCombinedObjectToStage(msgBox);
