@@ -61,6 +61,8 @@ public abstract class MapChooseScene extends SokobanScene {
     protected GameParams gameParams = new GameParams();
     protected Map<Actor, TimerClock> timer;
     protected List<BoxObject> greenBoxObjectOrigin = new ArrayList<>();
+    protected String winMessage = null;
+    protected boolean defaultEnableRacing = false;
 
     protected final float SCREEN_WIDTH_CENTER = 8f, SCREEN_HEIGHT_CENTER = 4.5f;
     protected final int INITIAL_MAP_WIDTH = 48, INITIAL_MAP_HEIGHT = 27;
@@ -86,9 +88,6 @@ public abstract class MapChooseScene extends SokobanScene {
     @Override
     public void init() {
         super.init();
-        // 提示当前 level
-        HintMessageBox msgBox = new HintMessageBox(gameMain, level.toString());
-        msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
 
         // 调用子类对应初始化
         setupLevel(readMapData());
@@ -97,7 +96,6 @@ public abstract class MapChooseScene extends SokobanScene {
         timer = new HashMap<>();
 
         addActorsToStage(playerSpine);
-        addCombinedObjectToStage(msgBox);
 
         ActionUtils.FadeInEffect(playerSpine);        
     }
@@ -270,6 +268,10 @@ public abstract class MapChooseScene extends SokobanScene {
         }
     }
 
+    public void setWinMessage(String winMessage) {
+        this.winMessage = winMessage;
+    }
+
     /** 添加返回按钮 */
     public void addReturnButton(float x, float y) {
         ImageButtonContainer controlButtonContainer = new ImageButtonContainer(gameMain);
@@ -349,7 +351,20 @@ public abstract class MapChooseScene extends SokobanScene {
         addCombinedObjectToStage(gridMap);
     }
 
-    // 重绘逻辑
+    public HintMessageBox getMessageHintBox(String msg) {
+        HintMessageBox msgBox = null;
+        if (msg != null) {
+            msgBox = new HintMessageBox(gameMain, msg);
+            msgBox.setPosition(SCREEN_WIDTH_CENTER, 0.5f);
+        }
+        return msgBox;
+    }
+
+    public void setDefaultEnableRacing(boolean defaultEnableRacing) {
+        this.defaultEnableRacing = defaultEnableRacing;
+        gameParams.racing = defaultEnableRacing;
+    }
+
     @Override
     public void draw(float delta) {
         // 更新鼠标跟踪、主角视角
@@ -362,6 +377,16 @@ public abstract class MapChooseScene extends SokobanScene {
         overlapsCheck();
         
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        
+        HintMessageBox msgBox = getMessageHintBox(winMessage);
+        if (msgBox != null) addCombinedObjectToStage(msgBox);
+
+        if (defaultEnableRacing) racingModeCheckbox.getCheckbox().setChecked(true);
     }
 
     // 需要连续处理的输入逻辑

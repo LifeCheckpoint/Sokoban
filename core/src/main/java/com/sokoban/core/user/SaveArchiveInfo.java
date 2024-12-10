@@ -20,34 +20,30 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
     }
 
     public static class TimeRecordInfo {
-        public long bestRecord;
+        public long lastBestRecord;
         public long currentRecord;
         public long delta;
+        public boolean success;
 
-        public TimeRecordInfo(long bestRecord, long currentRecord, long delta) {
-            this.bestRecord = bestRecord;
+        public TimeRecordInfo(long lastBestRecord, long currentRecord, long delta, boolean success) {
+            this.lastBestRecord = lastBestRecord;
             this.currentRecord = currentRecord;
             this.delta = delta;
-        }
-
-        public boolean success() {
-            return currentRecord < bestRecord;
+            this.success = success;
         }
     }
 
     public static class StepRecordInfo {
-        public int bestRecord;
+        public int lastBestRecord;
         public int currentRecord;
         public int delta;
+        public boolean success;
 
-        public StepRecordInfo(int bestRecord, int currentRecord, int delta) {
-            this.bestRecord = bestRecord;
+        public StepRecordInfo(int lastBestRecord, int currentRecord, int delta, boolean success) {
+            this.lastBestRecord = lastBestRecord;
             this.currentRecord = currentRecord;
             this.delta = delta;
-        }
-
-        public boolean success() {
-            return currentRecord < bestRecord;
+            this.success = success;
         }
     }
 
@@ -96,7 +92,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
             ));
             bestTimeRecords.put(map, time);
 
-            return new TimeRecordInfo(time, time, 0);
+            return new TimeRecordInfo(time, time, 0, true);
 
         } else {
 
@@ -108,7 +104,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
                     "Challenge best time record failed: %s - best %.3fs / current %.3fs (+%.3fs)",
                     map.getMapName(), ((double) lastBestRecord) / 1000.0, ((double) time) / 1000.0, ((double) (time - lastBestRecord)) / 1000.0
                 ));
-                return new TimeRecordInfo(lastBestRecord, time, time - lastBestRecord);
+                return new TimeRecordInfo(lastBestRecord, time, time - lastBestRecord, false);
 
             } else {
 
@@ -118,7 +114,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
                     map.getMapName(), ((double) lastBestRecord) / 1000.0, ((double) time) / 1000.0, ((double) (lastBestRecord - time)) / 1000.0
                 ));
                 bestTimeRecords.replace(map, time);
-                return new TimeRecordInfo(lastBestRecord, time, lastBestRecord - time);
+                return new TimeRecordInfo(lastBestRecord, time, lastBestRecord - time, true);
                 
             }
 
@@ -141,7 +137,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
             ));
             bestStepRecords.put(map, step);
 
-            return new StepRecordInfo(step, step, 0);
+            return new StepRecordInfo(step, step, 0, true);
 
         } else {
 
@@ -153,7 +149,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
                     "Challenge best step record failed: %s - best %d steps / current %d steps (+%d steps)",
                     map.getMapName(), lastBestRecord, step, step - lastBestRecord
                 ));
-                return new StepRecordInfo(lastBestRecord, step, step - lastBestRecord);
+                return new StepRecordInfo(lastBestRecord, step, step - lastBestRecord, false);
 
             } else {
 
@@ -163,7 +159,7 @@ public class SaveArchiveInfo implements DeepClonable<SaveArchiveInfo> {
                     map.getMapName(), lastBestRecord, step, lastBestRecord - step
                 ));
                 bestStepRecords.replace(map, step);
-                return new StepRecordInfo(lastBestRecord, step, lastBestRecord - step);
+                return new StepRecordInfo(lastBestRecord, step, lastBestRecord - step, true);
                 
             }
 

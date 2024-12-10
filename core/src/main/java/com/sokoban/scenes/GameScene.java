@@ -1,5 +1,7 @@
 package com.sokoban.scenes;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Set;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Timer;
 import com.sokoban.assets.ImageAssets;
 import com.sokoban.assets.SpineAssets;
 import com.sokoban.core.game.GameParams;
@@ -36,12 +40,16 @@ import com.sokoban.core.state.GameHistoryRecoder;
 import com.sokoban.core.state.GameStateFrame;
 import com.sokoban.core.user.UserManager;
 import com.sokoban.core.user.SaveArchiveInfo.MapStatue;
+import com.sokoban.core.user.SaveArchiveInfo.StepRecordInfo;
+import com.sokoban.core.user.SaveArchiveInfo.TimeRecordInfo;
 import com.sokoban.Main;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
+import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.action.ViewportRescaleAction;
 import com.sokoban.polygon.combine.CheckboxObject;
+import com.sokoban.polygon.combine.CombinedNumberDisplayObject;
 import com.sokoban.polygon.combine.GameEscapeFrame;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
@@ -62,6 +70,7 @@ public class GameScene extends SokobanFitScene {
     private MapFileInfo mapFileInfo;
     private boolean isInEscapeMenu;
     private GameParams gameParams;
+    private LocalDateTime startTime;
 
     // 功能增强
     private BackgroundGrayParticleManager bgParticle;
@@ -81,6 +90,9 @@ public class GameScene extends SokobanFitScene {
     Stack3DGirdWorld gridWorld; // 网格世界
     PlayerCore playerCore; // 游戏逻辑核心
     int currentSubmap; // 当前子地图
+    CombinedNumberDisplayObject racingStep; // 竞速步记录器
+    CombinedNumberDisplayObject racingTime; // 竞速时间记录器
+    TimerClock racingClock; // 竞速计时器
 
     GameHistoryRecoder historyStates; // 历史记录器
 
@@ -129,13 +141,11 @@ public class GameScene extends SokobanFitScene {
         // 初始化退出菜单
         initEscapeMenu();
 
+        // 初始化竞速对象
+        initRacingObjects();
+
         // 初始化历史记录
         initHistoryState();
-
-        // 如果竞速，则开启计时与计步
-        if (gameParams.racing) {
-            // TODO 计时计步组件
-        }
 
         // 更新地图状态
         // 如果用户非空非 guest，存档非空
@@ -223,6 +233,38 @@ public class GameScene extends SokobanFitScene {
         if (objectType == BoxType.BoxTarget) {
             spineObject.setAnimation(1, "deactive", false);
             spineObject.setAnimationTotalTime(1, 0.5f);
+        }
+    }
+
+    /** 初始化竞速小组件 */
+    public void initRacingObjects() {
+        racingStep = new CombinedNumberDisplayObject(gameMain, 6, 0);
+        racingStep.setPosition(0f, 8f);
+        racingStep.setShowDecimalPoint(false);
+        racingStep.setShowFirstZeros(false);
+
+        racingTime = new CombinedNumberDisplayObject(gameMain, 6, 2);
+        racingTime.setPosition(0f, 7f);
+        racingTime.setShowDecimalPoint(true);
+        racingTime.setShowFirstZeros(false);
+
+        // 只有在开启竞速的时候才会显示
+        if (gameParams.racing) {
+            addCombinedObjectToUIStage(racingStep);
+            addCombinedObjectToUIStage(racingTime);
+
+            startTime = LocalDateTime.now();
+
+            // 添加竞速定时更新事件
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    stage.addAction(Actions.sequence(
+                        Actions.delay(MathUtils.random(-0.2f, 0.2f)),
+                        Actions.run(() -> racingTime.setValue(((float) Duration.between(startTime, LocalDateTime.now()).toMillis()) / 1000f))
+                    ));
+                }
+            }, 0.05f, 0.5f);
         }
     }
 
@@ -438,6 +480,9 @@ public class GameScene extends SokobanFitScene {
                     // 更新画面表现
                     updateShowing(playerCore.getMoveList());
 
+                    // 更新计步器
+                    racingStep.setValue(historyStates.getLast().stepCount);
+
                     // 检查是否胜利
                     if (playerCore.isGameWin()) endGame(true);
 
@@ -460,7 +505,11 @@ public class GameScene extends SokobanFitScene {
                             // 更新画面表现
                             updateShowing(undoFrame.moves);
                         }
+
+                        // 更新计步器
+                        racingStep.setValue(historyStates.getLast().stepCount);
                     }
+                    
                     return true;
                 }
     
@@ -494,12 +543,38 @@ public class GameScene extends SokobanFitScene {
 
         // 胜利结束
         if (succcess) {
-            // 加入到用户成功地图
+            String successString = null;
 
             // 如果用户非空非 guest，存档非空
-            if (gameMain.getLoginUser() != null && !gameMain.getLoginUser().isGuest() && gameMain.getSaveArchive() != null) {
+            if (gameMain.getLoginUser() != null && !gameMain.getLoginUser().isGuest() && gameMain.getSaveArchive() != null)  {
+                
+                // FIXME 用户存档未能保存
+                // 检查 racing 是否破纪录
+                if (gameParams.racing) {
+                    StepRecordInfo stepRecord = gameMain.getSaveArchive().updateStepRecords(mapFileInfo.map, historyStates.getLast().stepCount);
+                    long duration = Duration.between(startTime, historyStates.getLast().frameTime).toMillis();
+                    TimeRecordInfo timeRecord = gameMain.getSaveArchive().updateTimeRecords(mapFileInfo.map, duration);
+
+                    if (stepRecord.success) {
+                        successString = (successString == null) ? "" : successString;
+                        successString += String.format("Step: %d -> %d", stepRecord.lastBestRecord, stepRecord.currentRecord);
+                    }
+
+                    if (timeRecord.success) {
+                        successString = (successString == null) ? "" : successString + ", ";
+                        successString += String.format("Time: %d -> %d (ms)", timeRecord.lastBestRecord, timeRecord.currentRecord);
+                    }
+
+                    Logger.info("GameScene", "Success string:" + successString);
+                }
+
+                // 保存存档
                 gameMain.getSaveArchive().updateMapStaute(mapFileInfo.map, MapStatue.Success); // 设置档案对应地图状态
-                new UserManager().updateUserInfo(gameMain.getLoginUser());
+                if (!new UserManager().updateUserInfo(gameMain.getLoginUser())) {
+                    Logger.error("GameScene", "Can't save user file");
+                } else {
+                    Logger.info("GameScene", "Save user file OK");
+                }
             }
 
             // 等待一会后淡出
@@ -508,9 +583,12 @@ public class GameScene extends SokobanFitScene {
             whiting.getColor().a = 0f;
             addActorsToUIStage(whiting);
             whiting.addAction(Actions.fadeIn(0.95f, Interpolation.sineIn)); 
+
+            final String successStringValue = successString;
+            final boolean defaultEnableRacingValue = gameParams.racing;
             stage.addAction(Actions.sequence(
                 Actions.delay(1f),
-                Actions.run(() -> returnToMapChooseScene())
+                Actions.run(() -> returnToMapChooseScene(successStringValue, defaultEnableRacingValue))
             ));
 
         } else {
@@ -601,14 +679,21 @@ public class GameScene extends SokobanFitScene {
         }
     }
 
-    /**
-     * 返回地图选择场景
-     */
+    /** 返回地图选择场景 */
     public void returnToMapChooseScene() {
+        returnToMapChooseScene(null, false);
+    }
+
+    /** 返回地图选择场景 */
+    public void returnToMapChooseScene(String msg, boolean defaultEnableRacing) {
         SokobanScene returnScreen;
 
         if (mapFileInfo.level == SokobanLevels.Tutorial) returnScreen = new LevelChooseScene(gameMain);
-        else if (mapFileInfo.level != SokobanLevels.None) returnScreen = MapChooseScene.getMapChooseScene(gameMain, mapFileInfo.level);
+        else if (mapFileInfo.level != SokobanLevels.None) {
+            returnScreen = MapChooseScene.getMapChooseScene(gameMain, mapFileInfo.level);
+            ((MapChooseScene) returnScreen).setWinMessage(msg);
+            ((MapChooseScene) returnScreen).setDefaultEnableRacing(defaultEnableRacing);
+        }
         else returnScreen = new LevelChooseScene(gameMain);
 
         stage.addAction(Actions.sequence(

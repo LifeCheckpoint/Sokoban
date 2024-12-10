@@ -114,8 +114,7 @@ public class UserManager {
             return false;
         }
 
-        new JsonManager(userInfo.getUserID()).saveJsonToFile(userInfoPath, userInfo);
-        return true;
+        return new JsonManager(userInfo.getUserID()).saveJsonToFile(userInfoPath, userInfo);
     }
 
     /**
