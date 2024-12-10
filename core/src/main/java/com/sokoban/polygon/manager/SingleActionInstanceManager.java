@@ -48,8 +48,6 @@ public class SingleActionInstanceManager {
      * @param resetEvent 重置工作，可为 null
      */
     public void executeAction(Actor actor, Action actions, ActionInstanceReset resetEvent) {
-        // TODO BUG
-        
         // 重置 -> 动画 -> 解锁
         actor.addAction(Actions.sequence(
             // 重置事件不为空 动画状态存在且动画状态标志真 -> 进行重置
