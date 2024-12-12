@@ -29,7 +29,7 @@ public class IDAStar {
     private Set<int[]> boxTargetList; // 箱子目标点表
 
     private static final int MAX = Integer.MAX_VALUE;
-    private static final int LAMBDA_DEEPIN = 0;
+    private static final int LAMBDA_DEEPIN = 1;
 
     /** 在 IDA* 中性能高一些的状态类 */
     public static class IDAState {
@@ -94,7 +94,7 @@ public class IDAStar {
         for (int[] box : state.boxesPos) tempSubMap.getObjectLayer()[box[1]][box[0]] = ObjectType.Box;
         
         // 如果有箱子陷入死角，直接置为大数
-        if (DeadLockTest.lockTest(tempSubMap, state.boxesPos)) return 114514;
+        if (DeadLockTest.lockTest(tempSubMap, state.boxesPos, true)) return 114514;
 
         // 计算所有箱子到所有目标点的曼哈顿距离
         for (int[] box : state.boxesPos) {

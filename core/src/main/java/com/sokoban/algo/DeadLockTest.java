@@ -24,20 +24,37 @@ public class DeadLockTest {
      */
     public static boolean cornerLockTest(SubMapData subMap, int x, int y, boolean boxAsAir) {
         ObjectType[][] objectLayer = subMap.getObjectLayer();
+        ObjectType[][] objectLayerWithoutBox = new ObjectType[subMap.height][subMap.width];
         if (subMap.getTargetLayer()[y][x] == ObjectType.BoxTarget) return false;
 
         int[][] deltaPoses = new int[][] {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
         boolean[] lockPos = new boolean[4];
+
+        if (boxAsAir) {
+            for (int yy = 0; yy < subMap.height; yy++) {
+                for (int xx = 0; xx < subMap.width; xx++) {
+                    if (PlayerCoreUtils.isBox(objectLayer[yy][xx])) objectLayerWithoutBox[yy][xx] = ObjectType.Air;
+                    else if (PlayerCoreUtils.isPlayer(objectLayer[yy][xx])) objectLayerWithoutBox[yy][xx] = ObjectType.Air;
+                    else objectLayerWithoutBox[yy][xx] = objectLayer[yy][xx];
+                }
+            }
+        } else {
+            for (int yy = 0; yy < subMap.height; yy++) {
+                for (int xx = 0; xx < subMap.width; xx++) {
+                    objectLayerWithoutBox[yy][xx] = objectLayer[yy][xx];
+                }
+            }
+        }
+        
         for (int directionIndex = 0; directionIndex < 4; directionIndex++) {
             int[] deltaPos = deltaPoses[directionIndex];
             int newX = x + deltaPos[0], newY = y + deltaPos[1];
             
-            boolean boxLock = (!boxAsAir) && PlayerCoreUtils.isBox(objectLayer[newY][newX]); // 锁箱判定：不将箱子视为空气，且确实存在箱子
-            boolean wallLock = PlayerCoreUtils.isWalkable(objectLayer[newY][newX]) && PlayerCoreUtils.isBox(objectLayer[newY][newX]); // 锁墙判定：存在空气、箱子以外的物体
-            lockPos[directionIndex] = boxLock || wallLock;
+            lockPos[directionIndex] = !PlayerCoreUtils.isWalkable(objectLayerWithoutBox[newY][newX]);
         }
 
-        return (lockPos[0] && lockPos[1]) || (lockPos[1] && lockPos[2]) || (lockPos[2] && lockPos[3]) || (lockPos[3] && lockPos[0]);
+        boolean res = (lockPos[0] && lockPos[1]) || (lockPos[1] && lockPos[2]) || (lockPos[2] && lockPos[3]) || (lockPos[3] && lockPos[0]);
+        return res;
     }
 
     /**
@@ -103,7 +120,7 @@ public class DeadLockTest {
             for (int x = 0; x < subMap.width; x++) {
                 if (PlayerCoreUtils.isBox(objectLayer[y][x])) {
                     // 死锁判断
-                    if (cornerLockTest(subMap, x, y, false)) return true; // 角落死锁
+                    if (cornerLockTest(subMap, x, y, true)) return true; // 角落死锁
                 }
             }
         }
@@ -115,8 +132,8 @@ public class DeadLockTest {
      * @param subMap 子地图
      * @return 是否存在死锁
      */
-    public static boolean lockTest(SubMapData subMap, Set<int[]> boxesPosition) {
-        for (int[] poses : boxesPosition) if (cornerLockTest(subMap, poses[0], poses[1], false)) {
+    public static boolean lockTest(SubMapData subMap, Set<int[]> boxesPosition, boolean boxAsAir) {
+        for (int[] poses : boxesPosition) if (cornerLockTest(subMap, poses[0], poses[1], boxAsAir)) {
             return true; // 角落死锁
         }
         return false;

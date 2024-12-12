@@ -43,6 +43,7 @@ import com.sokoban.core.user.SaveArchiveInfo.MapStatue;
 import com.sokoban.core.user.SaveArchiveInfo.StepRecordInfo;
 import com.sokoban.core.user.SaveArchiveInfo.TimeRecordInfo;
 import com.sokoban.Main;
+import com.sokoban.algo.DeadLockTest;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
@@ -51,6 +52,7 @@ import com.sokoban.polygon.action.ViewportRescaleAction;
 import com.sokoban.polygon.combine.CheckboxObject;
 import com.sokoban.polygon.combine.CombinedNumberDisplayObject;
 import com.sokoban.polygon.combine.GameEscapeFrame;
+import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
@@ -491,6 +493,9 @@ public class GameScene extends SokobanFitScene {
                     // 检查是否胜利
                     if (playerCore.isGameWin()) endGame(true);
 
+                    // 检查是否失败
+                    if (DeadLockTest.lockTest(playerCore.getSubmap(currentSubmap))) endGame(false);
+
                     return true;
                 }
     
@@ -594,9 +599,10 @@ public class GameScene extends SokobanFitScene {
                 Actions.delay(1f),
                 Actions.run(() -> returnToMapChooseScene(successStringValue, defaultEnableRacingValue))
             ));
-
         } else {
-            // TODO 失败逻辑
+            HintMessageBox msgBox = new HintMessageBox(gameMain, "We get into a corner...");
+            msgBox.setPosition(8f, 0.5f);
+            addCombinedObjectToUIStage(msgBox);
         }
     }
 
