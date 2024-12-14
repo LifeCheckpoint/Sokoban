@@ -56,6 +56,7 @@ import com.sokoban.polygon.combine.HintMessageBox;
 import com.sokoban.polygon.combine.Stack2DGirdWorld;
 import com.sokoban.polygon.combine.Stack3DGirdWorld;
 import com.sokoban.polygon.container.ButtonCheckboxContainers;
+import com.sokoban.polygon.container.ImageButtonContainer;
 import com.sokoban.polygon.manager.BackgroundGrayParticleManager;
 import com.sokoban.polygon.manager.MouseMovingTraceManager;
 import com.sokoban.polygon.manager.SingleActionInstanceManager;
@@ -87,6 +88,9 @@ public class GameScene extends SokobanFitScene {
     private CheckboxObject replayButton;
     private CheckboxObject settingsButton;
     private CheckboxObject exitGameButton;
+
+    // 操控按钮
+    Image buttonUp, buttonDown, buttonLeft, buttonRight;
 
     // 游戏主内容
     Stack3DGirdWorld gridWorld; // 网格世界
@@ -143,6 +147,9 @@ public class GameScene extends SokobanFitScene {
 
         // 初始化视口跟随
         moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTRH_CENTER, SCREEN_HEIGHT_CENTER);
+        
+        // 初始化移动按钮
+        initMoveButtons();
 
         // 初始化退出菜单
         initEscapeMenu();
@@ -243,6 +250,50 @@ public class GameScene extends SokobanFitScene {
             spineObject.setAnimation(1, "deactive", false);
             spineObject.setAnimationTotalTime(1, 0.5f);
         }
+    }
+
+    /** 初始化移动按钮 */
+    public void initMoveButtons() {
+        ImageButtonContainer buttonContainer = new ImageButtonContainer(gameMain, 0.008f);
+        buttonUp = buttonContainer.create(ImageAssets.UpSquareButton);
+        buttonDown = buttonContainer.create(ImageAssets.DownSquareButton);
+        buttonLeft = buttonContainer.create(ImageAssets.LeftSquareArrow);
+        buttonRight = buttonContainer.create(ImageAssets.RightSquareArrow);
+
+        buttonUp.setPosition(14.5f, 2f);
+        buttonDown.setPosition(14.5f, 1f);
+        buttonLeft.setPosition(14f, 1.5f);
+        buttonRight.setPosition(15f, 1.5f);
+
+        buttonUp.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                checkMoving(event, Keys.W);
+            }
+        });
+
+        buttonDown.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                checkMoving(event, Keys.S);
+            }
+        });
+
+        buttonLeft.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                checkMoving(event, Keys.A);
+            }
+        });
+
+        buttonRight.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                checkMoving(event, Keys.D);
+            }
+        });
+
+        addActorsToUIStage(buttonUp, buttonDown, buttonRight, buttonLeft);
     }
 
     /** 初始化竞速小组件 */
@@ -452,86 +503,96 @@ public class GameScene extends SokobanFitScene {
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                Direction moveDirection = Direction.None;
-
-                // 如果在退出菜单则不检测操控行为
-                if (isInEscapeMenu) return false;
-
-                if (keycode == Keys.W || keycode == Keys.UP) moveDirection = Direction.Up;
-                if (keycode == Keys.S || keycode == Keys.DOWN) moveDirection = Direction.Down;
-                if (keycode == Keys.A || keycode == Keys.LEFT) moveDirection = Direction.Left;
-                if (keycode == Keys.D || keycode == Keys.RIGHT) moveDirection = Direction.Right;
-    
-                // 如果进行四种移动之一
-                if (moveDirection != Direction.None) {
-                    // 进行逻辑移动
-                    Logger.debug("GameScene", "Move direction " + moveDirection);
-                    MapData originalMap = playerCore.getMap().deepCopy();
-                    playerCore.move(currentSubmap, moveDirection);
-  
-                    // 如果地图未发生变化，不进行任何更新
-                    if (originalMap.equals(playerCore.getMap())) return true;
-
-                    // 更新历史记录
-                    GameStateFrame stateFrame = new GameStateFrame();
-                    stateFrame.mapData = playerCore.getMap().deepCopy();
-                    stateFrame.action = moveDirection;
-                    stateFrame.stepCount = historyStates.getTotalFrameNum(); // 不包括初始帧
-                    stateFrame.moves = playerCore.getMoveList();
-
-                    stateFrame.undo = false;
-
-                    Logger.debug("GameScene", "Current game frame = " + stateFrame, 500);
-                    historyStates.addNewFrame(stateFrame);
-
-                    // 更新画面表现
-                    updateShowing(playerCore.getMoveList());
-
-                    // 更新计步器
-                    racingStep.setValue(historyStates.getLast().stepCount);
-
-                    // 检查是否胜利
-                    if (playerCore.isGameWin()) endGame(true);
-
-                    // 检查是否失败
-                    if (DeadLockTest.lockTest(playerCore.getSubmap(currentSubmap))) endGame(false);
-
-                    return true;
-                }
-    
-                // 撤销
-                if (Gdx.input.isKeyJustPressed(Keys.Z)) {
-
-                    // 如果不是初始状态
-                    if (historyStates.getTotalFrameNum() > 1) {
-                        // 允许撤销，但是步数和时间都会继续增长
-                        GameStateFrame undoFrame = historyStates.undo();
-
-                        if (undoFrame != null) {
-                            playerCore.setMap(undoFrame.mapData);
-                            Logger.debug("GameScene", "Undo, Current game frame = " + undoFrame);
-                            Logger.warning(undoFrame.moves.toString());
-
-                            // 更新画面表现
-                            updateShowing(undoFrame.moves);
-                        }
-
-                        // 更新计步器
-                        racingStep.setValue(historyStates.getLast().stepCount);
-                    }
-                    
-                    return true;
-                }
-    
-                // 重置
-                if (Gdx.input.isKeyJustPressed(Keys.R)) {
-                    replay();
-                    return true;
-                }
-
-                return false;
+                return checkMoving(event, keycode);
             }
         });
+    }
+
+    /** 按键输入移动检查 */
+    public boolean checkMoving(InputEvent event, int keycode) {
+        Direction moveDirection = Direction.None;
+
+        // 如果在退出菜单则不检测操控行为
+        if (isInEscapeMenu) return false;
+
+        if (keycode == Keys.W || keycode == Keys.UP) moveDirection = Direction.Up;
+        if (keycode == Keys.S || keycode == Keys.DOWN) moveDirection = Direction.Down;
+        if (keycode == Keys.A || keycode == Keys.LEFT) moveDirection = Direction.Left;
+        if (keycode == Keys.D || keycode == Keys.RIGHT) moveDirection = Direction.Right;
+
+        // 如果进行四种移动之一
+        if (moveDirection != Direction.None) {
+            // 进行逻辑移动
+            Logger.debug("GameScene", "Move direction " + moveDirection);
+            MapData originalMap = playerCore.getMap().deepCopy();
+            playerCore.move(currentSubmap, moveDirection);
+
+            // 如果地图未发生变化，不进行任何更新
+            if (originalMap.equals(playerCore.getMap())) return true;
+
+            // 更新历史记录
+            GameStateFrame stateFrame = new GameStateFrame();
+            stateFrame.mapData = playerCore.getMap().deepCopy();
+            stateFrame.action = moveDirection;
+            stateFrame.stepCount = historyStates.getTotalFrameNum(); // 不包括初始帧
+            stateFrame.moves = playerCore.getMoveList();
+
+            stateFrame.undo = false;
+
+            Logger.debug("GameScene", "Current game frame = " + stateFrame, 500);
+            historyStates.addNewFrame(stateFrame);
+
+            // 更新画面表现
+            updateShowing(playerCore.getMoveList());
+
+            // 更新计步器
+            racingStep.setValue(historyStates.getLast().stepCount);
+
+            // 检查是否胜利
+            if (playerCore.isGameWin()) endGame(true);
+
+            // 检查是否失败
+            if (DeadLockTest.lockTest(playerCore.getSubmap(currentSubmap))) endGame(false);
+
+            return true;
+        }
+
+        // 撤销
+        if (Gdx.input.isKeyJustPressed(Keys.Z)) {
+
+            // 如果不是初始状态
+            if (historyStates.getTotalFrameNum() > 1) {
+                // 允许撤销，但是步数和时间都会继续增长
+                GameStateFrame undoFrame = historyStates.undo();
+
+                if (undoFrame != null) {
+                    playerCore.setMap(undoFrame.mapData);
+                    Logger.debug("GameScene", "Undo, Current game frame = " + undoFrame);
+                    Logger.warning(undoFrame.moves.toString());
+
+                    // 更新画面表现
+                    updateShowing(undoFrame.moves);
+                }
+
+                // 更新计步器
+                racingStep.setValue(historyStates.getLast().stepCount);
+            }
+            
+            return true;
+        }
+
+        // 重置
+        if (Gdx.input.isKeyJustPressed(Keys.R)) {
+            replay();
+            return true;
+        }
+
+        // 自动演算提示
+        if ((Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) && Gdx.input.isKeyJustPressed(Keys.A)) {
+            // TODO
+        }
+
+        return false;
     }
 
     /** 初始化历史记录 */

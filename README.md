@@ -57,18 +57,18 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 ### Task 3: Save and Load Games (15 points) 
 
 1. ✔️ Each user (except guests) has the option to load their previous saved game; the save is a single save file, and saving again will overwrite the previous save (Overwriting the original save is the basic requirement. Additional points would not be given if multiple save slots are implemented per user.)
-2. ▶️ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
+2. ✔️ From the game start interface, players can choose to load their last save which should contain information about the the game board's status and the number of moves made so far.
 3. ✔️ Each user's save data is unique.
 4. ✔️ Manual saving is a basic requirement; implementing automatic saving at timed intervals or upon exit can earn points in the advanced section.
-5. ▶️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
+5. ✔️ Save File Error Check: If a save file's format or contents are corrupted when loading, the damaged save will not be loaded, and the game will still run rather than crash. (If your game is capable of detecting save files that have been modified by others while still maintaining the legitimacy of the save data，it will earn the advanced points.)
 
 ### Task 4: Gameplay (30 points) 
 
 1. ✔️ Pushing Boxes: When a player moves the character, they can push any box in the direction they are moving, provided there is an empty space behind the box. A box can be moved until it hits a wall or another box.
-2. ❌ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
+2. ✔️ Button control: The interface must include up, down, left, and right buttons to facilitate player movement in different directions. 
 3. ✔️ Keyboard control: Keyboard control are required for player movement (up, down, left, right) in different directions. 
 4. ✔️ Game Victory: The goal of the game is to push all the boxes onto the designated target locations. Once all targets are covered by boxes, display a victory screen indicating that the puzzle has been successfully solved.  
-5. ▶️ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
+5. ✔️ Game Fail: If the box cannot be moved (e.g., a box is pushed into a corner) when the game is not victorious, either a game-over message or an option to restart the level should be displayed. 
 
 ### Task 5: Graphical User Interface (GUI) (10 points) 
 
