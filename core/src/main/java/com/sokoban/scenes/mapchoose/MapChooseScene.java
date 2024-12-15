@@ -121,7 +121,7 @@ public abstract class MapChooseScene extends SokobanScene {
     /** 离开前清理所有动画并渐隐所有物体 */
     public abstract void stopAllActivities();
 
-    // FIXME 快速退出会出现闪动
+    // NOT PLANED 快速退出会出现闪动
     /** 返回按钮触发返回上一场景 */
     public void returnToPreviousScreen() {
         stopAllActivities(); // 结束所有动画

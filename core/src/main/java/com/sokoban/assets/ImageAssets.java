@@ -12,6 +12,7 @@ public enum ImageAssets {
     Box("img/box.png"),
     BoxActive("img/box_active.png"),
     BoxTarget("img/target.png"),
+    CalculatingWarningIcon("img/warn_calc.png"),
     CancelButton("img/button/cancel.png"),
     ContinueGame("img/button/continue_game.png"),
     CorrectIcon("img/correct.png"),

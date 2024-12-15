@@ -355,7 +355,7 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     // 着色器初始化
-    // FIXME 无效
+    // NOT PLANED 无效
     private void initShaders() {
         // 初始化模糊效果
         blurBuffers = new FrameBuffer[2];
@@ -373,7 +373,7 @@ public class GameWelcomeScene extends SokobanScene {
     }
 
     // 渲染模糊背景
-    // FIXME 无效
+    // NOT PLANED 无效
     private void renderBlurredBackground() {
         Matrix4 projectionMatrix = stage.getBatch().getProjectionMatrix().cpy();
         

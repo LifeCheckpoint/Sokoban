@@ -24,11 +24,11 @@ public class IDAStar {
     private PlayerCore playerCore; // 逻辑核心
     private IDAState goalState = null;  // 添加成员变量存储目标状态
     private int boxNum = 0;
+    public volatile boolean exit = false;
 
     // 采用邻接矩阵 + 表双用存储箱子目标点，采用表存储玩家目标点
     private Set<int[]> boxTargetList; // 箱子目标点表
 
-    private static final int MAX = Integer.MAX_VALUE;
     private static final int LAMBDA_DEEPIN = 1;
 
     /** 在 IDA* 中性能高一些的状态类 */
@@ -236,8 +236,10 @@ public class IDAStar {
 
     /** IDA* 深度限定搜索 */
     private int depthLimitedSearch(IDAState state, int g, int threshold, Set<IDAState> visited) {
+        if (exit) return -1;
+
         // 添加到已访问节点
-        if (visited.contains(state)) return Integer.MAX_VALUE;
+        if (visited.contains(state)) return 114514;
         visited.add(state);
         
         int f = g + heuristicLoss(state); // 计算当前 loss

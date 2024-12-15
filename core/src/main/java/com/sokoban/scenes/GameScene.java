@@ -44,6 +44,8 @@ import com.sokoban.core.user.SaveArchiveInfo.StepRecordInfo;
 import com.sokoban.core.user.SaveArchiveInfo.TimeRecordInfo;
 import com.sokoban.Main;
 import com.sokoban.algo.DeadLockTest;
+import com.sokoban.algo.SearchAlgo;
+import com.sokoban.algo.IDAStar.IDAState;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
 import com.sokoban.polygon.TimerClock;
@@ -74,12 +76,16 @@ public class GameScene extends SokobanFitScene {
     private boolean isInEscapeMenu;
     private GameParams gameParams;
     private LocalDateTime startTime;
+    private boolean isInCaculate = false;
 
     // 功能增强
     private BackgroundGrayParticleManager bgParticle;
     private MouseMovingTraceManager moveTrace;
     private SingleActionInstanceManager SAIManager;
     private Actor escapeMenuActorStateHelper;
+
+    private SearchAlgo algo;
+    private Thread calcThread;
 
     // Escape Menu
     private ButtonCheckboxContainers buttonContainer;
@@ -90,18 +96,20 @@ public class GameScene extends SokobanFitScene {
     private CheckboxObject exitGameButton;
 
     // 操控按钮
-    Image buttonUp, buttonDown, buttonLeft, buttonRight;
+    private Image buttonUp, buttonDown, buttonLeft, buttonRight;
+
+    private Image warningCalcIcon;
+    private Image backCalc;
 
     // 游戏主内容
-    Stack3DGirdWorld gridWorld; // 网格世界
-    PlayerCore playerCore; // 游戏逻辑核心
-    int currentSubmap; // 当前子地图
-    SpineObject playerSpine; // 玩家对应 Spine
-    CombinedNumberDisplayObject racingStep; // 竞速步记录器
-    CombinedNumberDisplayObject racingTime; // 竞速时间记录器
-    TimerClock racingClock; // 竞速计时器
+    private Stack3DGirdWorld gridWorld; // 网格世界
+    private PlayerCore playerCore; // 游戏逻辑核心
+    private int currentSubmap; // 当前子地图
+    private SpineObject playerSpine; // 玩家对应 Spine
+    private CombinedNumberDisplayObject racingStep; // 竞速步记录器
+    private CombinedNumberDisplayObject racingTime; // 竞速时间记录器
 
-    GameHistoryRecoder historyStates; // 历史记录器
+    private GameHistoryRecoder historyStates; // 历史记录器
 
     private final float DEFAULT_CELL_SIZE = 1f;
     private final float VIEWPORT_RESCALE_RATIO = 1.6f;
@@ -147,6 +155,26 @@ public class GameScene extends SokobanFitScene {
 
         // 初始化视口跟随
         moveTrace = new MouseMovingTraceManager(viewport, SCREEN_WIDTRH_CENTER, SCREEN_HEIGHT_CENTER);
+
+        // 初始化计算显示
+        warningCalcIcon = new Image(gameMain.getAssetsPathManager().get(ImageAssets.CalculatingWarningIcon));
+        warningCalcIcon.setScale(0.0065f);
+        warningCalcIcon.setPosition(6f, 4.5f);
+        backCalc = new Image(gameMain.getAssetsPathManager().get(ImageAssets.BlackPixel));
+        backCalc.setScale(10f);
+        backCalc.setPosition(-2f, -2f);
+        backCalc.getColor().a = 0.4f;
+
+        // 添加计时器确认计算结果
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if (isInCaculate) {
+                    if (algo.result != null) endAutoCaculate(algo.result);
+                    Logger.debug("GameScene", "Checking result...");
+                }
+            }
+        }, 0.25f, 0.25f);
         
         // 初始化移动按钮
         initMoveButtons();
@@ -510,15 +538,20 @@ public class GameScene extends SokobanFitScene {
 
     /** 按键输入移动检查 */
     public boolean checkMoving(InputEvent event, int keycode) {
+        // 计算中，不执行操作
+        if (isInCaculate) return false;
+
         Direction moveDirection = Direction.None;
+        
+        boolean control = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
 
         // 如果在退出菜单则不检测操控行为
         if (isInEscapeMenu) return false;
 
-        if (keycode == Keys.W || keycode == Keys.UP) moveDirection = Direction.Up;
-        if (keycode == Keys.S || keycode == Keys.DOWN) moveDirection = Direction.Down;
-        if (keycode == Keys.A || keycode == Keys.LEFT) moveDirection = Direction.Left;
-        if (keycode == Keys.D || keycode == Keys.RIGHT) moveDirection = Direction.Right;
+        if (!control && (keycode == Keys.W || keycode == Keys.UP)) moveDirection = Direction.Up;
+        if (!control && (keycode == Keys.S || keycode == Keys.DOWN)) moveDirection = Direction.Down;
+        if (!control && (keycode == Keys.A || keycode == Keys.LEFT)) moveDirection = Direction.Left;
+        if (!control && (keycode == Keys.D || keycode == Keys.RIGHT)) moveDirection = Direction.Right;
 
         // 如果进行四种移动之一
         if (moveDirection != Direction.None) {
@@ -588,11 +621,35 @@ public class GameScene extends SokobanFitScene {
         }
 
         // 自动演算提示
-        if ((Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) && Gdx.input.isKeyJustPressed(Keys.A)) {
-            // TODO
+        if (control && Gdx.input.isKeyJustPressed(Keys.A)) {
+            startAutoCaculate();
         }
 
         return false;
+    }
+
+    /** 启动自动计算 */
+    public void startAutoCaculate() {
+        isInCaculate = true;
+        addActorsToUIStage(backCalc);
+        addActorsToUIStage(warningCalcIcon);
+        algo = new SearchAlgo(playerCore.getMap());
+        calcThread = new Thread(algo);
+        calcThread.start();
+    }
+
+    /** 结束自动计算 */
+    public void endAutoCaculate(List<IDAState> searchAlgoResult) {
+        algo.starFind.exit = true;
+        isInCaculate = false;
+        warningCalcIcon.remove();
+        backCalc.remove();
+
+        if (searchAlgoResult == null) {
+            Logger.warning("GameScene", "Cancel calc or no result");
+        } else {
+            Logger.info("GameScene", "IDA* algo get result");
+        }
     }
 
     /** 初始化历史记录 */
@@ -738,10 +795,16 @@ public class GameScene extends SokobanFitScene {
 
     @Override
     public void input() {
-        // 检测退出行为
+        // 如果不在计算状态，弹出菜单，否则结束计算状态
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-            if (!isInEscapeMenu) showEscapeMenu();
-            else closeEscapeMenu();
+            if (!isInCaculate) {
+                if (!isInEscapeMenu) showEscapeMenu();
+                else closeEscapeMenu();
+            } else {
+                // 结束计算状态
+                // TODO
+                endAutoCaculate(null);
+            }
         }
 
         // 强制退出

@@ -151,7 +151,7 @@ public class SettingScene extends SokobanScene {
         effectsVolumeSlider.setActionWhenValueUpdate(new ValueUpdateCallback() {
             @Override
             public void onValueUpdate(float value) {
-                // TODO
+                // NOT PLANED
             }
         });
 
