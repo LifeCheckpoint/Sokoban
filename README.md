@@ -15,13 +15,13 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |预期功能|实现进度|
 |---|---|
 |立项|✔️已完成|
-|合作开发|▶️进行中|
-|素材绘制|▶️进行中|
+|合作开发|✔️已完成|
+|素材绘制|✔️已完成|
 |推箱子核心玩法|✔️已完成|
 |基本界面开发|✔️已完成|
 |用户管理|✔️已完成|
-|基础AI|▶️进行中|
-|动画效果|▶️进行中|
+|基础AI|✔️已完成|
+|动画效果|✔️已完成|
 |设置配置|✔️已完成|
 
 当前版本 `0.4.0`
@@ -85,7 +85,7 @@ Any additional features beyond the basic requirements described above will earn 
 1. ✔️ Enhanced graphics and aesthetics
 2. ✔️ More game modes design
 3. ✔️ level selection interface 
-4. ▶️ Implementation of AI to achieve high scores
+4. ✔️ Implementation of AI to achieve high scores
 5. ✔️ Adding some animated effects
 6. ✔️ Adding game time display, save time in the archive, introducing a time-limited mode
 7. ✔️ Adding props in the game 

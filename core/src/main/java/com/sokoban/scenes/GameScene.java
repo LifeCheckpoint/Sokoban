@@ -2,6 +2,7 @@ package com.sokoban.scenes;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,8 @@ public class GameScene extends SokobanFitScene {
 
     private Image warningCalcIcon;
     private Image backCalc;
+    private Timer.Task autoMove;
+    private int currentAutoStep = 0;
 
     // 游戏主内容
     private Stack3DGirdWorld gridWorld; // 网格世界
@@ -649,6 +652,30 @@ public class GameScene extends SokobanFitScene {
             Logger.warning("GameScene", "Cancel calc or no result");
         } else {
             Logger.info("GameScene", "IDA* algo get result");
+            
+            // 将结果序列差分为移动序列
+            List<Direction> autoMovings = new ArrayList<>();
+            for (int i = 0; i < searchAlgoResult.size() - 1; i++) {
+                Pos from = new Pos(searchAlgoResult.get(i).playerX, searchAlgoResult.get(i).playerY);
+                Pos to = new Pos(searchAlgoResult.get(i + 1).playerX, searchAlgoResult.get(i + 1).playerY);
+                autoMovings.add(PlayerCoreUtils.getDeltaDirection(to.sub(from)));
+            }
+
+            autoMove = new Timer.Task() {
+                @Override
+                public void run() {
+                    if (currentAutoStep < autoMovings.size()) {
+                        Direction move = autoMovings.get(currentAutoStep);
+                        if (move == Direction.Up) checkMoving(new InputEvent(), Keys.W);
+                        if (move == Direction.Down) checkMoving(new InputEvent(), Keys.S);
+                        if (move == Direction.Left) checkMoving(new InputEvent(), Keys.A);
+                        if (move == Direction.Right) checkMoving(new InputEvent(), Keys.D);
+                        currentAutoStep += 1;
+                    }
+                }
+            };
+            
+            Timer.schedule(autoMove, 0.5f, 0.3f);
         }
     }
 

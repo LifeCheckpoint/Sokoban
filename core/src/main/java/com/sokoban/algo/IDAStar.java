@@ -33,9 +33,9 @@ public class IDAStar {
 
     /** 在 IDA* 中性能高一些的状态类 */
     public static class IDAState {
-        int playerX, playerY;
-        Set<int[]> boxesPos;
-        IDAState parent;
+        public int playerX, playerY;
+        public Set<int[]> boxesPos;
+        public IDAState parent;
 
         IDAState(int playerX, int playerY, Set<int[]> boxesPos) {
             this(playerX, playerY, boxesPos, null);
