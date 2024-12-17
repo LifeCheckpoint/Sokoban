@@ -49,7 +49,6 @@ import com.sokoban.algo.SearchAlgo;
 import com.sokoban.algo.IDAStar.IDAState;
 import com.sokoban.polygon.BoxObject;
 import com.sokoban.polygon.SpineObject;
-import com.sokoban.polygon.TimerClock;
 import com.sokoban.polygon.BoxObject.BoxType;
 import com.sokoban.polygon.action.ViewportRescaleAction;
 import com.sokoban.polygon.combine.CheckboxObject;
@@ -829,7 +828,6 @@ public class GameScene extends SokobanFitScene {
                 else closeEscapeMenu();
             } else {
                 // 结束计算状态
-                // TODO
                 endAutoCaculate(null);
             }
         }
