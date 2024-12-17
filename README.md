@@ -24,7 +24,7 @@ Desktop 桌面平台, 预计将打包为即开即玩的游戏
 |动画效果|✔️已完成|
 |设置配置|✔️已完成|
 
-当前版本 `0.4.0`
+当前版本 `1.0.0`
 
 ## Feature 项目特色
 
@@ -92,6 +92,14 @@ Any additional features beyond the basic requirements described above will earn 
 8. ✔️ Adding maps of your own design
 
 ## Log 更新日志
+
+### 1.0.0 beta update
+
+1. 项目截止
+2. 新增自动求解功能
+3. 新增移动按钮
+4. 视角现在会跟随移动
+5. 角落死锁检测提示
 
 ### 0.4.1 update
 
