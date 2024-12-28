@@ -3,6 +3,7 @@
 
 ## vscode:
 .vscode/
+.vs/
 
 ## Gradle:
 .gradle/
